@@ -1,6 +1,7 @@
 // src/app/payment/payment-form.component.ts
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,9 +17,10 @@ type PaymentMethod = 'CREDIT_CARD' | 'PAYPAL' | 'APPLE_PAY' | 'PIX' | 'IDEAL';
   templateUrl: './payment-form.component.html',
 })
 export class PaymentFormComponent implements OnInit {
-  private http   = inject(HttpClient);
-  private flow   = inject(BookingFlowService);
-  private router = inject(Router);
+  private http       = inject(HttpClient);
+  private flow       = inject(BookingFlowService);
+  private router     = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
   readonly methods: PaymentMethod[] = ['CREDIT_CARD', 'PAYPAL', 'APPLE_PAY', 'PIX', 'IDEAL'];
   methodControl = new FormControl<PaymentMethod>('CREDIT_CARD', { nonNullable: true });
@@ -29,7 +31,7 @@ export class PaymentFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildDetailsForm(this.methodControl.value);
-    this.methodControl.valueChanges.subscribe(method => this.buildDetailsForm(method));
+    this.methodControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(method => this.buildDetailsForm(method));
   }
 
   private buildDetailsForm(method: PaymentMethod): void {
@@ -59,6 +61,7 @@ export class PaymentFormComponent implements OnInit {
   }
 
   submit(): void {
+    if (this.detailsForm.invalid) return;
     const booking = this.flow.booking()!;
     this.submitting.set(true);
     this.error.set(null);
@@ -77,6 +80,8 @@ export class PaymentFormComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         if (err.status === 402) {
           this.error.set('Payment declined — please try another method.');
+        } else if (err.status === 404) {
+          this.error.set('No pending booking found.');
         } else if (err.status === 409) {
           this.router.navigate(['/payment/receipt']);
         } else {

@@ -1,5 +1,5 @@
 // src/app/booking/booking-confirmation.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
@@ -11,7 +11,7 @@ import { BookingFlowService } from '../shared/services/booking-flow.service';
   imports: [CurrencyPipe, RouterLink],
   templateUrl: './booking-confirmation.component.html',
 })
-export class BookingConfirmationComponent {
+export class BookingConfirmationComponent implements OnInit {
   private router = inject(Router);
   flow = inject(BookingFlowService);
 

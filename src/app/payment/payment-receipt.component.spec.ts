@@ -57,10 +57,10 @@ describe('PaymentReceiptComponent', () => {
   it('starts polling on init', fakeAsync(() => {
     fixture.detectChanges();
     tick(2000);
-
-    httpMock.expectOne('/api/bookings/AX3KF7AB?lastName=Doe')
-      .flush({ ...booking, status: 'CONFIRMED' });
-
+    const req = httpMock.expectOne(r => r.url === '/api/bookings/AX3KF7AB' && r.params.get('lastName') === 'Doe');
+    // Response not yet flushed — polling is in progress and booking is not resolved
+    expect(component.resolvedBooking()).toBeNull();
+    req.flush({ ...booking, status: 'CONFIRMED' });
     discardPeriodicTasks();
   }));
 
@@ -68,7 +68,7 @@ describe('PaymentReceiptComponent', () => {
     fixture.detectChanges();
     tick(2000);
 
-    httpMock.expectOne('/api/bookings/AX3KF7AB?lastName=Doe')
+    httpMock.expectOne(r => r.url === '/api/bookings/AX3KF7AB' && r.params.get('lastName') === 'Doe')
       .flush({ ...booking, status: 'CONFIRMED' });
 
     fixture.detectChanges();
@@ -76,21 +76,21 @@ describe('PaymentReceiptComponent', () => {
 
     // No further poll should be made
     tick(2000);
-    httpMock.expectNone('/api/bookings/AX3KF7AB?lastName=Doe');
+    httpMock.expectNone(r => r.url === '/api/bookings/AX3KF7AB' && r.params.get('lastName') === 'Doe');
   }));
 
   it('stops polling and sets resolvedBooking when status is PAYMENT_FAILED', fakeAsync(() => {
     fixture.detectChanges();
     tick(2000);
 
-    httpMock.expectOne('/api/bookings/AX3KF7AB?lastName=Doe')
+    httpMock.expectOne(r => r.url === '/api/bookings/AX3KF7AB' && r.params.get('lastName') === 'Doe')
       .flush({ ...booking, status: 'PAYMENT_FAILED' });
 
     fixture.detectChanges();
     expect(component.resolvedBooking()).toEqual({ ...booking, status: 'PAYMENT_FAILED' });
 
     tick(2000);
-    httpMock.expectNone('/api/bookings/AX3KF7AB?lastName=Doe');
+    httpMock.expectNone(r => r.url === '/api/bookings/AX3KF7AB' && r.params.get('lastName') === 'Doe');
   }));
 
   it('stops polling and sets timedOut after 30 seconds', fakeAsync(() => {
@@ -101,7 +101,7 @@ describe('PaymentReceiptComponent', () => {
     // not still be pending depending on RxJS internal scheduling order.
     for (let i = 0; i < 15; i++) {
       tick(2000);
-      httpMock.match('/api/bookings/AX3KF7AB?lastName=Doe')
+      httpMock.match(r => r.url === '/api/bookings/AX3KF7AB' && r.params.get('lastName') === 'Doe')
         .forEach(r => r.flush({ ...booking, status: 'PENDING' }));
     }
 
@@ -109,6 +109,6 @@ describe('PaymentReceiptComponent', () => {
     expect(component.timedOut()).toBeTrue();
 
     tick(2000);
-    httpMock.expectNone('/api/bookings/AX3KF7AB?lastName=Doe');
+    httpMock.expectNone(r => r.url === '/api/bookings/AX3KF7AB' && r.params.get('lastName') === 'Doe');
   }));
 });

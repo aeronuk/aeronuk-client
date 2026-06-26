@@ -1,8 +1,8 @@
 // src/app/payment/payment-receipt.component.ts
 import { Component, OnInit, signal } from '@angular/core';
 import { inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router, RouterLink } from '@angular/router';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { interval, Subject, timer } from 'rxjs';
@@ -14,7 +14,7 @@ import { CurrencyPipe } from '@angular/common';
 @Component({
   selector: 'app-payment-receipt',
   standalone: true,
-  imports: [CurrencyPipe, RouterLink],
+  imports: [CurrencyPipe],
   templateUrl: './payment-receipt.component.html',
 })
 export class PaymentReceiptComponent implements OnInit {
@@ -35,11 +35,10 @@ export class PaymentReceiptComponent implements OnInit {
     interval(2000).pipe(
       takeUntilDestroyed(this.destroyRef),
       takeUntil(stop$),
-      switchMap(() =>
-        this.http.get<Booking>(
-          `/api/bookings/${booking.bookingCode}?lastName=${booking.passenger.lastName}`,
-        ),
-      ),
+      switchMap(() => {
+        const params = new HttpParams().set('lastName', booking.passenger.lastName);
+        return this.http.get<Booking>(`/api/bookings/${booking.bookingCode}`, { params });
+      }),
     ).subscribe(b => {
       if (b.status === 'CONFIRMED' || b.status === 'PAYMENT_FAILED') {
         this.resolvedBooking.set(b);
