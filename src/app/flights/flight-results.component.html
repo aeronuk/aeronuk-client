@@ -1,0 +1,13 @@
+@if (results().length === 0) {
+  <p>No flights found.</p>
+} @else {
+  @for (flight of results(); track flight.id) {
+    <div class="flight-card">
+      <strong>{{ flight.flightNumber }}</strong>
+      {{ flight.origin }} → {{ flight.destination }}
+      <span>{{ flight.departureTime | date:'short' }} – {{ flight.arrivalTime | date:'short' }}</span>
+      <span>{{ flight.price.amount | currency:flight.price.currency }}</span>
+      <button type="button" (click)="select(flight)">Select</button>
+    </div>
+  }
+}
