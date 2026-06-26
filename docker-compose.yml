@@ -1,0 +1,13 @@
+services:
+  aeronuk-client:
+    build: .
+    container_name: aeronuk-client
+    ports:
+      - "4200:4200"
+    networks:
+      - aeronuk-network
+
+networks:
+  aeronuk-network:
+    name: aeronuk-network
+    driver: bridge
