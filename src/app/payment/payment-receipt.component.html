@@ -1,0 +1,20 @@
+<!-- src/app/payment/payment-receipt.component.html -->
+<h2>Booking Receipt</h2>
+
+@if (resolvedBooking(); as b) {
+  @if (b.status === 'CONFIRMED') {
+    <p>Your booking is confirmed!</p>
+  } @else {
+    <p>Payment failed. Please contact support.</p>
+  }
+  <p>Booking Code: <strong>{{ b.bookingCode }}</strong></p>
+  <p>Passenger: {{ b.passenger.firstName }} {{ b.passenger.lastName }}</p>
+  <p>Total: {{ b.totalAmount | currency:b.currency }}</p>
+  <p>Status: {{ b.status }}</p>
+  <button type="button" (click)="restart()">Book Another Flight</button>
+} @else if (timedOut()) {
+  <p>Could not confirm booking status. Please check your email or contact support.</p>
+  <button type="button" (click)="restart()">Start Over</button>
+} @else {
+  <p>Confirming your booking…</p>
+}

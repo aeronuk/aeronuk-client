@@ -1,0 +1,41 @@
+<!-- src/app/payment/payment-form.component.html -->
+<h2>Payment</h2>
+
+<label>
+  Payment Method
+  <select [formControl]="methodControl">
+    @for (method of methods; track method) {
+      <option [value]="method">{{ method }}</option>
+    }
+  </select>
+</label>
+
+<form [formGroup]="detailsForm" (ngSubmit)="submit()">
+  @switch (methodControl.value) {
+    @case ('CREDIT_CARD') {
+      <label>Card Number <input type="text" formControlName="cardNumber" /></label>
+      <label>Expiry Month <input type="number" formControlName="expiryMonth" /></label>
+      <label>Expiry Year  <input type="number" formControlName="expiryYear" /></label>
+    }
+    @case ('PAYPAL') {
+      <label>PayPal Email <input type="email" formControlName="email" /></label>
+    }
+    @case ('APPLE_PAY') {
+      <label>Token <input type="text" formControlName="token" /></label>
+    }
+    @case ('PIX') {
+      <label>PIX Key <input type="text" formControlName="pixKey" /></label>
+    }
+    @case ('IDEAL') {
+      <label>Bank <input type="text" formControlName="bank" /></label>
+    }
+  }
+
+  <button type="submit" [disabled]="detailsForm.invalid || submitting()">
+    @if (submitting()) { Processing… } @else { Pay Now }
+  </button>
+</form>
+
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}
