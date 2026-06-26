@@ -1,0 +1,29 @@
+<h2>Passenger Details</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <label>
+    First Name
+    <input type="text" formControlName="firstName" />
+  </label>
+  <label>
+    Last Name
+    <input type="text" formControlName="lastName" />
+  </label>
+  <label>
+    Email
+    <input type="email" formControlName="email" />
+    @if (form.controls.email.invalid && form.controls.email.touched) {
+      <span class="error">Valid email required.</span>
+    }
+  </label>
+  <label>
+    Phone (optional)
+    <input type="tel" formControlName="phone" />
+  </label>
+  <button type="submit" [disabled]="form.invalid || submitting()">
+    @if (submitting()) { Creating booking… } @else { Continue to Payment }
+  </button>
+</form>
+
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}

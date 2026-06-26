@@ -1,0 +1,19 @@
+<h2>Select a Seat</h2>
+
+@if (loading()) {
+  <p>Loading seats…</p>
+} @else if (error()) {
+  <p class="error">{{ error() }}</p>
+} @else {
+  <div class="seat-grid">
+    @for (seat of seats(); track seat.id) {
+      <button
+        type="button"
+        [disabled]="!seat.available"
+        (click)="select(seat)">
+        {{ seat.seatNumber }} ({{ seat.class }})
+        @if (!seat.available) { — taken }
+      </button>
+    }
+  </div>
+}

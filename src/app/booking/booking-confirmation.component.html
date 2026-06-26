@@ -1,0 +1,12 @@
+@if (flow.booking(); as booking) {
+  <h2>Booking Confirmed</h2>
+  <p>Booking Code: <strong>{{ booking.bookingCode }}</strong></p>
+  <p>Flight: {{ booking.flightId }}</p>
+  <p>Seat: {{ booking.seatNumber }}</p>
+  <p>Passenger: {{ booking.passenger.firstName }} {{ booking.passenger.lastName }}</p>
+  <p>Total: {{ booking.totalAmount | currency:booking.currency }}</p>
+  <p>Status: {{ booking.status }}</p>
+  <a routerLink="/payment">
+    <button type="button">Proceed to Payment</button>
+  </a>
+}
