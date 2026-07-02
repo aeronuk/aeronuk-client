@@ -7,11 +7,15 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { switchMap } from 'rxjs/operators';
 import { BookingFlowService } from '../shared/services/booking-flow.service';
 import { Booking } from '../shared/models/booking.model';
+import { HlmCardImports } from '../shared/ui/card';
+import { HlmButtonImports } from '../shared/ui/button';
+import { HlmInputImports } from '../shared/ui/input';
+import { HlmLabelImports } from '../shared/ui/label';
 
 @Component({
   selector: 'app-passenger-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ...HlmCardImports, ...HlmButtonImports, ...HlmInputImports, ...HlmLabelImports],
   templateUrl: './passenger-form.component.html',
 })
 export class PassengerFormComponent {

@@ -5,11 +5,15 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpParams } from '@angular/common/http';
 import { Flight } from '../shared/models/flight.model';
 import { FlightResultsComponent } from './flight-results.component';
+import { HlmCardImports } from '../shared/ui/card';
+import { HlmButtonImports } from '../shared/ui/button';
+import { HlmInputImports } from '../shared/ui/input';
+import { HlmLabelImports } from '../shared/ui/label';
 
 @Component({
   selector: 'app-flight-search',
   standalone: true,
-  imports: [ReactiveFormsModule, FlightResultsComponent],
+  imports: [ReactiveFormsModule, FlightResultsComponent, ...HlmCardImports, ...HlmButtonImports, ...HlmInputImports, ...HlmLabelImports],
   templateUrl: './flight-search.component.html',
 })
 export class FlightSearchComponent {

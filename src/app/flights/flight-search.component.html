@@ -1,37 +1,50 @@
-<h2>Search Flights</h2>
-<form [formGroup]="form" (ngSubmit)="search()">
-  <label>
-    Origin
-    <select formControlName="origin">
-      <option value="">-- select --</option>
-      @for (code of airportCodes; track code) {
-        <option [value]="code">{{ code }}</option>
+<div hlmCard>
+  <div hlmCardHeader>
+    <h1 hlmCardTitle class="text-2xl font-semibold">Search Flights</h1>
+    <p hlmCardDescription>Find and book your next flight</p>
+  </div>
+  <div hlmCardContent class="pt-2">
+    <form [formGroup]="form" (ngSubmit)="search()" class="space-y-4">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel>Origin</label>
+          <select formControlName="origin" class="flex h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50">
+            <option value="">— select —</option>
+            @for (code of airportCodes; track code) {
+              <option [value]="code">{{ code }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel>Destination</label>
+          <select formControlName="destination" class="flex h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50">
+            <option value="">— select —</option>
+            @for (code of airportCodes; track code) {
+              <option [value]="code">{{ code }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel>Date</label>
+          <input hlmInput type="date" formControlName="date" />
+        </div>
+      </div>
+
+      @if (error()) {
+        <p class="text-sm text-destructive">{{ error() }}</p>
       }
-    </select>
-  </label>
 
-  <label>
-    Destination
-    <select formControlName="destination">
-      <option value="">-- select --</option>
-      @for (code of airportCodes; track code) {
-        <option [value]="code">{{ code }}</option>
-      }
-    </select>
-  </label>
+      <button hlmBtn type="submit" [disabled]="form.invalid || loading()">
+        @if (loading()) { Searching… } @else { Search Flights }
+      </button>
+    </form>
+  </div>
+</div>
 
-  <label>
-    Date
-    <input type="date" formControlName="date" />
-  </label>
-
-  <button type="submit" [disabled]="form.invalid || loading()">
-    @if (loading()) { Searching… } @else { Search }
-  </button>
-</form>
-
-@if (error()) {
-  <p class="error">{{ error() }}</p>
+@if (results().length > 0 || form.valid) {
+  <div class="mt-6">
+    <app-flight-results [results]="results()" />
+  </div>
 }
-
-<app-flight-results [results]="results()" />

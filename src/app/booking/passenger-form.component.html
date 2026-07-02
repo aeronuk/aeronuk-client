@@ -1,29 +1,41 @@
-<h2>Passenger Details</h2>
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <label>
-    First Name
-    <input type="text" formControlName="firstName" />
-  </label>
-  <label>
-    Last Name
-    <input type="text" formControlName="lastName" />
-  </label>
-  <label>
-    Email
-    <input type="email" formControlName="email" />
-    @if (form.controls.email.invalid && form.controls.email.touched) {
-      <span class="error">Valid email required.</span>
-    }
-  </label>
-  <label>
-    Phone (optional)
-    <input type="tel" formControlName="phone" />
-  </label>
-  <button type="submit" [disabled]="form.invalid || submitting()">
-    @if (submitting()) { Creating booking… } @else { Continue to Payment }
-  </button>
-</form>
+<div hlmCard>
+  <div hlmCardHeader>
+    <h2 hlmCardTitle class="text-xl font-semibold">Passenger Details</h2>
+    <p hlmCardDescription>Enter your information to complete the booking</p>
+  </div>
+  <div hlmCardContent class="pt-2">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel>First Name</label>
+          <input hlmInput type="text" formControlName="firstName" placeholder="John" />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel>Last Name</label>
+          <input hlmInput type="text" formControlName="lastName" placeholder="Doe" />
+        </div>
+      </div>
 
-@if (error()) {
-  <p class="error">{{ error() }}</p>
-}
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel>Email</label>
+        <input hlmInput type="email" formControlName="email" placeholder="john@example.com" />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <p class="text-xs text-destructive">Please enter a valid email address.</p>
+        }
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel>Phone <span class="text-muted-foreground font-normal">(optional)</span></label>
+        <input hlmInput type="tel" formControlName="phone" placeholder="+1 555 000 0000" />
+      </div>
+
+      @if (error()) {
+        <p class="text-sm text-destructive">{{ error() }}</p>
+      }
+
+      <button hlmBtn type="submit" [disabled]="form.invalid || submitting()">
+        @if (submitting()) { Creating booking… } @else { Continue to Payment }
+      </button>
+    </form>
+  </div>
+</div>

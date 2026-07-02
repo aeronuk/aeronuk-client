@@ -1,19 +1,34 @@
-<h2>Select a Seat</h2>
-
-@if (loading()) {
-  <p>Loading seats…</p>
-} @else if (error()) {
-  <p class="error">{{ error() }}</p>
-} @else {
-  <div class="seat-grid">
-    @for (seat of seats(); track seat.id) {
-      <button
-        type="button"
-        [disabled]="!seat.available"
-        (click)="select(seat)">
-        {{ seat.seatNumber }} ({{ seat.class }})
-        @if (!seat.available) { — taken }
-      </button>
+<div hlmCard>
+  <div hlmCardHeader>
+    <h2 hlmCardTitle class="text-xl font-semibold">Select a Seat</h2>
+    <p hlmCardDescription>Choose your preferred seat for this flight</p>
+  </div>
+  <div hlmCardContent class="pt-2">
+    @if (loading()) {
+      <p class="text-sm text-muted-foreground">Loading seats…</p>
+    } @else if (error()) {
+      <p class="text-sm text-destructive">{{ error() }}</p>
+    } @else {
+      <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        @for (seat of seats(); track seat.id) {
+          <button
+            hlmBtn
+            type="button"
+            [variant]="seat.available ? 'outline' : 'ghost'"
+            [disabled]="!seat.available"
+            (click)="select(seat)"
+            class="flex h-auto flex-col items-start gap-1 py-3 px-3 text-left"
+          >
+            <span class="font-semibold">{{ seat.seatNumber }}</span>
+            <span hlmBadge [variant]="seat.class === 'business' ? 'default' : 'secondary'" class="text-[10px]">
+              {{ seat.class }}
+            </span>
+            @if (!seat.available) {
+              <span class="text-xs text-muted-foreground">Taken</span>
+            }
+          </button>
+        }
+      </div>
     }
   </div>
-}
+</div>

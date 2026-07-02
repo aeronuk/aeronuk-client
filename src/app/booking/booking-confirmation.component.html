@@ -1,12 +1,47 @@
 @if (flow.booking(); as booking) {
-  <h2>Booking Confirmed</h2>
-  <p>Booking Code: <strong>{{ booking.bookingCode }}</strong></p>
-  <p>Flight: {{ flow.flight()?.flightNumber }} — {{ flow.flight()?.origin }} → {{ flow.flight()?.destination }}</p>
-  <p>Seat: {{ booking.seatNumber }}</p>
-  <p>Passenger: {{ booking.passenger.firstName }} {{ booking.passenger.lastName }}</p>
-  <p>Total: {{ booking.totalAmount | currency:booking.currency }}</p>
-  <p>Status: {{ booking.status }}</p>
-  <a routerLink="/payment">
-    <button type="button">Proceed to Payment</button>
-  </a>
+  <div hlmCard>
+    <div hlmCardHeader>
+      <h2 hlmCardTitle class="text-xl font-semibold">Booking Confirmed</h2>
+      <p hlmCardDescription>Your seat has been reserved — complete payment to confirm</p>
+    </div>
+    <div hlmCardContent class="pt-2">
+      <dl class="space-y-3">
+        <div class="flex justify-between text-sm">
+          <dt class="text-muted-foreground">Booking Code</dt>
+          <dd class="font-mono font-semibold">{{ booking.bookingCode }}</dd>
+        </div>
+        <div class="flex justify-between text-sm">
+          <dt class="text-muted-foreground">Flight</dt>
+          <dd class="font-medium">{{ flow.flight()?.flightNumber }}</dd>
+        </div>
+        <div class="flex justify-between text-sm">
+          <dt class="text-muted-foreground">Route</dt>
+          <dd>{{ flow.flight()?.origin }} → {{ flow.flight()?.destination }}</dd>
+        </div>
+        <div class="flex justify-between text-sm">
+          <dt class="text-muted-foreground">Seat</dt>
+          <dd>{{ booking.seatNumber }}</dd>
+        </div>
+        <div class="flex justify-between text-sm">
+          <dt class="text-muted-foreground">Passenger</dt>
+          <dd>{{ booking.passenger.firstName }} {{ booking.passenger.lastName }}</dd>
+        </div>
+        <div class="flex justify-between text-sm">
+          <dt class="text-muted-foreground">Total</dt>
+          <dd class="font-semibold">{{ booking.totalAmount | currency:booking.currency }}</dd>
+        </div>
+        <div class="flex justify-between text-sm">
+          <dt class="text-muted-foreground">Status</dt>
+          <dd>
+            <span hlmBadge variant="secondary">{{ booking.status }}</span>
+          </dd>
+        </div>
+      </dl>
+    </div>
+    <div hlmCardFooter class="justify-end">
+      <a routerLink="/payment">
+        <button hlmBtn type="button">Proceed to Payment</button>
+      </a>
+    </div>
+  </div>
 }

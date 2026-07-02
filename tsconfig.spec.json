@@ -4,12 +4,11 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
-    "types": [
-      "jasmine"
-    ]
+    "types": ["jasmine"],
+    "baseUrl": ".",
+    "paths": {
+      "@spartan-ng/helm/utils": ["src/app/shared/ui/utils/index.ts"]
+    }
   },
-  "include": [
-    "src/**/*.d.ts",
-    "src/**/*.spec.ts"
-  ]
+  "include": ["src/**/*.spec.ts", "src/**/*.ts"]
 }

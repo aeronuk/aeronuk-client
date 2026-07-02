@@ -5,10 +5,14 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BookingFlowService } from '../shared/services/booking-flow.service';
 import { Seat } from '../shared/models/flight.model';
+import { HlmCardImports } from '../shared/ui/card';
+import { HlmButtonImports } from '../shared/ui/button';
+import { HlmBadgeImports } from '../shared/ui/badge';
 
 @Component({
   selector: 'app-seat-selection',
   standalone: true,
+  imports: [...HlmCardImports, ...HlmButtonImports, ...HlmBadgeImports],
   templateUrl: './seat-selection.component.html',
 })
 export class SeatSelectionComponent implements OnInit {

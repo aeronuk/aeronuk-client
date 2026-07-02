@@ -10,11 +10,14 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 import { BookingFlowService } from '../shared/services/booking-flow.service';
 import { Booking } from '../shared/models/booking.model';
 import { CurrencyPipe } from '@angular/common';
+import { HlmCardImports } from '../shared/ui/card';
+import { HlmButtonImports } from '../shared/ui/button';
+import { HlmBadgeImports } from '../shared/ui/badge';
 
 @Component({
   selector: 'app-payment-receipt',
   standalone: true,
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, ...HlmCardImports, ...HlmButtonImports, ...HlmBadgeImports],
   templateUrl: './payment-receipt.component.html',
 })
 export class PaymentReceiptComponent implements OnInit {

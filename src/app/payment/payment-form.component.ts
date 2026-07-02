@@ -7,13 +7,17 @@ import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BookingFlowService } from '../shared/services/booking-flow.service';
 import { Payment } from '../shared/models/payment.model';
+import { HlmCardImports } from '../shared/ui/card';
+import { HlmButtonImports } from '../shared/ui/button';
+import { HlmInputImports } from '../shared/ui/input';
+import { HlmLabelImports } from '../shared/ui/label';
 
 type PaymentMethod = 'CREDIT_CARD' | 'PAYPAL' | 'APPLE_PAY' | 'PIX' | 'IDEAL';
 
 @Component({
   selector: 'app-payment-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ...HlmCardImports, ...HlmButtonImports, ...HlmInputImports, ...HlmLabelImports],
   templateUrl: './payment-form.component.html',
 })
 export class PaymentFormComponent implements OnInit {
