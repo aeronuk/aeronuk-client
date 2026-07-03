@@ -1,0 +1,74 @@
+@if (state.foundBooking(); as booking) {
+  <div class="mx-auto max-w-[1180px] px-6 py-12">
+    <div class="mx-auto max-w-[640px]">
+
+      <!-- Back link -->
+      <a routerLink="/my-trips" class="mb-6 inline-flex items-center gap-1.5 text-[14px] text-[#5C6B84] hover:text-[#0B1E3D]">
+        ← Back to search
+      </a>
+
+      <h1 class="mb-6 text-[28px] font-extrabold tracking-[-0.02em] text-[#0B1E3D]">Booking found</h1>
+
+      <!-- Booking card -->
+      <div class="rounded-[16px] bg-white" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
+        <!-- Header -->
+        <div class="border-b border-[#E4E9F2] px-6 py-5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <img src="assets/logo.svg" class="h-[34px] w-[34px]" alt="AeroNUK">
+              <div>
+                <p class="text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A99B3]">Booking reference</p>
+                <p class="font-mono text-[20px] font-bold tracking-widest text-[#2180E0]">{{ booking.bookingCode }}</p>
+              </div>
+            </div>
+            <span
+              class="rounded-full px-3 py-1 text-[12px] font-bold uppercase tracking-[0.06em]"
+              [style.background]="booking.status === 'CONFIRMED' ? '#DDF0E8' : '#FEE2E2'"
+              [style.color]="booking.status === 'CONFIRMED' ? '#1F9D6B' : '#DC2626'"
+            >{{ booking.status }}</span>
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div class="space-y-4 px-6 py-5">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#8A99B3]">Passenger</p>
+              <p class="mt-0.5 text-[15px] font-semibold text-[#0B1E3D]">{{ booking.passenger.firstName }} {{ booking.passenger.lastName }}</p>
+            </div>
+            <div>
+              <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#8A99B3]">Seat</p>
+              <p class="mt-0.5 text-[15px] font-semibold text-[#0B1E3D]">{{ booking.seatNumber }}</p>
+            </div>
+            <div>
+              <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#8A99B3]">Email</p>
+              <p class="mt-0.5 text-[14px] text-[#5C6B84]">{{ booking.passenger.email }}</p>
+            </div>
+            <div>
+              <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#8A99B3]">Total paid</p>
+              <p class="mt-0.5 text-[15px] font-semibold text-[#0B1E3D]">{{ booking.totalAmount | currency:booking.currency }}</p>
+            </div>
+            <div>
+              <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#8A99B3]">Booked on</p>
+              <p class="mt-0.5 text-[14px] text-[#5C6B84]">{{ booking.createdAt | date:'d MMM y, h:mm a' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer actions -->
+        <div class="rounded-b-[16px] border-t border-[#E4E9F2] bg-[#F4F6FB] px-6 py-4">
+          <div class="flex gap-3">
+            <button type="button" disabled class="rounded-[10px] border border-[#E4E9F2] bg-white px-5 py-2.5 text-[14px] font-semibold text-[#8A99B3] opacity-60 cursor-not-allowed">
+              Cancel booking
+            </button>
+            <button type="button" disabled class="rounded-[10px] border border-[#E4E9F2] bg-white px-5 py-2.5 text-[14px] font-semibold text-[#8A99B3] opacity-60 cursor-not-allowed">
+              Change booking
+            </button>
+          </div>
+          <p class="mt-2 text-[12px] text-[#B4BECE]">Manage booking features coming soon.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+}

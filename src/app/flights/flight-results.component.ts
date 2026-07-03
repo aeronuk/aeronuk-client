@@ -4,13 +4,11 @@ import { inject } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Flight } from '../shared/models/flight.model';
 import { BookingFlowService } from '../shared/services/booking-flow.service';
-import { HlmCardImports } from '../shared/ui/card';
-import { HlmButtonImports } from '../shared/ui/button';
 
 @Component({
   selector: 'app-flight-results',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, ...HlmCardImports, ...HlmButtonImports],
+  imports: [CurrencyPipe, DatePipe],
   templateUrl: './flight-results.component.html',
 })
 export class FlightResultsComponent {

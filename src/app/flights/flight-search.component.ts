@@ -5,21 +5,24 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpParams } from '@angular/common/http';
 import { Flight } from '../shared/models/flight.model';
 import { FlightResultsComponent } from './flight-results.component';
-import { HlmCardImports } from '../shared/ui/card';
-import { HlmButtonImports } from '../shared/ui/button';
-import { HlmInputImports } from '../shared/ui/input';
-import { HlmLabelImports } from '../shared/ui/label';
 
 @Component({
   selector: 'app-flight-search',
   standalone: true,
-  imports: [ReactiveFormsModule, FlightResultsComponent, ...HlmCardImports, ...HlmButtonImports, ...HlmInputImports, ...HlmLabelImports],
+  imports: [ReactiveFormsModule, FlightResultsComponent],
   templateUrl: './flight-search.component.html',
 })
 export class FlightSearchComponent {
   private http = inject(HttpClient);
 
   readonly airportCodes = ['JFK', 'LAX', 'ORD', 'SFO', 'LHR', 'NRT'];
+
+  readonly popularDestinations = [
+    { city: 'New York', code: 'JFK', price: 299, imageLabel: 'city / skyline' },
+    { city: 'Los Angeles', code: 'LAX', price: 349, imageLabel: 'city / beach' },
+    { city: 'London', code: 'LHR', price: 189, imageLabel: 'city / landmarks' },
+    { city: 'Tokyo', code: 'NRT', price: 649, imageLabel: 'city / temple' },
+  ];
 
   form = new FormGroup({
     origin:      new FormControl('', Validators.required),

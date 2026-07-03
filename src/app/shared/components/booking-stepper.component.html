@@ -1,0 +1,38 @@
+<div class="border-b border-[#E4E9F2] bg-white">
+  <div class="mx-auto flex max-w-[1180px] items-center justify-center px-6 py-4">
+    @for (step of steps; track step; let i = $index) {
+      @let stepNum = i + 1;
+      @let isDone = stepNum < currentStep();
+      @let isActive = stepNum === currentStep();
+
+      <div class="flex items-center">
+        <div class="flex items-center gap-2">
+          <div
+            class="flex h-[26px] w-[26px] items-center justify-center rounded-full text-[12px] font-bold"
+            [ngClass]="{
+              'bg-[#1F9D6B] text-white': isDone,
+              'bg-[#2180E0] text-white': isActive,
+              'bg-[#EEF2F8] text-[#8A99B3]': !isDone && !isActive
+            }"
+          >
+            @if (isDone) { ✓ } @else { {{ stepNum }} }
+          </div>
+          <span
+            class="text-[13px]"
+            [ngClass]="{
+              'font-semibold text-[#0B1E3D]': isActive,
+              'text-[#1F9D6B]': isDone,
+              'text-[#8A99B3]': !isDone && !isActive
+            }"
+          >{{ step }}</span>
+        </div>
+        @if (stepNum < steps.length) {
+          <div
+            class="mx-4 h-[2px] w-[34px] rounded-full"
+            [ngClass]="isDone ? 'bg-[#1F9D6B]' : 'bg-[#EEF2F8]'"
+          ></div>
+        }
+      </div>
+    }
+  </div>
+</div>

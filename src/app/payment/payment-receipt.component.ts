@@ -9,20 +9,17 @@ import { interval, Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { BookingFlowService } from '../shared/services/booking-flow.service';
 import { Booking } from '../shared/models/booking.model';
-import { CurrencyPipe } from '@angular/common';
-import { HlmCardImports } from '../shared/ui/card';
-import { HlmButtonImports } from '../shared/ui/button';
-import { HlmBadgeImports } from '../shared/ui/badge';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-payment-receipt',
   standalone: true,
-  imports: [CurrencyPipe, ...HlmCardImports, ...HlmButtonImports, ...HlmBadgeImports],
+  imports: [CurrencyPipe, DatePipe],
   templateUrl: './payment-receipt.component.html',
 })
 export class PaymentReceiptComponent implements OnInit {
   private http       = inject(HttpClient);
-  private flow       = inject(BookingFlowService);
+  protected flow       = inject(BookingFlowService);
   private router     = inject(Router);
   private destroyRef = inject(DestroyRef);
 

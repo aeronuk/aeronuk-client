@@ -1,34 +1,56 @@
-<div hlmCard>
-  <div hlmCardHeader>
-    <h2 hlmCardTitle class="text-xl font-semibold">Select a Seat</h2>
-    <p hlmCardDescription>Choose your preferred seat for this flight</p>
-  </div>
-  <div hlmCardContent class="pt-2">
-    @if (loading()) {
-      <p class="text-sm text-muted-foreground">Loading seats…</p>
-    } @else if (error()) {
-      <p class="text-sm text-destructive">{{ error() }}</p>
-    } @else {
-      <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        @for (seat of seats(); track seat.id) {
-          <button
-            hlmBtn
-            type="button"
-            [variant]="seat.available ? 'outline' : 'ghost'"
-            [disabled]="!seat.available"
-            (click)="select(seat)"
-            class="flex h-auto flex-col items-start gap-1 py-3 px-3 text-left"
-          >
-            <span class="font-semibold">{{ seat.seatNumber }}</span>
-            <span hlmBadge [variant]="seat.class === 'business' ? 'default' : 'secondary'" class="text-[10px]">
-              {{ seat.class }}
-            </span>
-            @if (!seat.available) {
-              <span class="text-xs text-muted-foreground">Taken</span>
-            }
-          </button>
-        }
+<div class="mx-auto max-w-[1180px] px-6 py-8">
+  <div class="grid grid-cols-[1fr_360px] gap-6 items-start">
+
+    <!-- Main: seat grid -->
+    <div class="rounded-[16px] bg-white p-6" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
+      <h2 class="mb-5 text-[20px] font-extrabold text-[#0B1E3D]">Select a seat</h2>
+
+      <!-- Legend -->
+      <div class="mb-6 flex flex-wrap gap-4">
+        <div class="flex items-center gap-2">
+          <div class="h-5 w-5 rounded-[4px] border border-[#BBD8F5] bg-[#EAF3FD]"></div>
+          <span class="text-[13px] text-[#5C6B84]">Available</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="h-5 w-5 rounded-[4px] border border-[#9FD8BF] bg-[#DDF0E8]"></div>
+          <span class="text-[13px] text-[#5C6B84]">Business</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="h-5 w-5 rounded-[4px] bg-[#E4E9F2]"></div>
+          <span class="text-[13px] text-[#5C6B84]">Taken</span>
+        </div>
       </div>
-    }
+
+      @if (loading()) {
+        <div class="py-8 text-center text-[14px] text-[#8A99B3]">Loading seats…</div>
+      } @else if (error()) {
+        <div class="rounded-[10px] bg-red-50 px-4 py-3 text-[14px] text-red-700">{{ error() }}</div>
+      } @else {
+        <div class="flex flex-wrap gap-2">
+          @for (seat of seats(); track seat.id) {
+            <button
+              type="button"
+              [disabled]="!seat.available"
+              (click)="select(seat)"
+              class="flex h-[56px] w-[56px] flex-col items-center justify-center rounded-[8px] text-[12px] font-bold transition-all"
+              [class]="getSeatClasses(seat)"
+            >
+              <span>{{ seat.seatNumber }}</span>
+              <span class="text-[10px] font-medium opacity-70">{{ seat.class === 'business' ? 'BIZ' : 'ECO' }}</span>
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sticky top-[88px] rounded-[16px] bg-white p-6" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
+      <p class="text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A99B3]">Choose a seat to continue</p>
+      <p class="mt-3 text-[15px] text-[#5C6B84]">Click any available seat in the cabin map to select it.</p>
+      <div class="mt-6 rounded-[12px] bg-[#F4F6FB] p-4">
+        <p class="text-[13px] text-[#8A99B3]">Economy seats are shown in blue. Business class seats are shown in green.</p>
+      </div>
+    </div>
+
   </div>
 </div>

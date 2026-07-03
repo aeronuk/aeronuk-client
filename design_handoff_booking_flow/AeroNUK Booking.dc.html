@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; }
+  ::selection{ background:#3B9EFF; color:#fff; }
+</style>
+</helmet>
+
+<div style="min-height:100vh; background:#F4F6FB; font-family:'Hanken Grotesk',system-ui,sans-serif; color:#0B1E3D; -webkit-font-smoothing:antialiased;">
+
+  <!-- ============ HEADER ============ -->
+  <header style="position:sticky; top:0; z-index:50; background:rgba(255,255,255,0.85); backdrop-filter:saturate(1.4) blur(12px); border-bottom:1px solid #E4E9F2;">
+    <div style="max-width:1180px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; gap:32px;">
+      <a href="#" onClick="{{ goHome }}" style="display:flex; align-items:center; gap:11px; text-decoration:none; color:inherit;">
+        <svg viewBox="0 0 680 680" width="38" height="38" style="display:block;" aria-hidden="true">
+          <circle cx="340" cy="340" r="320" fill="#0B1E3D"></circle>
+          <circle cx="340" cy="340" r="304" fill="none" stroke="#1A3561" stroke-width="2"></circle>
+          <path d="M 340 150 L 480 520 L 434 520 L 340 270 L 246 520 L 200 520 Z" fill="#FFFFFF"></path>
+          <path d="M 268 430 L 412 430 L 400 398 L 280 398 Z" fill="#0B1E3D"></path>
+          <path d="M 412 468 L 560 388 Q 604 368 616 366 Q 632 362 628 374 Q 624 384 606 394 L 484 462 Z" fill="#3B9EFF"></path>
+          <path d="M 268 468 L 120 388 Q 76 368 64 366 Q 48 362 52 374 Q 56 384 74 394 L 196 462 Z" fill="#3B9EFF"></path>
+        </svg>
+        <span style="font-size:20px; font-weight:800; letter-spacing:-0.02em;">Aero<span style="color:#2180E0;">NUK</span></span>
+      </a>
+      <nav style="display:flex; gap:6px; margin-left:8px;">
+        <a href="#" onClick="{{ goHome }}" style="text-decoration:none; color:#0B1E3D; font-weight:600; font-size:15px; padding:8px 14px; border-radius:9px;">Book</a>
+        <a href="#" onClick="{{ goManage }}" style="{{ myTripsStyle }}">My trips</a>
+        <!-- @handoff: "Check-in" nav item hidden — redundant with My trips (same find-by-reference flow covers it). Restore as a distinct entry if check-in gets its own dedicated flow. -->
+        <!-- @handoff: "Help" nav item hidden for now, same as Return/Multi-city and My trips list. Restore when a help/support destination exists. -->
+
+      </nav>
+      <!-- @handoff: Currency selector and user avatar hidden for now — no auth and no multi-currency support in the current API. Restore both once user accounts and multi-currency pricing ship. -->
+
+    </div>
+  </header>
+
+  <!-- ============ STEPPER ============ -->
+  <sc-if value="{{ showStepper }}" hint-placeholder-val="{{ true }}">
+    <div style="background:#fff; border-bottom:1px solid #E4E9F2;">
+      <div style="max-width:1180px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="{{ s.dotStyle }}">{{ s.mark }}</div>
+            <span style="{{ s.labelStyle }}">{{ s.label }}</span>
+            <sc-if value="{{ s.showBar }}" hint-placeholder-val="{{ true }}">
+              <div style="width:34px; height:2px; background:#E4E9F2; border-radius:2px;"></div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ SEARCH / HOME ============ -->
+  <sc-if value="{{ isSearch }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <section style="position:relative; background:linear-gradient(165deg,#0B1E3D 0%,#12305C 60%,#1A3F73 100%); overflow:hidden;">
+        <div style="position:absolute; inset:0; background-image:radial-gradient(circle at 82% 18%, rgba(59,158,255,0.28), transparent 42%); pointer-events:none;"></div>
+        <div style="position:absolute; right:-40px; top:24px; opacity:0.10;">
+          <svg viewBox="0 0 680 680" width="420" height="420" aria-hidden="true">
+            <path d="M 340 150 L 480 520 L 434 520 L 340 270 L 246 520 L 200 520 Z" fill="#FFFFFF"></path>
+            <path d="M 412 468 L 560 388 Q 604 368 616 366 Q 632 362 628 374 Q 624 384 606 394 L 484 462 Z" fill="#3B9EFF"></path>
+            <path d="M 268 468 L 120 388 Q 76 368 64 366 Q 48 362 52 374 Q 56 384 74 394 L 196 462 Z" fill="#3B9EFF"></path>
+          </svg>
+        </div>
+        <div style="max-width:1180px; margin:0 auto; padding:64px 24px 120px; position:relative;">
+          <p style="margin:0 0 14px; color:#9FC6F5; font-weight:600; font-size:15px; letter-spacing:0.14em; text-transform:uppercase;">Fly better with AeroNUK</p>
+          <h1 style="margin:0; font-size:52px; line-height:1.04; font-weight:800; letter-spacing:-0.03em; color:#fff; max-width:640px;">Where would you like to go today?</h1>
+          <p style="margin:18px 0 0; color:#B8C7DE; font-size:18px; max-width:520px; line-height:1.5;">Search hundreds of routes, compare fares and book in seconds — no hidden fees, ever.</p>
+        </div>
+      </section>
+
+      <!-- Search card -->
+      <div style="max-width:1180px; margin:-72px auto 0; padding:0 24px; position:relative; z-index:10;">
+        <div style="background:#fff; border-radius:22px; box-shadow:0 1px 2px rgba(11,30,61,0.05), 0 24px 60px rgba(11,30,61,0.16); padding:26px;">
+          <div style="display:flex; gap:8px; margin-bottom:22px;">
+            <button style="border:none; cursor:pointer; background:#0B1E3D; color:#fff; font-family:inherit; font-weight:600; font-size:14px; padding:9px 18px; border-radius:999px;">One way</button>
+          </div>
+          <div style="display:grid; grid-template-columns:1.4fr 1.4fr 1fr; gap:12px; align-items:end;">
+            <div style="position:relative;">
+              <label style="display:block; font-size:12px; font-weight:600; color:#8A99B3; margin-bottom:7px; text-transform:uppercase; letter-spacing:0.06em;">From</label>
+              <div style="border:1px solid #E4E9F2; border-radius:12px; padding:11px 14px; background:#fff;">
+                <div style="font-size:17px; font-weight:700;">London</div>
+                <div style="font-size:13px; color:#8A99B3;">LHR · Heathrow</div>
+              </div>
+              <button style="position:absolute; right:-18px; bottom:14px; z-index:5; width:36px; height:36px; border-radius:50%; border:1px solid #E4E9F2; background:#fff; box-shadow:0 4px 10px rgba(11,30,61,0.10); cursor:pointer; color:#2180E0; font-size:16px; display:flex; align-items:center; justify-content:center;">⇄</button>
+            </div>
+            <div>
+              <label style="display:block; font-size:12px; font-weight:600; color:#8A99B3; margin-bottom:7px; text-transform:uppercase; letter-spacing:0.06em;">To</label>
+              <div style="border:1px solid #E4E9F2; border-radius:12px; padding:11px 14px; background:#fff;">
+                <div style="font-size:17px; font-weight:700;">New York</div>
+                <div style="font-size:13px; color:#8A99B3;">JFK · John F. Kennedy</div>
+              </div>
+            </div>
+            <div>
+              <label style="display:block; font-size:12px; font-weight:600; color:#8A99B3; margin-bottom:7px; text-transform:uppercase; letter-spacing:0.06em;">Depart</label>
+              <div style="border:1px solid #E4E9F2; border-radius:12px; padding:11px 14px; background:#fff;">
+                <div style="font-size:17px; font-weight:700;">14 Jul</div>
+                <div style="font-size:13px; color:#8A99B3;">Monday</div>
+              </div>
+            </div>
+            <!-- @handoff: Return date field hidden — one-way only for now. Restore alongside the trip-type toggle when round-trip search ships. -->
+            <!-- @handoff: Passengers field hidden — booking API currently only supports a single passenger per flight. Restore this field (and passenger-count logic through fare/payment) when multi-passenger booking ships. -->
+          </div>
+          <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+            <button onClick="{{ toResults }}" style="border:none; cursor:pointer; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:15px 40px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.32); display:flex; align-items:center; gap:9px;">Search flights →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Popular destinations -->
+      <section style="max-width:1180px; margin:56px auto 0; padding:0 24px 72px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:22px;">
+          <h2 style="margin:0; font-size:26px; font-weight:800; letter-spacing:-0.02em;">Popular right now</h2>
+          <a href="#" style="color:#2180E0; font-weight:600; font-size:15px; text-decoration:none;">View all destinations →</a>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:18px;">
+          <sc-for list="{{ destinations }}" as="d" hint-placeholder-count="4">
+            <div style="background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.07); cursor:pointer;">
+              <div style="height:150px; background-image:repeating-linear-gradient(135deg,#DCE5F1 0 12px,#E7EEF7 12px 24px); display:flex; align-items:flex-end; justify-content:flex-start; padding:12px;">
+                <span style="background:rgba(11,30,61,0.72); color:#fff; font-size:11px; font-family:ui-monospace,monospace; padding:4px 8px; border-radius:6px;">{{ d.imgLabel }}</span>
+              </div>
+              <div style="padding:16px;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <div style="font-size:18px; font-weight:700;">{{ d.city }}</div>
+                  <div style="font-size:12px; font-weight:600; color:#8A99B3; font-family:ui-monospace,monospace;">{{ d.code }}</div>
+                </div>
+                <div style="margin-top:8px; color:#5C6B84; font-size:14px;">Return from <span style="color:#0B1E3D; font-weight:700;">{{ d.price }}</span></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </div>
+  </sc-if>
+
+  <!-- ============ MY TRIPS (SEARCH) ============ -->
+  <sc-if value="{{ isManage }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:560px; margin:0 auto; padding:64px 24px 96px;">
+      <div style="text-align:center; margin-bottom:32px;">
+        <h1 style="margin:0 0 10px; font-size:32px; font-weight:800; letter-spacing:-0.03em;">Find your booking</h1>
+        <p style="margin:0; color:#5C6B84; font-size:16px;">Enter your booking reference and last name to manage your trip.</p>
+      </div>
+      <div style="background:#fff; border-radius:20px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 14px 34px rgba(11,30,61,0.08); padding:28px;">
+        <div style="margin-bottom:16px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Booking reference</label>
+          <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; font-family:ui-monospace,monospace; letter-spacing:0.04em; color:#B4BECE;">ANK-7X2QL9</div>
+        </div>
+        <div style="margin-bottom:24px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Last name</label>
+          <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE;">Doe</div>
+        </div>
+        <sc-if value="{{ manageError }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#FCEBEA; color:#B3261E; font-size:13px; font-weight:600; padding:11px 14px; border-radius:10px; margin-bottom:16px;">We couldn't find a booking with that reference and last name. Please check and try again.</div>
+        </sc-if>
+        <button onClick="{{ findBooking }}" style="width:100%; border:none; cursor:pointer; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:15px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);">Find booking →</button>
+      </div>
+      <p style="margin:20px 0 0; text-align:center; font-size:13px; color:#8A99B3;">Your reference is on your confirmation email, e.g. ANK-7X2QL9.</p>
+      <p style="margin:8px 0 0; text-align:center; font-size:13px;"><a href="#" onClick="{{ simulateNotFound }}" style="color:#8A99B3; text-decoration:underline;">Preview: booking not found</a></p>
+    </div>
+  </sc-if>
+
+  <!-- ============ MY TRIPS (RESULT) ============ -->
+  <sc-if value="{{ isManageResult }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:720px; margin:0 auto; padding:56px 24px 80px;">
+      <a href="#" onClick="{{ goManage }}" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none; display:inline-block; margin-bottom:20px;">← Search another booking</a>
+      <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:6px; flex-wrap:wrap; gap:10px;">
+        <h1 style="margin:0; font-size:28px; font-weight:800; letter-spacing:-0.03em;">Booking found</h1>
+        <div style="background:#EAF3FD; color:#2180E0; font-weight:700; font-size:14px; padding:8px 16px; border-radius:999px; font-family:ui-monospace,monospace;">ANK-7X2QL9</div>
+      </div>
+      <p style="margin:0 0 22px; color:#5C6B84; font-size:15px;">Passenger: Jordan Doe</p>
+
+      <div style="background:#fff; border-radius:20px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 14px 34px rgba(11,30,61,0.08); padding:28px; text-align:left;">
+        <div style="display:flex; align-items:center; gap:12px; padding-bottom:20px; border-bottom:1px solid #EEF2F8;">
+          <svg viewBox="0 0 680 680" width="40" height="40" aria-hidden="true"><circle cx="340" cy="340" r="320" fill="#0B1E3D"></circle><path d="M 340 150 L 480 520 L 434 520 L 340 270 L 246 520 L 200 520 Z" fill="#fff"></path><path d="M 268 430 L 412 430 L 400 398 L 280 398 Z" fill="#0B1E3D"></path></svg>
+          <div><div style="font-weight:800; font-size:17px;">AeroNUK {{ flight.flightNo }}</div><div style="color:#8A99B3; font-size:13px;">Mon 14 Jul · Boeing 787-9</div></div>
+          <div style="margin-left:auto; text-align:right;"><div style="font-size:12px; color:#8A99B3;">Seat</div><div style="font-weight:800; font-size:17px;">{{ seatLabel }}</div></div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 0;">
+          <div><div style="font-size:30px; font-weight:800; letter-spacing:-0.02em;">{{ flight.dep }}</div><div style="color:#5C6B84; font-weight:600; font-size:14px;">London</div><div style="color:#8A99B3; font-size:12px;">LHR · T5</div></div>
+          <div style="flex:1; text-align:center; padding:0 20px;"><div style="font-size:12px; color:#8A99B3; margin-bottom:5px;">{{ flight.dur }}</div><div style="display:flex; align-items:center; gap:6px;"><div style="height:2px; flex:1; background:#E4E9F2;"></div><span style="color:#2180E0;">✈</span><div style="height:2px; flex:1; background:#E4E9F2;"></div></div><div style="font-size:12px; color:#8A99B3; margin-top:5px;">Direct</div></div>
+          <div style="text-align:right;"><div style="font-size:30px; font-weight:800; letter-spacing:-0.02em;">{{ flight.arr }}</div><div style="color:#5C6B84; font-weight:600; font-size:14px;">New York</div><div style="color:#8A99B3; font-size:12px;">JFK · T7</div></div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:22px;">
+        <button style="flex:1; border:1px solid #E4E9F2; background:#fff; cursor:pointer; font-family:inherit; font-weight:700; font-size:15px; color:#B3261E; padding:15px; border-radius:12px;">Cancel booking</button>
+        <button style="flex:1; border:none; cursor:pointer; background:#0B1E3D; color:#fff; font-family:inherit; font-weight:700; font-size:15px; padding:15px; border-radius:12px;">Change booking</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ RESULTS ============ -->
+  <sc-if value="{{ isResults }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:1180px; margin:0 auto; padding:26px 24px 72px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; flex-wrap:wrap; gap:12px;">
+        <h1 style="margin:0; font-size:26px; font-weight:800; letter-spacing:-0.02em;">London → New York</h1>
+        <button onClick="{{ goHome }}" style="border:1px solid #E4E9F2; background:#fff; cursor:pointer; font-family:inherit; font-weight:600; font-size:14px; color:#2180E0; padding:9px 16px; border-radius:10px;">Edit search</button>
+      </div>
+      <p style="margin:0 0 22px; color:#5C6B84; font-size:15px;">Mon 14 Jul · Economy · <span style="color:#0B1E3D; font-weight:600;">{{ flights.length }} direct flights found</span></p>
+
+      <div style="display:grid; grid-template-columns:260px 1fr; gap:24px; align-items:start;">
+        <!-- Filters -->
+        <aside style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:22px; position:sticky; top:88px;">
+          <div style="font-size:16px; font-weight:800; margin-bottom:18px;">Filters</div>
+          <!-- @handoff: Stops filter hidden — booking API currently only returns direct flights. Restore when connecting/multi-stop itineraries are supported. -->
+
+          <div style="margin-bottom:22px;">
+            <div style="font-size:13px; font-weight:700; color:#8A99B3; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">Price range</div>
+            <div style="height:5px; background:#EEF2F8; border-radius:999px; position:relative;">
+              <div style="position:absolute; left:8%; right:14%; top:0; bottom:0; background:#2180E0; border-radius:999px;"></div>
+              <div style="position:absolute; left:86%; top:50%; transform:translate(-50%,-50%); width:16px; height:16px; border-radius:50%; background:#fff; border:2px solid #2180E0; box-shadow:0 2px 5px rgba(11,30,61,0.15);"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:13px; color:#5C6B84;"><span>£300</span><span>£500</span></div>
+          </div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#8A99B3; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">Departure time</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <div style="border:1px solid #2180E0; background:#EAF3FD; border-radius:10px; padding:10px; text-align:center; font-size:13px; font-weight:600;">Morning<div style="font-size:11px; color:#8A99B3; font-weight:500;">6a–12p</div></div>
+              <div style="border:1px solid #E4E9F2; border-radius:10px; padding:10px; text-align:center; font-size:13px; font-weight:600;">Afternoon<div style="font-size:11px; color:#8A99B3; font-weight:500;">12–6p</div></div>
+              <div style="border:1px solid #E4E9F2; border-radius:10px; padding:10px; text-align:center; font-size:13px; font-weight:600;">Evening<div style="font-size:11px; color:#8A99B3; font-weight:500;">6–12a</div></div>
+              <div style="border:1px solid #E4E9F2; border-radius:10px; padding:10px; text-align:center; font-size:13px; font-weight:600;">Night<div style="font-size:11px; color:#8A99B3; font-weight:500;">12–6a</div></div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Sort + list -->
+        <div>
+          <!-- @handoff: Sort bar (Best/Cheapest/Fastest) hidden — sorting not yet supported by the booking API; flights are shown in the order returned. Restore when sort options ship. -->
+
+
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <sc-for list="{{ flights }}" as="f" hint-placeholder-count="5">
+              <div style="background:#fff; border-radius:16px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 10px 24px rgba(11,30,61,0.06); padding:20px 22px; display:flex; align-items:center; gap:24px;">
+                <div style="display:flex; align-items:center; gap:12px; min-width:120px;">
+                  <svg viewBox="0 0 680 680" width="34" height="34" aria-hidden="true"><circle cx="340" cy="340" r="320" fill="#0B1E3D"></circle><path d="M 340 150 L 480 520 L 434 520 L 340 270 L 246 520 L 200 520 Z" fill="#fff"></path><path d="M 268 430 L 412 430 L 400 398 L 280 398 Z" fill="#0B1E3D"></path></svg>
+                  <div style="font-size:13px; font-weight:600; color:#5C6B84;">AeroNUK<div style="font-size:12px; color:#8A99B3; font-weight:400;">{{ f.flightNo }}</div></div>
+                </div>
+                <div style="display:flex; align-items:center; gap:18px; flex:1;">
+                  <div style="text-align:right;"><div style="font-size:22px; font-weight:800; letter-spacing:-0.02em;">{{ f.dep }}</div><div style="font-size:13px; color:#8A99B3; font-weight:600;">LHR</div></div>
+                  <div style="flex:1; text-align:center;">
+                    <div style="font-size:12px; color:#8A99B3; margin-bottom:5px;">{{ f.dur }}</div>
+                    <div style="display:flex; align-items:center; gap:6px;"><div style="height:2px; flex:1; background:#E4E9F2;"></div><span style="color:#2180E0;">✈</span><div style="height:2px; flex:1; background:#E4E9F2;"></div></div>
+                    <div style="{{ f.stopStyle }}">{{ f.stops }}</div>
+                  </div>
+                  <div style="text-align:left;"><div style="font-size:22px; font-weight:800; letter-spacing:-0.02em;">{{ f.arr }}</div><div style="font-size:13px; color:#8A99B3; font-weight:600;">JFK</div></div>
+                </div>
+                <div style="text-align:right; min-width:130px;">
+                  <sc-if value="{{ f.tag }}" hint-placeholder-val="best"><span style="{{ f.tagStyle }}">{{ f.tag }}</span></sc-if>
+                  <div style="font-size:26px; font-weight:800; letter-spacing:-0.02em; margin-top:4px;">{{ f.price }}</div>
+                  <button onClick="{{ f.select }}" style="border:none; cursor:pointer; margin-top:8px; background:#0B1E3D; color:#fff; font-family:inherit; font-weight:700; font-size:14px; padding:10px 22px; border-radius:10px;">Select</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ DETAILS ============ -->
+  <sc-if value="{{ isDetails }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:1180px; margin:0 auto; padding:26px 24px 72px;">
+      <a href="#" onClick="{{ toResults }}" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none; display:inline-block; margin-bottom:16px;">← Back to results</a>
+      <div style="display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:start;">
+        <div style="display:flex; flex-direction:column; gap:20px;">
+          <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:26px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:22px;">
+              <div style="font-size:19px; font-weight:800;">Outbound · Mon 14 Jul</div>
+              <div style="font-size:13px; font-weight:600; color:#5C6B84; background:#EEF2F8; padding:5px 12px; border-radius:999px;">Direct · {{ flight.dur }}</div>
+            </div>
+            <div style="display:flex; gap:18px;">
+              <div style="display:flex; flex-direction:column; align-items:center; padding-top:5px;">
+                <div style="width:12px; height:12px; border-radius:50%; border:2px solid #2180E0;"></div>
+                <div style="width:2px; flex:1; background:#D5DEEA; min-height:70px;"></div>
+                <div style="width:12px; height:12px; border-radius:50%; background:#2180E0;"></div>
+              </div>
+              <div style="flex:1;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><div><span style="font-size:22px; font-weight:800;">{{ flight.dep }}</span> <span style="color:#5C6B84; font-weight:600;">London Heathrow (LHR)</span></div><div style="color:#8A99B3; font-size:14px;">Terminal 5</div></div>
+                <div style="color:#8A99B3; font-size:13px; margin:14px 0 18px; display:flex; align-items:center; gap:8px;"><span style="color:#2180E0;">✈</span> AeroNUK {{ flight.flightNo }} · Boeing 787-9 · Economy</div>
+                <div style="display:flex; justify-content:space-between;"><div><span style="font-size:22px; font-weight:800;">{{ flight.arr }}</span> <span style="color:#5C6B84; font-weight:600;">New York (JFK)</span></div><div style="color:#8A99B3; font-size:14px;">Terminal 7</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:26px;">
+            <div style="font-size:19px; font-weight:800; margin-bottom:6px;">Choose your fare</div>
+            <p style="margin:0 0 20px; color:#8A99B3; font-size:14px;">All fares include taxes and one personal item.</p>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px;">
+              <sc-for list="{{ fares }}" as="fa" hint-placeholder-count="3">
+                <div style="{{ fa.cardStyle }}">
+                  <sc-if value="{{ fa.tag }}" hint-placeholder-val="Popular"><span style="position:absolute; top:-11px; left:16px; background:#F2A03D; color:#3B2500; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px;">{{ fa.tag }}</span></sc-if>
+                  <div style="font-size:15px; font-weight:700; color:#5C6B84;">{{ fa.name }}</div>
+                  <div style="font-size:28px; font-weight:800; letter-spacing:-0.02em; margin:6px 0 14px;">{{ fa.price }}</div>
+                  <div style="display:flex; flex-direction:column; gap:9px; margin-bottom:18px;">
+                    <sc-for list="{{ fa.feats }}" as="ft" hint-placeholder-count="3">
+                      <div style="display:flex; gap:8px; font-size:13px; color:#3A4A66;"><span style="color:#1F9D6B;">✓</span> {{ ft }}</div>
+                    </sc-for>
+                  </div>
+                  <button onClick="{{ fa.select }}" style="{{ fa.btnStyle }}">{{ fa.btnLabel }}</button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary sidebar -->
+        <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; position:sticky; top:88px;">
+          <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Trip summary</div>
+          <div style="display:flex; align-items:center; gap:10px; padding-bottom:16px; border-bottom:1px solid #EEF2F8;">
+            <div style="font-size:15px; font-weight:700;">LHR</div><span style="color:#2180E0;">→</span><div style="font-size:15px; font-weight:700;">JFK</div>
+            <!-- @handoff: "Return" trip-type chip hidden — one-way only for now. Restore when round-trip search ships. -->
+          </div>
+          <div style="display:flex; flex-direction:column; gap:11px; padding:16px 0; border-bottom:1px solid #EEF2F8; font-size:14px;">
+            <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Fare (1 adult)</span><span style="font-weight:600;">{{ flight.price }}</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Taxes & fees</span><span style="font-weight:600;">£62</span></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; padding-top:16px;">
+            <span style="font-weight:700;">Total</span><span style="font-size:26px; font-weight:800; letter-spacing:-0.02em;">{{ flight.total }}</span>
+          </div>
+          <button onClick="{{ toPassenger }}" style="width:100%; border:none; cursor:pointer; margin-top:18px; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:15px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);">Continue →</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ PASSENGER ============ -->
+  <sc-if value="{{ isPassenger }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:1180px; margin:0 auto; padding:26px 24px 72px;">
+      <a href="#" onClick="{{ toDetails }}" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none; display:inline-block; margin-bottom:16px;">← Back to flight</a>
+      <div style="display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:start;">
+        <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:28px;">
+          <div style="font-size:20px; font-weight:800; margin-bottom:4px;">Passenger details</div>
+          <p style="margin:0 0 24px; color:#8A99B3; font-size:14px;">Enter names exactly as they appear on your passport.</p>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; padding:12px 16px; background:#F4F6FB; border-radius:12px;">
+            <div style="width:30px; height:30px; border-radius:50%; background:#2180E0; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px;">1</div>
+            <div style="font-weight:700; font-size:15px;">Adult 1</div>
+            <div style="margin-left:auto; font-size:13px; color:#8A99B3;">Lead passenger</div>
+          </div>
+          <div style="display:grid; grid-template-columns:120px 1fr 1fr; gap:14px; margin-bottom:16px;">
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Title</label>
+              <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#8A99B3; display:flex; justify-content:space-between;">Mr <span>▾</span></div>
+            </div>
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">First & middle names</label>
+              <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE;">Jordan</div>
+            </div>
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Last name</label>
+              <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE;">Doe</div>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Date of birth</label>
+              <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE;">DD / MM / YYYY</div>
+            </div>
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Nationality</label>
+              <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#8A99B3; display:flex; justify-content:space-between;">United Kingdom <span>▾</span></div>
+            </div>
+          </div>
+          <div style="height:1px; background:#EEF2F8; margin:24px 0;"></div>
+          <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Contact details</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Email address</label>
+              <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE;">you@email.com</div>
+            </div>
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Mobile number</label>
+              <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE;">+44 7700 900000</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; position:sticky; top:88px;">
+          <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Trip summary</div>
+          <div style="display:flex; align-items:center; gap:10px; padding-bottom:16px; border-bottom:1px solid #EEF2F8;">
+            <div style="font-size:15px; font-weight:700;">{{ flight.dep }} LHR</div><span style="color:#2180E0;">→</span><div style="font-size:15px; font-weight:700;">{{ flight.arr }} JFK</div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:11px; padding:16px 0; border-bottom:1px solid #EEF2F8; font-size:14px;">
+            <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Fare (1 adult)</span><span style="font-weight:600;">{{ flight.price }}</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Taxes & fees</span><span style="font-weight:600;">£62</span></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; padding-top:16px;">
+            <span style="font-weight:700;">Total</span><span style="font-size:26px; font-weight:800; letter-spacing:-0.02em;">{{ flight.total }}</span>
+          </div>
+          <button onClick="{{ toSeats }}" style="width:100%; border:none; cursor:pointer; margin-top:18px; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:15px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);">Continue to seats →</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ SEATS ============ -->
+  <sc-if value="{{ isSeats }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:1180px; margin:0 auto; padding:26px 24px 72px;">
+      <a href="#" onClick="{{ toPassenger }}" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none; display:inline-block; margin-bottom:16px;">← Back to passengers</a>
+      <div style="display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:start;">
+        <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:28px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+            <div style="font-size:20px; font-weight:800;">Select your seat</div>
+            <div style="font-size:13px; font-weight:600; color:#5C6B84;">Boeing 787-9</div>
+          </div>
+          <p style="margin:0 0 22px; color:#8A99B3; font-size:14px;">Outbound · London → New York</p>
+
+          <!-- Legend -->
+          <div style="display:flex; gap:20px; margin-bottom:22px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:#5C6B84;"><span style="width:20px; height:20px; border-radius:6px; background:#EAF3FD; border:1.5px solid #BBD8F5;"></span> Available</div>
+            <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:#5C6B84;"><span style="width:20px; height:20px; border-radius:6px; background:#DDF0E8; border:1.5px solid #9FD8BF;"></span> Extra legroom +£18</div>
+            <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:#5C6B84;"><span style="width:20px; height:20px; border-radius:6px; background:#E4E9F2;"></span> Taken</div>
+            <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:#5C6B84;"><span style="width:20px; height:20px; border-radius:6px; background:#2180E0;"></span> Your seat</div>
+          </div>
+
+          <!-- Cabin -->
+          <div style="max-width:420px; margin:0 auto; background:#F7F9FC; border:1px solid #E4E9F2; border-radius:24px 24px 14px 14px; padding:20px 18px;">
+            <div style="text-align:center; color:#B4BECE; font-size:12px; letter-spacing:0.1em; margin-bottom:16px;">◁ FRONT OF CABIN</div>
+            <div style="display:flex; justify-content:space-between; padding:0 30px 8px; color:#B4BECE; font-size:12px; font-weight:600;">
+              <span>A</span><span>B</span><span>C</span><span style="width:22px;"></span><span>D</span><span>E</span><span>F</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:7px;">
+              <sc-for list="{{ seatRows }}" as="r" hint-placeholder-count="12">
+                <div style="display:flex; align-items:center; gap:7px; justify-content:center;">
+                  <span style="width:16px; font-size:11px; color:#B4BECE; text-align:center;">{{ r.num }}</span>
+                  <sc-for list="{{ r.left }}" as="s" hint-placeholder-count="3">
+                    <button onClick="{{ s.onClick }}" style="{{ s.style }}">{{ s.label }}</button>
+                  </sc-for>
+                  <span style="width:14px;"></span>
+                  <sc-for list="{{ r.right }}" as="s" hint-placeholder-count="3">
+                    <button onClick="{{ s.onClick }}" style="{{ s.style }}">{{ s.label }}</button>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; position:sticky; top:88px;">
+          <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Your selection</div>
+          <div style="background:#F4F6FB; border-radius:12px; padding:16px; text-align:center; margin-bottom:16px;">
+            <div style="font-size:13px; color:#8A99B3; margin-bottom:4px;">Seat</div>
+            <div style="font-size:32px; font-weight:800; letter-spacing:-0.02em; color:#0B1E3D;">{{ seatLabel }}</div>
+            <div style="font-size:13px; color:#5C6B84; margin-top:4px;">{{ seatDesc }}</div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:11px; padding-bottom:16px; border-bottom:1px solid #EEF2F8; font-size:14px;">
+            <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Flight + fare</span><span style="font-weight:600;">{{ flight.price }}</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Seat</span><span style="font-weight:600;">{{ seatPrice }}</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Taxes & fees</span><span style="font-weight:600;">£62</span></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; padding-top:16px;">
+            <span style="font-weight:700;">Total</span><span style="font-size:26px; font-weight:800; letter-spacing:-0.02em;">{{ seatTotal }}</span>
+          </div>
+          <button onClick="{{ toPayment }}" style="width:100%; border:none; cursor:pointer; margin-top:18px; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:15px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);">Continue to payment →</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ PAYMENT ============ -->
+  <sc-if value="{{ isPayment }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:1180px; margin:0 auto; padding:26px 24px 72px;">
+      <a href="#" onClick="{{ toSeats }}" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none; display:inline-block; margin-bottom:16px;">← Back to seats</a>
+      <div style="display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:start;">
+        <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:28px;">
+          <div style="font-size:20px; font-weight:800; margin-bottom:4px;">Payment</div>
+          <p style="margin:0 0 24px; color:#8A99B3; font-size:14px; display:flex; align-items:center; gap:7px;"><span style="color:#1F9D6B;">🔒</span> Your payment is encrypted and secure.</p>
+          <div style="display:flex; gap:10px; margin-bottom:24px;">
+            <div style="flex:1; border:1.5px solid #2180E0; background:#EAF3FD; border-radius:12px; padding:14px; display:flex; align-items:center; gap:10px; font-weight:700; font-size:14px;"><span style="width:18px; height:18px; border-radius:50%; border:5px solid #2180E0;"></span> Card</div>
+            <div style="flex:1; border:1px solid #E4E9F2; border-radius:12px; padding:14px; display:flex; align-items:center; gap:10px; font-weight:600; font-size:14px; color:#5C6B84;"><span style="width:18px; height:18px; border-radius:50%; border:1.5px solid #CBD5E5;"></span> PayPal</div>
+            <div style="flex:1; border:1px solid #E4E9F2; border-radius:12px; padding:14px; display:flex; align-items:center; gap:10px; font-weight:600; font-size:14px; color:#5C6B84;"><span style="width:18px; height:18px; border-radius:50%; border:1.5px solid #CBD5E5;"></span> Apple Pay</div>
+          </div>
+          <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Cardholder name</label>
+            <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE;">Jordan Doe</div>
+          </div>
+          <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Card number</label>
+            <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE; display:flex; justify-content:space-between; align-items:center;">1234 5678 9012 3456 <span style="display:flex; gap:4px;"><span style="width:26px; height:16px; border-radius:3px; background:#2180E0;"></span><span style="width:26px; height:16px; border-radius:3px; background:#F2A03D;"></span></span></div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Expiry date</label>
+              <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE;">MM / YY</div>
+            </div>
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Security code</label>
+              <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE;">CVC</div>
+            </div>
+          </div>
+          <div style="height:1px; background:#EEF2F8; margin:24px 0;"></div>
+          <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Billing address</div>
+          <div style="margin-bottom:14px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Address line</label>
+            <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE;">221B Baker Street</div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">City</label>
+              <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE;">London</div>
+            </div>
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Postcode</label>
+              <div style="border:1px solid #E4E9F2; border-radius:11px; padding:13px 14px; font-size:15px; color:#B4BECE;">NW1 6XE</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; position:sticky; top:88px;">
+          <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Order summary</div>
+          <div style="display:flex; align-items:center; gap:10px; padding-bottom:14px; border-bottom:1px solid #EEF2F8;">
+            <div style="font-size:14px; font-weight:700;">London → New York</div>
+            <!-- @handoff: "Return" trip-type chip hidden — one-way only for now. Restore when round-trip search ships. -->
+          </div>
+          <div style="display:flex; flex-direction:column; gap:11px; padding:14px 0; border-bottom:1px solid #EEF2F8; font-size:14px;">
+            <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Fare (1 adult)</span><span style="font-weight:600;">{{ flight.price }}</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Seat {{ seatLabel }}</span><span style="font-weight:600;">{{ seatPrice }}</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Taxes & fees</span><span style="font-weight:600;">£62</span></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; padding-top:16px;">
+            <span style="font-weight:700;">Total</span><span style="font-size:28px; font-weight:800; letter-spacing:-0.02em;">{{ seatTotal }}</span>
+          </div>
+          <button onClick="{{ toConfirm }}" style="width:100%; border:none; cursor:pointer; margin-top:18px; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:16px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);">Pay {{ seatTotal }}</button>
+          <p style="margin:12px 0 0; text-align:center; font-size:12px; color:#8A99B3;">By paying you agree to our fare rules & terms.</p>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ CONFIRMATION ============ -->
+  <sc-if value="{{ isConfirm }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:720px; margin:0 auto; padding:56px 24px 80px; text-align:center;">
+      <div style="width:82px; height:82px; border-radius:50%; background:linear-gradient(150deg,#22B07D,#1F9D6B); display:flex; align-items:center; justify-content:center; margin:0 auto 24px; box-shadow:0 12px 30px rgba(31,157,107,0.32);">
+        <span style="color:#fff; font-size:40px;">✓</span>
+      </div>
+      <h1 style="margin:0 0 10px; font-size:36px; font-weight:800; letter-spacing:-0.03em;">You're all booked!</h1>
+      <p style="margin:0 0 8px; color:#5C6B84; font-size:17px;">A confirmation has been sent to your email. Bon voyage.</p>
+      <div style="display:inline-block; margin:18px 0 32px; background:#EAF3FD; color:#2180E0; font-weight:700; font-size:15px; padding:9px 20px; border-radius:999px; font-family:ui-monospace,monospace;">Booking ref · ANK-7X2QL9</div>
+
+      <div style="background:#fff; border-radius:20px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 14px 34px rgba(11,30,61,0.08); padding:28px; text-align:left;">
+        <div style="display:flex; align-items:center; gap:12px; padding-bottom:20px; border-bottom:1px solid #EEF2F8;">
+          <svg viewBox="0 0 680 680" width="40" height="40" aria-hidden="true"><circle cx="340" cy="340" r="320" fill="#0B1E3D"></circle><path d="M 340 150 L 480 520 L 434 520 L 340 270 L 246 520 L 200 520 Z" fill="#fff"></path><path d="M 268 430 L 412 430 L 400 398 L 280 398 Z" fill="#0B1E3D"></path></svg>
+          <div><div style="font-weight:800; font-size:17px;">AeroNUK {{ flight.flightNo }}</div><div style="color:#8A99B3; font-size:13px;">Mon 14 Jul · Boeing 787-9</div></div>
+          <div style="margin-left:auto; text-align:right;"><div style="font-size:12px; color:#8A99B3;">Seat</div><div style="font-weight:800; font-size:17px;">{{ seatLabel }}</div></div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 0;">
+          <div><div style="font-size:30px; font-weight:800; letter-spacing:-0.02em;">{{ flight.dep }}</div><div style="color:#5C6B84; font-weight:600; font-size:14px;">London</div><div style="color:#8A99B3; font-size:12px;">LHR · T5</div></div>
+          <div style="flex:1; text-align:center; padding:0 20px;"><div style="font-size:12px; color:#8A99B3; margin-bottom:5px;">{{ flight.dur }}</div><div style="display:flex; align-items:center; gap:6px;"><div style="height:2px; flex:1; background:#E4E9F2;"></div><span style="color:#2180E0;">✈</span><div style="height:2px; flex:1; background:#E4E9F2;"></div></div><div style="font-size:12px; color:#8A99B3; margin-top:5px;">Direct</div></div>
+          <div style="text-align:right;"><div style="font-size:30px; font-weight:800; letter-spacing:-0.02em;">{{ flight.arr }}</div><div style="color:#5C6B84; font-weight:600; font-size:14px;">New York</div><div style="color:#8A99B3; font-size:12px;">JFK · T7</div></div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:22px;">
+        <button style="flex:1; border:1px solid #E4E9F2; background:#fff; cursor:pointer; font-family:inherit; font-weight:700; font-size:15px; color:#0B1E3D; padding:15px; border-radius:12px;">Download ticket</button>
+        <button onClick="{{ goHome }}" style="flex:1; border:none; cursor:pointer; background:#0B1E3D; color:#fff; font-family:inherit; font-weight:700; font-size:15px; padding:15px; border-radius:12px;">Back to home</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ FOOTER ============ -->
+  <footer style="border-top:1px solid #E4E9F2; background:#fff;">
+    <div style="max-width:1180px; margin:0 auto; padding:26px 24px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <span style="font-size:15px; font-weight:800; letter-spacing:-0.02em;">Aero<span style="color:#2180E0;">NUK</span></span>
+      <span style="color:#8A99B3; font-size:13px;">Fictional airline · demo booking experience</span>
+      <div style="margin-left:auto; display:flex; gap:20px; color:#8A99B3; font-size:13px;"><span>Privacy</span><span>Fare rules</span><span>Contact</span></div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { screen: 'search', flightId: 1, fare: 'Economy Saver', seat: null, manageError: false };
+
+  flightData() {
+    return [
+      { id:1, flightNo:'AK 178', dep:'08:15', arr:'11:05', dur:'7h 50m', stops:'Direct', direct:true, price:'£389', total:'£451', tag:'Best' },
+      { id:2, flightNo:'AK 204', dep:'10:40', arr:'13:55', dur:'8h 15m', stops:'Direct', direct:true, price:'£412', total:'£474' },
+      // @handoff: original 1-stop flight (AK 622) removed from results — booking API currently only returns direct flights. Restore when connecting itineraries ship. Replaced with a direct flight at the same price to keep a "Cheapest" option.
+      { id:6, flightNo:'AK 205', dep:'12:05', arr:'14:55', dur:'7h 50m', stops:'Direct', direct:true, price:'£344', total:'£406', tag:'Cheapest' },
+      { id:4, flightNo:'AK 090', dep:'17:05', arr:'20:00', dur:'7h 55m', stops:'Direct', direct:true, price:'£455', total:'£517', tag:'Fastest' },
+      { id:5, flightNo:'AK 411', dep:'21:30', arr:'00:35', dur:'8h 05m', stops:'Direct', direct:true, price:'£398', total:'£460' },
+    ];
+  }
+
+  go(screen) { return () => this.setState({ screen }); }
+
+  goManage() { this.setState({ screen: 'manage', manageError: false }); }
+
+  findBooking() { this.setState({ screen: 'manageResult', manageError: false }); }
+
+  simulateNotFound() { this.setState({ manageError: true }); }
+
+  buildSeatRows() {
+    const cols = ['A','B','C','D','E','F'];
+    // deterministic occupancy
+    const taken = new Set(['9A','9B','11E','12C','13F','14A','15B','15C','16D','18E','19A','19F','21B','22C','8F','10D','17A','20E']);
+    const rows = [];
+    for (let n = 8; n <= 22; n++) {
+      const extra = (n === 8 || n === 9); // extra legroom rows
+      const cells = cols.map((c) => {
+        const id = n + c;
+        const occupied = taken.has(id);
+        const selected = this.state.seat === id;
+        let bg = '#EAF3FD', border = '1.5px solid #BBD8F5', color = '#2180E0';
+        if (extra) { bg = '#DDF0E8'; border = '1.5px solid #9FD8BF'; color = '#1F9D6B'; }
+        if (occupied) { bg = '#E4E9F2'; border = '1.5px solid #E4E9F2'; color = '#B4BECE'; }
+        if (selected) { bg = '#2180E0'; border = '1.5px solid #2180E0'; color = '#fff'; }
+        const style = {
+          width: '30px', height: '30px', borderRadius: '7px', background: bg,
+          border, color, fontFamily: 'inherit', fontSize: '11px', fontWeight: 700,
+          cursor: occupied ? 'not-allowed' : 'pointer', display: 'flex',
+          alignItems: 'center', justifyContent: 'center', padding: 0,
+        };
+        return {
+          id, label: c, style,
+          onClick: occupied ? undefined : () => this.setState({ seat: id }),
+        };
+      });
+      rows.push({ num: n, left: cells.slice(0,3), right: cells.slice(3) });
+    }
+    return rows;
+  }
+
+  seatMeta() {
+    const s = this.state.seat;
+    if (!s) return { label: '—', desc: 'Tap a seat to choose', price: '£0', isExtra: false };
+    const row = parseInt(s, 10);
+    const col = s.replace(/[0-9]/g, '');
+    const isExtra = row === 8 || row === 9;
+    const isWindow = col === 'A' || col === 'F';
+    const isAisle = col === 'C' || col === 'D';
+    const kind = isWindow ? 'Window' : isAisle ? 'Aisle' : 'Middle';
+    return {
+      label: s,
+      desc: (isExtra ? 'Extra legroom · ' : '') + kind + ' seat',
+      price: isExtra ? '£18' : '£8',
+      isExtra,
+    };
+  }
+
+  renderVals() {
+    const screen = this.state.screen;
+    const flights = this.flightData();
+    const flight = flights.find(f => f.id === this.state.flightId) || flights[0];
+
+    const flightsView = flights.map(f => ({
+      ...f,
+      select: () => this.setState({ flightId: f.id, screen: 'details' }),
+      stopStyle: {
+        fontSize: '12px', fontWeight: 600, marginTop: '5px',
+        color: f.direct ? '#1F9D6B' : '#8A99B3',
+      },
+      tagStyle: {
+        display: 'inline-block', fontSize: '11px', fontWeight: 700, padding: '3px 9px',
+        borderRadius: '999px',
+        background: f.tag === 'Cheapest' ? '#DDF0E8' : f.tag === 'Fastest' ? '#FCE9CF' : '#EAF3FD',
+        color: f.tag === 'Cheapest' ? '#1F9D6B' : f.tag === 'Fastest' ? '#B5711A' : '#2180E0',
+      },
+    }));
+
+    const fareDefs = [
+      { name:'Economy Saver', price:'£389', feats:['1 cabin bag (7kg)','Seat from £8','Snack included'] },
+      { name:'Economy Flex', price:'£469', tag:'Most popular', feats:['1 cabin + 23kg checked','Free date changes','Priority boarding'] },
+      { name:'Business', price:'£1,240', feats:['Lie-flat seat','Lounge access','2 × 32kg checked'] },
+    ];
+    const fares = fareDefs.map(fa => {
+      const active = this.state.fare === fa.name;
+      return {
+        ...fa,
+        cardStyle: {
+          position:'relative', border: active ? '2px solid #2180E0' : '1.5px solid #E4E9F2',
+          background: active ? '#F5FAFF' : '#fff', borderRadius:'14px', padding:'22px 18px 18px',
+        },
+        btnLabel: active ? 'Selected' : 'Select',
+        btnStyle: {
+          width:'100%', border:'none', cursor:'pointer', fontFamily:'inherit', fontWeight:700,
+          fontSize:'14px', padding:'11px', borderRadius:'10px',
+          background: active ? '#2180E0' : '#EEF2F8',
+          color: active ? '#fff' : '#0B1E3D',
+        },
+        select: () => this.setState({ fare: fa.name }),
+      };
+    });
+
+    const seatMeta = this.seatMeta();
+    const taxes = 62;
+    const seatCost = this.state.seat ? (seatMeta.isExtra ? 18 : 8) : 0;
+    const baseFare = parseInt(flight.price.replace(/[^0-9]/g,''), 10);
+    const seatTotal = '£' + (baseFare + taxes + seatCost).toLocaleString('en-GB');
+
+    // stepper
+    const map = { search:-1, results:2, details:2, passenger:3, seats:4, payment:5, confirmation:5 };
+    const active = map[screen];
+    const labels = ['Search','Select','Passengers','Seats','Payment'];
+    const steps = labels.map((label, i) => {
+      const idx = i + 1;
+      const done = active > idx || screen === 'confirmation';
+      const isActive = active === idx && screen !== 'confirmation';
+      let bg = '#EEF2F8', color = '#8A99B3', border = 'none';
+      if (done) { bg = '#1F9D6B'; color = '#fff'; }
+      if (isActive) { bg = '#2180E0'; color = '#fff'; }
+      return {
+        label, mark: done ? '✓' : String(idx), showBar: i < labels.length - 1,
+        dotStyle: {
+          width:'26px', height:'26px', borderRadius:'50%', background:bg, color, border,
+          display:'flex', alignItems:'center', justifyContent:'center', fontSize:'13px', fontWeight:700, flex:'0 0 auto',
+        },
+        labelStyle: {
+          fontSize:'14px', fontWeight: (isActive||done) ? 700 : 500,
+          color: isActive ? '#0B1E3D' : done ? '#1F9D6B' : '#8A99B3',
+        },
+      };
+    });
+
+    const destinations = [
+      { city:'Barcelona', code:'BCN', price:'£78', imgLabel:'city / beach photo' },
+      { city:'Reykjavík', code:'KEF', price:'£120', imgLabel:'landscape photo' },
+      { city:'Dubai', code:'DXB', price:'£340', imgLabel:'skyline photo' },
+      { city:'Tokyo', code:'HND', price:'£520', imgLabel:'street photo' },
+    ];
+
+    const isManageScreen = screen === 'manage' || screen === 'manageResult';
+
+    return {
+      isSearch: screen==='search', isResults: screen==='results', isDetails: screen==='details',
+      isPassenger: screen==='passenger', isSeats: screen==='seats', isPayment: screen==='payment',
+      isConfirm: screen==='confirmation',
+      isManage: screen==='manage', isManageResult: screen==='manageResult',
+      showStepper: screen !== 'search' && !isManageScreen,
+      steps, flights: flightsView, flight, fares, destinations,
+      seatRows: this.buildSeatRows(),
+      seatLabel: seatMeta.label, seatDesc: seatMeta.desc, seatPrice: seatMeta.price, seatTotal,
+      manageError: this.state.manageError,
+      myTripsStyle: {
+        textDecoration: 'none', fontWeight: isManageScreen ? 600 : 500, fontSize: '15px',
+        padding: '8px 14px', borderRadius: '9px',
+        color: isManageScreen ? '#0B1E3D' : '#5C6B84',
+      },
+      goHome: this.go('search'), toResults: this.go('results'), toDetails: this.go('details'),
+      toPassenger: this.go('passenger'), toSeats: this.go('seats'), toPayment: this.go('payment'),
+      toConfirm: this.go('confirmation'),
+      goManage: () => this.goManage(), findBooking: () => this.findBooking(),
+      simulateNotFound: () => this.simulateNotFound(),
+    };
+  }
+}
+</script>
+</body>
+</html>

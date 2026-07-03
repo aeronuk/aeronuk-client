@@ -1,70 +1,137 @@
-<div hlmCard>
-  <div hlmCardHeader>
-    <h2 hlmCardTitle class="text-xl font-semibold">Payment</h2>
-    <p hlmCardDescription>Choose a payment method and enter your details</p>
-  </div>
-  <div hlmCardContent class="pt-2 space-y-4">
+<div class="mx-auto max-w-[1180px] px-6 py-8">
+  <div class="grid grid-cols-[1fr_360px] gap-6 items-start">
 
-    <div class="flex flex-col gap-1.5">
-      <label hlmLabel>Payment Method</label>
-      <select [formControl]="methodControl" class="flex h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50">
-        @for (method of methods; track method) {
-          <option [value]="method">{{ method }}</option>
+    <!-- Main: payment form -->
+    <div class="rounded-[16px] bg-white p-6" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
+      <h2 class="mb-6 text-[20px] font-extrabold text-[#0B1E3D]">Payment</h2>
+
+      <!-- Method selector -->
+      <div class="mb-6">
+        <p class="mb-3 text-[13px] font-bold uppercase tracking-[0.06em] text-[#8A99B3]">Payment method</p>
+        <div class="flex gap-3">
+          @for (method of methods; track method) {
+            <label
+              class="flex flex-1 cursor-pointer items-center gap-2 rounded-[10px] border-2 px-4 py-3 transition-all"
+              [class]="methodControl.value === method ? 'border-[#2180E0] bg-[#EAF3FD]' : 'border-[#E4E9F2] bg-white hover:border-[#B4BECE]'"
+            >
+              <input type="radio" [formControl]="methodControl" [value]="method" class="sr-only">
+              <span class="text-[13px] font-semibold" [class]="methodControl.value === method ? 'text-[#2180E0]' : 'text-[#5C6B84]'">
+                {{ method === 'CREDIT_CARD' ? 'Card' : method === 'APPLE_PAY' ? 'Apple Pay' : method }}
+              </span>
+            </label>
+          }
+        </div>
+      </div>
+
+      <!-- Dynamic fields -->
+      <form [formGroup]="detailsForm" (ngSubmit)="submit()" class="space-y-5">
+        @switch (methodControl.value) {
+          @case ('CREDIT_CARD') {
+            <div>
+              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Cardholder name</label>
+              <input type="text" placeholder="John Doe" class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" disabled />
+            </div>
+            <div>
+              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Card number</label>
+              <input type="text" formControlName="cardNumber" placeholder="1234 5678 9012 3456"
+                class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Expiry month</label>
+                <input type="number" formControlName="expiryMonth" placeholder="MM" min="1" max="12"
+                  class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
+              </div>
+              <div>
+                <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Expiry year</label>
+                <input type="number" formControlName="expiryYear" placeholder="YYYY" min="2024"
+                  class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
+              </div>
+            </div>
+          }
+          @case ('PAYPAL') {
+            <div>
+              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">PayPal email</label>
+              <input type="email" formControlName="email" placeholder="paypal@example.com"
+                class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
+            </div>
+          }
+          @case ('APPLE_PAY') {
+            <div>
+              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Token</label>
+              <input type="text" formControlName="token" placeholder="Apple Pay token"
+                class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
+            </div>
+          }
+          @case ('PIX') {
+            <div>
+              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">PIX key</label>
+              <input type="text" formControlName="pixKey" placeholder="CPF, phone or email"
+                class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
+            </div>
+          }
+          @case ('IDEAL') {
+            <div>
+              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Bank</label>
+              <input type="text" formControlName="bank" placeholder="Bank name"
+                class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
+            </div>
+          }
         }
-      </select>
+
+        @if (error()) {
+          <div class="rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-700">{{ error() }}</div>
+        }
+
+        <button
+          type="submit"
+          [disabled]="detailsForm.invalid || submitting()"
+          class="w-full rounded-[12px] py-[15px] text-[16px] font-bold text-white transition-opacity disabled:opacity-60"
+          style="background: linear-gradient(150deg, #2180E0 0%, #3B9EFF 100%); box-shadow: 0 8px 20px rgba(33,128,224,.32);"
+        >
+          @if (submitting()) {
+            Processing…
+          } @else if (flow.booking()) {
+            Pay {{ flow.booking()!.totalAmount | currency:flow.booking()!.currency }}
+          } @else {
+            Pay Now
+          }
+        </button>
+
+        <p class="text-center text-[12px] text-[#8A99B3]">By completing payment you agree to our <a href="#" class="underline">fare rules</a> and <a href="#" class="underline">privacy policy</a>.</p>
+      </form>
     </div>
 
-    <form [formGroup]="detailsForm" (ngSubmit)="submit()" class="space-y-4">
-      @switch (methodControl.value) {
-        @case ('CREDIT_CARD') {
-          <div class="flex flex-col gap-1.5">
-            <label hlmLabel>Card Number</label>
-            <input hlmInput type="text" formControlName="cardNumber" placeholder="1234 5678 9012 3456" />
+    <!-- Order summary sidebar -->
+    <div class="sticky top-[88px] rounded-[16px] bg-white p-6" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
+      <p class="mb-4 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A99B3]">Order summary</p>
+
+      @if (flow.booking(); as booking) {
+        @if (flow.flight(); as flight) {
+          <div class="flex items-center gap-2 rounded-[10px] bg-[#EAF3FD] px-3 py-2 text-[14px] font-bold text-[#0B1E3D]">
+            {{ flight.origin }} → {{ flight.destination }}
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div class="flex flex-col gap-1.5">
-              <label hlmLabel>Expiry Month</label>
-              <input hlmInput type="number" formControlName="expiryMonth" placeholder="MM" min="1" max="12" />
+          <div class="mt-5 space-y-3">
+            <div class="flex justify-between text-[14px]">
+              <span class="text-[#5C6B84]">Fare (1 adult)</span>
+              <span class="font-semibold text-[#0B1E3D]">{{ flight.price.amount | currency:flight.price.currency:'symbol':'1.0-0' }}</span>
             </div>
-            <div class="flex flex-col gap-1.5">
-              <label hlmLabel>Expiry Year</label>
-              <input hlmInput type="number" formControlName="expiryYear" placeholder="YYYY" min="2024" />
+            <div class="flex justify-between text-[14px]">
+              <span class="text-[#5C6B84]">Seat {{ booking.seatNumber }}</span>
+              <span class="font-semibold text-[#0B1E3D]">Included</span>
+            </div>
+            <div class="flex justify-between text-[14px]">
+              <span class="text-[#5C6B84]">Taxes &amp; fees</span>
+              <span class="font-semibold text-[#0B1E3D]">Included</span>
             </div>
           </div>
-        }
-        @case ('PAYPAL') {
-          <div class="flex flex-col gap-1.5">
-            <label hlmLabel>PayPal Email</label>
-            <input hlmInput type="email" formControlName="email" placeholder="paypal@example.com" />
-          </div>
-        }
-        @case ('APPLE_PAY') {
-          <div class="flex flex-col gap-1.5">
-            <label hlmLabel>Token</label>
-            <input hlmInput type="text" formControlName="token" placeholder="Apple Pay token" />
-          </div>
-        }
-        @case ('PIX') {
-          <div class="flex flex-col gap-1.5">
-            <label hlmLabel>PIX Key</label>
-            <input hlmInput type="text" formControlName="pixKey" placeholder="CPF, phone or email" />
-          </div>
-        }
-        @case ('IDEAL') {
-          <div class="flex flex-col gap-1.5">
-            <label hlmLabel>Bank</label>
-            <input hlmInput type="text" formControlName="bank" placeholder="Bank name" />
+          <div class="mt-4 flex justify-between border-t border-[#E4E9F2] pt-4">
+            <span class="text-[15px] font-bold text-[#0B1E3D]">Total</span>
+            <span class="text-[28px] font-extrabold tracking-[-0.02em] text-[#0B1E3D]">{{ booking.totalAmount | currency:booking.currency:'symbol':'1.0-0' }}</span>
           </div>
         }
       }
+    </div>
 
-      @if (error()) {
-        <p class="text-sm text-destructive">{{ error() }}</p>
-      }
-
-      <button hlmBtn type="submit" [disabled]="detailsForm.invalid || submitting()">
-        @if (submitting()) { Processing… } @else { Pay Now }
-      </button>
-    </form>
   </div>
 </div>

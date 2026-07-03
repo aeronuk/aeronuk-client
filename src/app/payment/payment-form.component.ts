@@ -5,24 +5,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CurrencyPipe } from '@angular/common';
 import { BookingFlowService } from '../shared/services/booking-flow.service';
 import { Payment } from '../shared/models/payment.model';
-import { HlmCardImports } from '../shared/ui/card';
-import { HlmButtonImports } from '../shared/ui/button';
-import { HlmInputImports } from '../shared/ui/input';
-import { HlmLabelImports } from '../shared/ui/label';
 
 type PaymentMethod = 'CREDIT_CARD' | 'PAYPAL' | 'APPLE_PAY' | 'PIX' | 'IDEAL';
 
 @Component({
   selector: 'app-payment-form',
   standalone: true,
-  imports: [ReactiveFormsModule, ...HlmCardImports, ...HlmButtonImports, ...HlmInputImports, ...HlmLabelImports],
+  imports: [ReactiveFormsModule, CurrencyPipe],
   templateUrl: './payment-form.component.html',
 })
 export class PaymentFormComponent implements OnInit {
   private http       = inject(HttpClient);
-  private flow       = inject(BookingFlowService);
+  protected flow       = inject(BookingFlowService);
   private router     = inject(Router);
   private destroyRef = inject(DestroyRef);
 

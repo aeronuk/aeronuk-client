@@ -5,14 +5,11 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BookingFlowService } from '../shared/services/booking-flow.service';
 import { Seat } from '../shared/models/flight.model';
-import { HlmCardImports } from '../shared/ui/card';
-import { HlmButtonImports } from '../shared/ui/button';
-import { HlmBadgeImports } from '../shared/ui/badge';
 
 @Component({
   selector: 'app-seat-selection',
   standalone: true,
-  imports: [...HlmCardImports, ...HlmButtonImports, ...HlmBadgeImports],
+  imports: [],
   templateUrl: './seat-selection.component.html',
 })
 export class SeatSelectionComponent implements OnInit {
@@ -38,5 +35,11 @@ export class SeatSelectionComponent implements OnInit {
     if (!seat.available) return;
     this.flow.selectSeat(seat);
     this.router.navigate(['/booking/passenger']);
+  }
+
+  getSeatClasses(seat: Seat): string {
+    if (!seat.available) return 'bg-[#E4E9F2] text-[#B4BECE] cursor-not-allowed';
+    if (seat.class === 'business') return 'bg-[#DDF0E8] border border-[#9FD8BF] text-[#1F9D6B] hover:border-[#1F9D6B]';
+    return 'bg-[#EAF3FD] border border-[#BBD8F5] text-[#2180E0] hover:border-[#2180E0]';
   }
 }
