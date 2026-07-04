@@ -1,137 +1,150 @@
-<div class="mx-auto max-w-[1180px] px-6 py-8">
-  <div class="grid grid-cols-[1fr_360px] gap-6 items-start">
+<div style="max-width:1180px; margin:0 auto; padding:26px 24px 72px;">
+  <a routerLink="/booking/seats" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none; display:inline-block; margin-bottom:16px;">← Back to seats</a>
 
-    <!-- Main: payment form -->
-    <div class="rounded-[16px] bg-white p-6" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
-      <h2 class="mb-6 text-[20px] font-extrabold text-[#0B1E3D]">Payment</h2>
+  <div style="display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:start;">
+
+    <!-- Payment form card -->
+    <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:28px;">
+      <div style="font-size:20px; font-weight:800; margin-bottom:4px;">Payment</div>
+      <p style="margin:0 0 24px; color:#8A99B3; font-size:14px; display:flex; align-items:center; gap:7px;">
+        <span style="color:#1F9D6B;">&#128274;</span> Your payment is encrypted and secure.
+      </p>
 
       <!-- Method selector -->
-      <div class="mb-6">
-        <p class="mb-3 text-[13px] font-bold uppercase tracking-[0.06em] text-[#8A99B3]">Payment method</p>
-        <div class="flex gap-3">
-          @for (method of methods; track method) {
-            <label
-              class="flex flex-1 cursor-pointer items-center gap-2 rounded-[10px] border-2 px-4 py-3 transition-all"
-              [class]="methodControl.value === method ? 'border-[#2180E0] bg-[#EAF3FD]' : 'border-[#E4E9F2] bg-white hover:border-[#B4BECE]'"
-            >
-              <input type="radio" [formControl]="methodControl" [value]="method" class="sr-only">
-              <span class="text-[13px] font-semibold" [class]="methodControl.value === method ? 'text-[#2180E0]' : 'text-[#5C6B84]'">
-                {{ method === 'CREDIT_CARD' ? 'Card' : method === 'APPLE_PAY' ? 'Apple Pay' : method }}
-              </span>
-            </label>
-          }
-        </div>
+      <div style="display:flex; gap:10px; margin-bottom:24px;">
+        @for (m of [['card','Card'],['paypal','PayPal'],['applepay','Apple Pay']]; track m[0]) {
+          <div
+            (click)="selectMethod($any(m[0]))"
+            style="flex:1; border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:10px; cursor:pointer; font-weight:600; font-size:15px; transition:border 0.15s ease, background 0.15s ease;"
+            [style.border]="method() === m[0] ? '2px solid #2180E0' : '1.5px solid #E4E9F2'"
+            [style.background]="method() === m[0] ? '#EAF3FD' : '#fff'"
+            [style.color]="method() === m[0] ? '#2180E0' : '#5C6B84'"
+          >
+            <span style="width:14px; height:14px; border-radius:50%; border:2px solid currentColor; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              @if (method() === m[0]) { <span style="width:6px; height:6px; border-radius:50%; background:#2180E0; display:block;"></span> }
+            </span>
+            {{ m[1] }}
+          </div>
+        }
       </div>
 
-      <!-- Dynamic fields -->
-      <form [formGroup]="detailsForm" (ngSubmit)="submit()" class="space-y-5">
-        @switch (methodControl.value) {
-          @case ('CREDIT_CARD') {
-            <div>
-              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Cardholder name</label>
-              <input type="text" placeholder="John Doe" class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" disabled />
-            </div>
-            <div>
-              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Card number</label>
-              <input type="text" formControlName="cardNumber" placeholder="1234 5678 9012 3456"
-                class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Expiry month</label>
-                <input type="number" formControlName="expiryMonth" placeholder="MM" min="1" max="12"
-                  class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
-              </div>
-              <div>
-                <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Expiry year</label>
-                <input type="number" formControlName="expiryYear" placeholder="YYYY" min="2024"
-                  class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
-              </div>
-            </div>
-          }
-          @case ('PAYPAL') {
-            <div>
-              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">PayPal email</label>
-              <input type="email" formControlName="email" placeholder="paypal@example.com"
-                class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
-            </div>
-          }
-          @case ('APPLE_PAY') {
-            <div>
-              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Token</label>
-              <input type="text" formControlName="token" placeholder="Apple Pay token"
-                class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
-            </div>
-          }
-          @case ('PIX') {
-            <div>
-              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">PIX key</label>
-              <input type="text" formControlName="pixKey" placeholder="CPF, phone or email"
-                class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
-            </div>
-          }
-          @case ('IDEAL') {
-            <div>
-              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Bank</label>
-              <input type="text" formControlName="bank" placeholder="Bank name"
-                class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
-            </div>
-          }
-        }
-
-        @if (error()) {
-          <div class="rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-700">{{ error() }}</div>
-        }
-
-        <button
-          type="submit"
-          [disabled]="detailsForm.invalid || submitting()"
-          class="w-full rounded-[12px] py-[15px] text-[16px] font-bold text-white transition-opacity disabled:opacity-60"
-          style="background: linear-gradient(150deg, #2180E0 0%, #3B9EFF 100%); box-shadow: 0 8px 20px rgba(33,128,224,.32);"
-        >
-          @if (submitting()) {
-            Processing…
-          } @else if (flow.booking()) {
-            Pay {{ flow.booking()!.totalAmount | currency:flow.booking()!.currency }}
-          } @else {
-            Pay Now
-          }
-        </button>
-
-        <p class="text-center text-[12px] text-[#8A99B3]">By completing payment you agree to our <a href="#" class="underline">fare rules</a> and <a href="#" class="underline">privacy policy</a>.</p>
-      </form>
-    </div>
-
-    <!-- Order summary sidebar -->
-    <div class="sticky top-[88px] rounded-[16px] bg-white p-6" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
-      <p class="mb-4 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A99B3]">Order summary</p>
-
-      @if (flow.booking(); as booking) {
-        @if (flow.flight(); as flight) {
-          <div class="flex items-center gap-2 rounded-[10px] bg-[#EAF3FD] px-3 py-2 text-[14px] font-bold text-[#0B1E3D]">
-            {{ flight.origin }} → {{ flight.destination }}
+      <!-- Card form -->
+      @if (method() === 'card') {
+        <form [formGroup]="cardForm">
+          <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Cardholder name *</label>
+            <input type="text" formControlName="cardName" class="field-input" [class.error]="hasError('cardName')" placeholder="Jordan Doe">
           </div>
-          <div class="mt-5 space-y-3">
-            <div class="flex justify-between text-[14px]">
-              <span class="text-[#5C6B84]">Fare (1 adult)</span>
-              <span class="font-semibold text-[#0B1E3D]">{{ flight.price.amount | currency:flight.price.currency:'symbol':'1.0-0' }}</span>
+          <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Card number *</label>
+            <input type="text" inputmode="numeric" maxlength="19" formControlName="cardNumber" class="field-input" [class.error]="hasError('cardNumber')" placeholder="1234 5678 9012 3456">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px;">
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Expiry date *</label>
+              <input type="text" inputmode="numeric" maxlength="5" formControlName="expiry" class="field-input" [class.error]="hasError('expiry')" placeholder="MM / YY">
             </div>
-            <div class="flex justify-between text-[14px]">
-              <span class="text-[#5C6B84]">Seat {{ booking.seatNumber }}</span>
-              <span class="font-semibold text-[#0B1E3D]">Included</span>
-            </div>
-            <div class="flex justify-between text-[14px]">
-              <span class="text-[#5C6B84]">Taxes &amp; fees</span>
-              <span class="font-semibold text-[#0B1E3D]">Included</span>
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Security code *</label>
+              <input type="text" inputmode="numeric" maxlength="4" formControlName="cvc" class="field-input" [class.error]="hasError('cvc')" placeholder="CVC">
             </div>
           </div>
-          <div class="mt-4 flex justify-between border-t border-[#E4E9F2] pt-4">
-            <span class="text-[15px] font-bold text-[#0B1E3D]">Total</span>
-            <span class="text-[28px] font-extrabold tracking-[-0.02em] text-[#0B1E3D]">{{ booking.totalAmount | currency:booking.currency:'symbol':'1.0-0' }}</span>
+
+          <div style="height:1px; background:#EEF2F8; margin-bottom:24px;"></div>
+          <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Billing address</div>
+
+          @if (submitted() && cardForm.invalid) {
+            <div style="background:#FCEBEA; color:#B3261E; font-size:13px; font-weight:600; padding:11px 14px; border-radius:10px; margin-bottom:16px;">
+              Please fill in all required payment and billing fields before paying.
+            </div>
+          }
+
+          <div style="margin-bottom:14px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Address line *</label>
+            <input type="text" formControlName="address" class="field-input" [class.error]="hasError('address')" placeholder="221B Baker Street">
           </div>
-        }
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">City *</label>
+              <input type="text" formControlName="city" class="field-input" [class.error]="hasError('city')" placeholder="London">
+            </div>
+            <div>
+              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Postcode *</label>
+              <input type="text" formControlName="postcode" class="field-input" [class.error]="hasError('postcode')" placeholder="NW1 6XE">
+            </div>
+          </div>
+        </form>
+      }
+
+      <!-- PayPal panel -->
+      @if (method() === 'paypal') {
+        <div style="border:1px solid #E4E9F2; border-radius:14px; padding:32px 24px; text-align:center;">
+          <div style="font-size:24px; font-weight:800; letter-spacing:-0.01em; margin-bottom:10px;">
+            <span style="color:#003087;">Pay</span><span style="color:#0070BA;">Pal</span>
+          </div>
+          <p style="margin:0 0 24px; color:#5C6B84; font-size:14px; max-width:340px; margin-left:auto; margin-right:auto;">
+            You'll be redirected to PayPal to log in and confirm this payment securely.
+          </p>
+          <button
+            (click)="submitAltMethod()"
+            [disabled]="submitting()"
+            style="border:none; cursor:pointer; background:#FFC439; color:#003087; font-family:inherit; font-weight:800; font-size:15px; padding:13px 32px; border-radius:24px; transition:filter 0.15s ease;"
+            [style.opacity]="submitting() ? '0.6' : '1'"
+          >{{ submitting() ? 'Processing…' : 'Continue with PayPal' }}</button>
+        </div>
+      }
+
+      <!-- Apple Pay panel -->
+      @if (method() === 'applepay') {
+        <div style="border:1px solid #E4E9F2; border-radius:14px; padding:32px 24px; text-align:center;">
+          <p style="margin:0 0 24px; color:#5C6B84; font-size:14px; max-width:340px; margin-left:auto; margin-right:auto;">
+            Confirm this payment with Face ID or Touch ID using the card on file in your Apple Wallet.
+          </p>
+          <button
+            (click)="submitAltMethod()"
+            [disabled]="submitting()"
+            style="border:none; cursor:pointer; background:#000; color:#fff; font-family:inherit; font-weight:600; font-size:16px; padding:13px 32px; border-radius:10px; display:inline-flex; align-items:center; gap:7px; transition:filter 0.15s ease;"
+            [style.opacity]="submitting() ? '0.6' : '1'"
+          >{{ submitting() ? 'Processing…' : 'Pay with Apple Pay' }}</button>
+        </div>
+      }
+
+      @if (error()) {
+        <div style="margin-top:16px; background:#FCEBEA; color:#B3261E; font-size:13px; font-weight:600; padding:11px 14px; border-radius:10px;">{{ error() }}</div>
       }
     </div>
 
+    <!-- Order summary sidebar -->
+    <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; position:sticky; top:88px;">
+      <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Order summary</div>
+      <div style="display:flex; align-items:center; gap:8px; padding-bottom:14px; border-bottom:1px solid #EEF2F8;">
+        <span style="font-size:14px; font-weight:700;">{{ flow.flight()?.origin ?? 'LHR' }}</span>
+        <span style="color:#2180E0;">→</span>
+        <span style="font-size:14px; font-weight:700;">{{ flow.flight()?.destination ?? 'JFK' }}</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:11px; padding:14px 0; border-bottom:1px solid #EEF2F8; font-size:14px;">
+        <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Fare (1 adult)</span><span style="font-weight:600;">£389</span></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Seat {{ seatLabel() }}</span><span style="font-weight:600;">{{ seatPrice() }}</span></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Taxes &amp; fees</span><span style="font-weight:600;">£62</span></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:baseline; padding-top:16px; margin-bottom:18px;">
+        <span style="font-weight:700;">Total</span>
+        <span style="font-size:28px; font-weight:800; letter-spacing:-0.02em;">{{ total() }}</span>
+      </div>
+
+      @if (method() === 'card') {
+        <button
+          (click)="submitCard()"
+          [disabled]="submitting()"
+          class="btn-primary"
+          style="width:100%; border:none; cursor:pointer; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:16px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);"
+          [style.opacity]="submitting() ? '0.6' : '1'"
+        >{{ submitting() ? 'Processing…' : 'Pay ' + total() }}</button>
+      }
+      @if (method() !== 'card') {
+        <p style="text-align:center; font-size:13px; color:#5C6B84;">Complete your payment in the panel on the left.</p>
+      }
+      <p style="margin:12px 0 0; text-align:center; font-size:12px; color:#8A99B3;">By paying you agree to our fare rules &amp; terms.</p>
+    </div>
   </div>
 </div>

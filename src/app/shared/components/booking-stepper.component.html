@@ -1,36 +1,23 @@
-<div class="border-b border-[#E4E9F2] bg-white">
-  <div class="mx-auto flex max-w-[1180px] items-center justify-center px-6 py-4">
-    @for (step of steps; track step; let i = $index) {
-      @let stepNum = i + 1;
-      @let isDone = stepNum < currentStep();
-      @let isActive = stepNum === currentStep();
-
-      <div class="flex items-center">
-        <div class="flex items-center gap-2">
-          <div
-            class="flex h-[26px] w-[26px] items-center justify-center rounded-full text-[12px] font-bold"
-            [ngClass]="{
-              'bg-[#1F9D6B] text-white': isDone,
-              'bg-[#2180E0] text-white': isActive,
-              'bg-[#EEF2F8] text-[#8A99B3]': !isDone && !isActive
-            }"
-          >
-            @if (isDone) { ✓ } @else { {{ stepNum }} }
-          </div>
-          <span
-            class="text-[13px]"
-            [ngClass]="{
-              'font-semibold text-[#0B1E3D]': isActive,
-              'text-[#1F9D6B]': isDone,
-              'text-[#8A99B3]': !isDone && !isActive
-            }"
-          >{{ step }}</span>
-        </div>
-        @if (stepNum < steps.length) {
-          <div
-            class="mx-4 h-[2px] w-[34px] rounded-full"
-            [ngClass]="isDone ? 'bg-[#1F9D6B]' : 'bg-[#EEF2F8]'"
-          ></div>
+<div style="background:#fff; border-bottom:1px solid #E4E9F2;">
+  <div style="max-width:1180px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+    @for (step of steps(); track step.label; let last = $last; let i = $index) {
+      <div
+        (click)="navigate(step)"
+        style="display:flex; align-items:center; gap:10px; transition:opacity 0.15s ease;"
+        [style.cursor]="step.done ? 'pointer' : 'default'"
+      >
+        <div
+          style="width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0; transition:background 0.15s ease;"
+          [style.background]="step.done ? '#1F9D6B' : step.active ? '#2180E0' : '#EEF2F8'"
+          [style.color]="(step.done || step.active) ? '#fff' : '#8A99B3'"
+        >{{ step.done ? '✓' : (i + 1) }}</div>
+        <span
+          style="font-size:14px;"
+          [style.font-weight]="(step.active || step.done) ? '700' : '500'"
+          [style.color]="step.active ? '#0B1E3D' : step.done ? '#1F9D6B' : '#8A99B3'"
+        >{{ step.label }}</span>
+        @if (!last) {
+          <div style="width:34px; height:2px; background:#E4E9F2; border-radius:2px;"></div>
         }
       </div>
     }

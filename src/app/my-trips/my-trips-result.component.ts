@@ -1,12 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { CurrencyPipe, DatePipe } from '@angular/common';
 import { MyTripsStateService } from './my-trips.component';
 
 @Component({
   selector: 'app-my-trips-result',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe, DatePipe],
+  imports: [RouterLink],
   templateUrl: './my-trips-result.component.html',
 })
 export class MyTripsResultComponent implements OnInit {

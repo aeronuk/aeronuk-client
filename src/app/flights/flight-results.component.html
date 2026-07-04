@@ -1,52 +1,98 @@
-@if (results().length === 0) {
-  <p class="text-[14px] text-[#8A99B3]">No flights found for the selected route and date.</p>
-} @else {
-  <div class="space-y-3">
-    @for (flight of results(); track flight.id) {
-      <div class="rounded-[16px] bg-white p-5" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
-        <div class="flex items-center gap-5">
+<div style="max-width:1180px; margin:0 auto; padding:26px 24px 72px;">
 
-          <!-- Logo + Flight number -->
-          <div class="flex shrink-0 items-center gap-3">
-            <img src="assets/logo.svg" class="h-[34px] w-[34px]" alt="AeroNUK">
-            <span class="text-[13px] font-semibold text-[#5C6B84]">{{ flight.flightNumber }}</span>
-          </div>
+  @if (loading()) {
+    <div style="text-align:center; padding:80px 0; color:#8A99B3; font-size:16px;">Searching flights…</div>
+  }
 
-          <!-- Flight path -->
-          <div class="flex flex-1 items-center gap-4">
-            <div class="text-center">
-              <p class="text-[22px] font-extrabold tracking-[-0.02em] text-[#0B1E3D]">{{ flight.departureTime | date:'HH:mm' }}</p>
-              <p class="text-[13px] text-[#8A99B3]">{{ flight.origin }}</p>
+  @if (!loading()) {
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; flex-wrap:wrap; gap:12px;">
+      <h1 style="margin:0; font-size:26px; font-weight:800; letter-spacing:-0.02em; white-space:nowrap; flex-shrink:0;">
+        {{ searchState.originCity() }} → {{ searchState.destinationCity() }}
+      </h1>
+      <a routerLink="/flights" style="border:1px solid #E4E9F2; background:#fff; text-decoration:none; font-weight:600; font-size:14px; color:#2180E0; padding:9px 16px; border-radius:10px; display:inline-block; transition:background 0.15s ease;">Edit search</a>
+    </div>
+
+    @if (screen() === 'results') {
+      <p style="margin:0 0 22px; color:#5C6B84; font-size:15px;">Economy · <span style="color:#0B1E3D; font-weight:600;">{{ flights().length }} direct flight{{ flights().length === 1 ? '' : 's' }} found</span></p>
+
+      <div style="display:grid; grid-template-columns:260px 1fr; gap:24px; align-items:start;">
+        <aside style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:22px; position:sticky; top:88px;">
+          <div style="font-size:16px; font-weight:800; margin-bottom:18px;">Filters</div>
+          <div style="margin-bottom:22px;">
+            <div style="font-size:13px; font-weight:700; color:#8A99B3; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">Price range</div>
+            <div style="height:5px; background:#EEF2F8; border-radius:999px; position:relative;">
+              <div style="position:absolute; left:8%; right:14%; top:0; bottom:0; background:#2180E0; border-radius:999px;"></div>
+              <div style="position:absolute; left:86%; top:50%; transform:translate(-50%,-50%); width:16px; height:16px; border-radius:50%; background:#fff; border:2px solid #2180E0; box-shadow:0 2px 5px rgba(11,30,61,0.15);"></div>
             </div>
-            <div class="flex flex-1 items-center gap-2">
-              <div class="flex-1 border-t-2 border-dashed border-[#B4BECE]"></div>
-              <span class="text-[18px] text-[#2180E0]">✈</span>
-              <div class="flex-1 border-t-2 border-dashed border-[#B4BECE]"></div>
+            <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:13px; color:#5C6B84;"><span>£200</span><span>£600</span></div>
+          </div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#8A99B3; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">Departure time</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              @for (slot of depTimeSlots; track slot.key) {
+                <div (click)="toggleDepTime(slot.key)"
+                  style="border-radius:10px; padding:10px 8px; text-align:center; font-size:13px; font-weight:600; cursor:pointer; transition:border-color 0.15s ease, background 0.15s ease;"
+                  [style.border]="depTimeSelected()[slot.key] ? '1.5px solid #2180E0' : '1px solid #E4E9F2'"
+                  [style.background]="depTimeSelected()[slot.key] ? '#EAF3FD' : '#fff'"
+                  [style.color]="depTimeSelected()[slot.key] ? '#2180E0' : '#5C6B84'"
+                >{{ slot.label }}<div style="font-size:11px; font-weight:400; margin-top:2px; opacity:0.8;">{{ slot.range }}</div></div>
+              }
             </div>
-            <div class="text-center">
-              <p class="text-[22px] font-extrabold tracking-[-0.02em] text-[#0B1E3D]">{{ flight.arrivalTime | date:'HH:mm' }}</p>
-              <p class="text-[13px] text-[#8A99B3]">{{ flight.destination }}</p>
+          </div>
+        </aside>
+
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          @for (flight of flights(); track flight.id) {
+            <div style="background:#fff; border-radius:16px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 10px 24px rgba(11,30,61,0.06); padding:20px 22px; display:flex; align-items:center; gap:24px;">
+              <div style="display:flex; align-items:center; gap:12px; min-width:120px;">
+                <svg viewBox="0 0 680 680" width="34" height="34" aria-hidden="true">
+                  <circle cx="340" cy="340" r="320" fill="#0B1E3D"/>
+                  <path d="M 340 150 L 480 520 L 434 520 L 340 270 L 246 520 L 200 520 Z" fill="#fff"/>
+                  <path d="M 268 430 L 412 430 L 400 398 L 280 398 Z" fill="#0B1E3D"/>
+                </svg>
+                <div style="font-size:13px; font-weight:600; color:#5C6B84;">AeroNUK<div style="font-size:12px; color:#8A99B3; font-weight:400;">{{ flight.flightNumber }}</div></div>
+              </div>
+              <div style="display:flex; align-items:center; gap:18px; flex:1;">
+                <div style="text-align:right;"><div style="font-size:22px; font-weight:800; letter-spacing:-0.02em;">{{ formatTime(flight.departureTime) }}</div><div style="font-size:13px; color:#8A99B3; font-weight:600;">{{ flight.origin }}</div></div>
+                <div style="flex:1; text-align:center;">
+                  <div style="font-size:12px; color:#8A99B3; margin-bottom:5px;">Non-stop</div>
+                  <div style="display:flex; align-items:center; gap:6px;"><div style="height:2px; flex:1; background:#E4E9F2;"></div><span style="color:#2180E0;">✈</span><div style="height:2px; flex:1; background:#E4E9F2;"></div></div>
+                  <div style="font-size:12px; color:#1F9D6B; font-weight:600; margin-top:5px;">Direct</div>
+                </div>
+                <div style="text-align:left;"><div style="font-size:22px; font-weight:800; letter-spacing:-0.02em;">{{ formatTime(flight.arrivalTime) }}</div><div style="font-size:13px; color:#8A99B3; font-weight:600;">{{ flight.destination }}</div></div>
+              </div>
+              <div style="text-align:right; min-width:130px;">
+                @if (getFlightTag(flight)) { <span [style]="getTagStyle(getFlightTag(flight))">{{ getFlightTag(flight) }}</span> }
+                <div style="font-size:26px; font-weight:800; letter-spacing:-0.02em; margin-top:4px;">{{ formatPrice(flight) }}</div>
+                <button (click)="selectFlight(flight)" class="btn-navy" style="border:none; cursor:pointer; margin-top:8px; background:#0B1E3D; color:#fff; font-family:inherit; font-weight:700; font-size:14px; padding:10px 22px; border-radius:10px;">Select</button>
+              </div>
             </div>
-          </div>
-
-          <!-- Direct label -->
-          <div class="w-20 text-center">
-            <span class="inline-block rounded-full px-2.5 py-0.5 text-[12px] font-semibold" style="background: #DDF0E8; color: #1F9D6B;">Direct</span>
-          </div>
-
-          <!-- Price + tag + select -->
-          <div class="shrink-0 text-right">
-            <span class="mb-1 inline-block rounded-full px-2.5 py-0.5 text-[11px] font-bold" style="background: #EAF3FD; color: #2180E0;">Best</span>
-            <p class="text-[26px] font-extrabold tracking-[-0.02em] text-[#0B1E3D]">{{ flight.price.amount | currency:flight.price.currency:'symbol':'1.0-0' }}</p>
-            <button
-              type="button"
-              (click)="select(flight)"
-              class="mt-2 rounded-[10px] bg-[#0B1E3D] px-6 py-2 text-[14px] font-semibold text-white transition-opacity hover:opacity-80"
-            >Select</button>
-          </div>
-
+          }
         </div>
       </div>
     }
-  </div>
-}
+
+    @if (screen() === 'no-results') {
+      <p style="margin:0 0 22px; color:#5C6B84; font-size:15px;">Economy</p>
+      <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:64px 24px; text-align:center;">
+        <div style="width:64px; height:64px; border-radius:50%; background:#EEF2F8; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:#8A99B3; font-size:28px;">✈</div>
+        <h2 style="margin:0 0 8px; font-size:22px; font-weight:800; letter-spacing:-0.02em;">No flights found</h2>
+        <p style="margin:0 0 24px; color:#5C6B84; font-size:15px; max-width:420px; margin-left:auto; margin-right:auto;">We couldn't find any flights for this route. Try a different date or airport.</p>
+        <a routerLink="/flights" class="btn-primary" style="display:inline-block; border:none; cursor:pointer; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:15px; padding:13px 28px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28); text-decoration:none;">Edit search</a>
+      </div>
+    }
+
+    @if (screen() === 'error') {
+      <p style="margin:0 0 22px; color:#5C6B84; font-size:15px;">Economy</p>
+      <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:64px 24px; text-align:center;">
+        <div style="width:64px; height:64px; border-radius:50%; background:#FCEBEA; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:#B3261E; font-size:28px; font-weight:800;">!</div>
+        <h2 style="margin:0 0 8px; font-size:22px; font-weight:800; letter-spacing:-0.02em;">Something went wrong</h2>
+        <p style="margin:0 0 24px; color:#5C6B84; font-size:15px; max-width:420px; margin-left:auto; margin-right:auto;">We're having trouble searching flights right now. Please try again in a moment.</p>
+        <div style="display:inline-flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+          <button (click)="ngOnInit()" class="btn-primary" style="border:none; cursor:pointer; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:15px; padding:13px 28px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);">Try again</button>
+          <a routerLink="/flights" class="btn-outline" style="display:inline-block; border:1px solid #E4E9F2; background:#fff; color:#0B1E3D; font-family:inherit; font-weight:700; font-size:15px; padding:13px 28px; border-radius:12px; text-decoration:none;">Edit search</a>
+        </div>
+      </div>
+    }
+  }
+</div>

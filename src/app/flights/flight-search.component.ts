@@ -1,52 +1,118 @@
-import { Component, signal } from '@angular/core';
-import { inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpParams } from '@angular/common/http';
-import { Flight } from '../shared/models/flight.model';
-import { FlightResultsComponent } from './flight-results.component';
+import { Component, signal, computed, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { SearchStateService } from '../shared/services/search-state.service';
+
+interface Airport {
+  code: string;
+  city: string;
+  airport: string;
+}
+
+interface Destination {
+  city: string;
+  code: string;
+  airport: string;
+  price: string;
+  imageLabel: string;
+}
 
 @Component({
   selector: 'app-flight-search',
   standalone: true,
-  imports: [ReactiveFormsModule, FlightResultsComponent],
+  imports: [RouterLink, FormsModule],
   templateUrl: './flight-search.component.html',
 })
 export class FlightSearchComponent {
-  private http = inject(HttpClient);
+  private router = inject(Router);
+  protected searchState = inject(SearchStateService);
 
-  readonly airportCodes = ['JFK', 'LAX', 'ORD', 'SFO', 'LHR', 'NRT'];
-
-  readonly popularDestinations = [
-    { city: 'New York', code: 'JFK', price: 299, imageLabel: 'city / skyline' },
-    { city: 'Los Angeles', code: 'LAX', price: 349, imageLabel: 'city / beach' },
-    { city: 'London', code: 'LHR', price: 189, imageLabel: 'city / landmarks' },
-    { city: 'Tokyo', code: 'NRT', price: 649, imageLabel: 'city / temple' },
+  readonly airports: Airport[] = [
+    { code: 'LHR', city: 'London',        airport: 'Heathrow' },
+    { code: 'JFK', city: 'New York',      airport: 'John F. Kennedy' },
+    { code: 'LAX', city: 'Los Angeles',   airport: 'Los Angeles Intl.' },
+    { code: 'ORD', city: 'Chicago',       airport: "O'Hare Intl." },
+    { code: 'SFO', city: 'San Francisco', airport: 'San Francisco Intl.' },
+    { code: 'NRT', city: 'Tokyo',         airport: 'Narita Intl.' },
   ];
 
-  form = new FormGroup({
-    origin:      new FormControl('', Validators.required),
-    destination: new FormControl('', Validators.required),
-    date:        new FormControl('', Validators.required),
-  });
+  readonly popularDestinations: Destination[] = [
+    { city: 'Barcelona', code: 'BCN', airport: 'El Prat',         price: '£78',  imageLabel: 'city / beach photo' },
+    { city: 'Reykjavík', code: 'KEF', airport: 'Keflavík Intl.',  price: '£120', imageLabel: 'landscape photo' },
+    { city: 'Dubai',     code: 'DXB', airport: 'Intl.',            price: '£340', imageLabel: 'skyline photo' },
+    { city: 'Tokyo',     code: 'HND', airport: 'Haneda',           price: '£520', imageLabel: 'street photo' },
+  ];
 
-  results = signal<Flight[]>([]);
-  loading = signal(false);
-  error   = signal<string | null>(null);
+  originCode      = signal('LHR');
+  destinationCode = signal('');
+  date            = signal('');
+  searchError     = signal('');
+  swapRotation    = signal(0);
+
+  protected readonly originAirport = computed(() =>
+    this.airports.find(a => a.code === this.originCode()) ?? null);
+
+  protected readonly destinationAirport = computed(() =>
+    this.airports.find(a => a.code === this.destinationCode()) ?? null);
+
+  swap(): void {
+    const tmp = this.originCode();
+    this.originCode.set(this.destinationCode());
+    this.destinationCode.set(tmp);
+    this.swapRotation.update(r => r + 180);
+  }
 
   search(): void {
-    if (this.form.invalid) return;
-    this.loading.set(true);
-    this.error.set(null);
-    const { origin, destination, date } = this.form.value;
-    const params = new HttpParams()
-      .set('origin', origin!)
-      .set('destination', destination!)
-      .set('date', date!);
+    const missing: string[] = [];
+    if (!this.originCode()) missing.push('origin');
+    if (!this.destinationCode()) missing.push('destination');
+    if (!this.date()) missing.push('departure date');
 
-    this.http.get<Flight[]>('/api/flights', { params }).subscribe({
-      next: flights => { this.results.set(flights); this.loading.set(false); },
-      error: ()     => { this.error.set('Search failed. Please try again.'); this.loading.set(false); },
-    });
+    if (missing.length) {
+      const list = missing.length === 1
+        ? missing[0]
+        : missing.slice(0, -1).join(', ') + ' and ' + missing[missing.length - 1];
+      this.searchError.set(`Please add the missing ${missing.length === 1 ? 'field' : 'fields'} before searching: ${list}.`);
+      return;
+    }
+
+    const orig = this.airports.find(a => a.code === this.originCode())!;
+    const dest = this.airports.find(a => a.code === this.destinationCode())!;
+    this.searchState.setSearch(
+      orig.code, orig.city, orig.airport,
+      dest.code, dest.city, dest.airport,
+      this.date(),
+    );
+    this.searchError.set('');
+    this.router.navigate(['/flights/results']);
+  }
+
+  previewNoResults(): void {
+    this.prepareAndNavigate('no-results');
+  }
+
+  previewError(): void {
+    this.prepareAndNavigate('error');
+  }
+
+  private prepareAndNavigate(preview: string): void {
+    const orig = this.airports.find(a => a.code === (this.originCode() || 'LHR'))!;
+    const dest = this.airports.find(a => a.code === (this.destinationCode() || 'JFK')) ?? { code: 'JFK', city: 'New York', airport: 'John F. Kennedy' };
+    this.searchState.setSearch(
+      orig.code, orig.city, orig.airport,
+      dest.code, dest.city, dest.airport,
+      this.date() || '2025-07-14',
+    );
+    this.router.navigate(['/flights/results'], { queryParams: { preview } });
+  }
+
+  selectDestination(dest: Destination): void {
+    const orig = this.airports.find(a => a.code === (this.originCode() || 'LHR'))!;
+    this.searchState.setSearch(
+      orig.code, orig.city, orig.airport,
+      dest.code, dest.city, dest.airport,
+      this.date() || '2025-07-14',
+    );
+    this.router.navigate(['/flights/results']);
   }
 }

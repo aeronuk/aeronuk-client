@@ -1,44 +1,48 @@
-<div class="mx-auto max-w-[1180px] px-6 py-12">
-  <div class="mx-auto max-w-[520px]">
-    <h1 class="mb-2 text-[32px] font-extrabold tracking-[-0.02em] text-[#0B1E3D]">Find your booking</h1>
-    <p class="mb-8 text-[15px] text-[#5C6B84]">Enter your booking reference and last name to retrieve your trip.</p>
+<div style="max-width:1180px; margin:0 auto; padding:48px 24px 80px;">
+  <div style="max-width:520px; margin:0 auto;">
+    <h1 style="font-size:32px; font-weight:800; letter-spacing:-0.02em; margin:0 0 8px; color:#0B1E3D;">Find your booking</h1>
+    <p style="margin:0 0 32px; font-size:15px; color:#5C6B84;">Enter your booking reference and last name to retrieve your trip.</p>
 
-    <div class="rounded-[16px] bg-white p-8" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
-      <form [formGroup]="form" (ngSubmit)="find()" class="space-y-5">
-        <div>
-          <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Booking reference</label>
+    <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:28px;">
+      <form [formGroup]="form" (ngSubmit)="find()">
+        <div style="margin-bottom:16px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Booking reference</label>
           <input
             type="text"
             formControlName="bookingCode"
-            placeholder="e.g. AB12CD"
-            class="w-full rounded-[12px] border border-[#E4E9F2] px-[14px] py-[13px] text-[15px] font-semibold uppercase tracking-widest text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20"
-          />
+            class="field-input"
+            placeholder="e.g. ANK-A1B2C3"
+            style="text-transform:uppercase;"
+          >
         </div>
-        <div>
-          <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Last name</label>
+        <div style="margin-bottom:24px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Last name</label>
           <input
             type="text"
             formControlName="lastName"
-            placeholder="As on your ticket"
-            class="w-full rounded-[12px] border border-[#E4E9F2] px-[14px] py-[13px] text-[15px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20"
-          />
+            class="field-input"
+            placeholder="e.g. Doe"
+          >
         </div>
 
         @if (error()) {
-          <div class="rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-700">
+          <div style="background:#FCEBEA; color:#B3261E; font-size:13px; font-weight:600; padding:11px 14px; border-radius:10px; margin-bottom:16px;">
             {{ error() }}
           </div>
         }
 
         <button
           type="submit"
-          [disabled]="form.invalid || searching()"
-          class="w-full rounded-[12px] py-[15px] text-[16px] font-bold text-white transition-opacity disabled:opacity-60"
-          style="background: linear-gradient(150deg, #2180E0 0%, #3B9EFF 100%); box-shadow: 0 8px 20px rgba(33,128,224,.32);"
-        >
-          @if (searching()) { Searching… } @else { Find booking }
-        </button>
+          [disabled]="searching() || form.invalid"
+          class="btn-primary"
+          style="width:100%; border:none; cursor:pointer; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:15px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);"
+          [style.opacity]="(searching() || form.invalid) ? '0.6' : '1'"
+        >{{ searching() ? 'Searching…' : 'Find my booking' }}</button>
       </form>
     </div>
+
+    <p style="margin:20px 0 0; text-align:center; font-size:13px; color:#8A99B3;">
+      Your booking reference was emailed to you when you completed your booking.
+    </p>
   </div>
 </div>

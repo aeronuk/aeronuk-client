@@ -24,6 +24,8 @@ export class App {
 
   protected readonly showStepper = computed(() => {
     const u = this.url() ?? '';
-    return u.startsWith('/booking') || u.startsWith('/payment');
+    return u.startsWith('/flights/results') ||
+           u.startsWith('/booking') ||
+           u.startsWith('/payment');
   });
 }

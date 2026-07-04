@@ -1,70 +1,48 @@
-// src/app/booking/passenger-form.component.ts
-import { Component, signal } from '@angular/core';
-import { inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Component, signal, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CurrencyPipe } from '@angular/common';
-import { switchMap } from 'rxjs/operators';
 import { BookingFlowService } from '../shared/services/booking-flow.service';
-import { Booking } from '../shared/models/booking.model';
 
 @Component({
   selector: 'app-passenger-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CurrencyPipe],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './passenger-form.component.html',
 })
 export class PassengerFormComponent {
-  private http   = inject(HttpClient);
   protected flow   = inject(BookingFlowService);
   private router = inject(Router);
 
-  submitting = signal(false);
-  error      = signal<string | null>(null);
+  submitted = signal(false);
 
   form = new FormGroup({
-    firstName: new FormControl('', Validators.required),
-    lastName:  new FormControl('', Validators.required),
-    email:     new FormControl('', [Validators.required, Validators.email]),
-    phone:     new FormControl(''),
+    title:       new FormControl('',  Validators.required),
+    firstName:   new FormControl('',  Validators.required),
+    lastName:    new FormControl('',  Validators.required),
+    dob:         new FormControl('',  Validators.required),
+    nationality: new FormControl('',  Validators.required),
+    email:       new FormControl('',  [Validators.required, Validators.email]),
+    mobile:      new FormControl('',  Validators.required),
   });
 
+  hasError(field: string): boolean {
+    const c = this.form.get(field);
+    return this.submitted() && !!c && c.invalid;
+  }
+
   submit(): void {
+    this.submitted.set(true);
     if (this.form.invalid) return;
-    const flight = this.flow.flight()!;
-    const seat   = this.flow.seat()!;
-    const { firstName, lastName, email, phone } = this.form.value;
-
-    this.submitting.set(true);
-    this.error.set(null);
-
-    this.http.get<{ bookingCode: string }>('/api/bookings/generate-code').pipe(
-      switchMap(({ bookingCode }) => {
-        const headers = new HttpHeaders({ 'X-Idempotency-Key': bookingCode });
-        const body = {
-          flightId:    flight.id,
-          seatNumber:  seat.seatNumber,
-          totalAmount: flight.price.amount,
-          currency:    flight.price.currency,
-          passenger: {
-            firstName: firstName!,
-            lastName:  lastName!,
-            email:     email!,
-            phone:     phone || null,
-          },
-        };
-        return this.http.post<Booking>('/api/bookings', body, { headers });
-      }),
-    ).subscribe({
-      next: booking => {
-        this.flow.setBooking(booking);
-        this.router.navigate(['/booking/confirmation']);
-      },
-      error: () => {
-        this.error.set('Booking failed. Please try again.');
-        this.submitting.set(false);
-      },
+    const v = this.form.value;
+    this.flow.setPassengerDraft({
+      title:       v.title!,
+      firstName:   v.firstName!,
+      lastName:    v.lastName!,
+      dob:         v.dob!,
+      nationality: v.nationality!,
+      email:       v.email!,
+      mobile:      v.mobile!,
     });
+    this.router.navigate(['/booking/seats']);
   }
 }

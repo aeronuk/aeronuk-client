@@ -1,95 +1,141 @@
-// src/app/payment/payment-form.component.ts
-import { Component, DestroyRef, OnInit, signal } from '@angular/core';
-import { inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CurrencyPipe } from '@angular/common';
+import { Component, signal, inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router, RouterLink } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { switchMap } from 'rxjs/operators';
 import { BookingFlowService } from '../shared/services/booking-flow.service';
+import { Booking } from '../shared/models/booking.model';
 import { Payment } from '../shared/models/payment.model';
 
-type PaymentMethod = 'CREDIT_CARD' | 'PAYPAL' | 'APPLE_PAY' | 'PIX' | 'IDEAL';
+type Method = 'card' | 'paypal' | 'applepay';
 
 @Component({
   selector: 'app-payment-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CurrencyPipe],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './payment-form.component.html',
 })
-export class PaymentFormComponent implements OnInit {
-  private http       = inject(HttpClient);
-  protected flow       = inject(BookingFlowService);
-  private router     = inject(Router);
-  private destroyRef = inject(DestroyRef);
+export class PaymentFormComponent {
+  private http   = inject(HttpClient);
+  protected flow   = inject(BookingFlowService);
+  private router = inject(Router);
 
-  readonly methods: PaymentMethod[] = ['CREDIT_CARD', 'PAYPAL', 'APPLE_PAY', 'PIX', 'IDEAL'];
-  methodControl = new FormControl<PaymentMethod>('CREDIT_CARD', { nonNullable: true });
-  detailsForm: FormGroup = new FormGroup({});
-
+  method    = signal<Method>('card');
+  submitted = signal(false);
   submitting = signal(false);
   error      = signal<string | null>(null);
 
-  ngOnInit(): void {
-    this.buildDetailsForm(this.methodControl.value);
-    this.methodControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(method => this.buildDetailsForm(method));
+  cardForm = new FormGroup({
+    cardName:   new FormControl('', Validators.required),
+    cardNumber: new FormControl('', Validators.required),
+    expiry:     new FormControl('', Validators.required),
+    cvc:        new FormControl('', Validators.required),
+    address:    new FormControl('', Validators.required),
+    city:       new FormControl('', Validators.required),
+    postcode:   new FormControl('', Validators.required),
+  });
+
+  hasError(field: string): boolean {
+    const c = this.cardForm.get(field);
+    return this.submitted() && !!c && c.invalid;
   }
 
-  private buildDetailsForm(method: PaymentMethod): void {
-    const controls: Record<string, AbstractControl> = {};
-    switch (method) {
-      case 'CREDIT_CARD':
-        controls['cardNumber']  = new FormControl('', Validators.required);
-        controls['expiryMonth'] = new FormControl('', Validators.required);
-        controls['expiryYear']  = new FormControl('', Validators.required);
-        break;
-      case 'PAYPAL':
-        controls['email'] = new FormControl('', [Validators.required, Validators.email]);
-        break;
-      case 'APPLE_PAY':
-        controls['token'] = new FormControl('', Validators.required);
-        break;
-      case 'PIX':
-        controls['pixKey'] = new FormControl('', Validators.required);
-        break;
-      case 'IDEAL':
-        controls['bank'] = new FormControl('', Validators.required);
-        break;
-    }
-    // Replace all controls
-    Object.keys(this.detailsForm.controls).forEach(k => this.detailsForm.removeControl(k));
-    Object.entries(controls).forEach(([k, c]) => this.detailsForm.addControl(k, c));
+  selectMethod(m: Method): void {
+    this.method.set(m);
+    this.submitted.set(false);
+    this.error.set(null);
   }
 
-  submit(): void {
-    if (this.detailsForm.invalid) return;
-    const booking = this.flow.booking()!;
+  submitCard(): void {
+    this.submitted.set(true);
+    if (this.cardForm.invalid) return;
+
+    const flight  = this.flow.flight()!;
+    const seat    = this.flow.seat()!;
+    const draft   = this.flow.passengerDraft()!;
+    const v       = this.cardForm.value;
+    const [em, ey] = (v.expiry ?? '').split('/').map(s => s.trim());
+
     this.submitting.set(true);
     this.error.set(null);
 
-    const body = {
-      bookingCode: booking.bookingCode,
-      method:      this.methodControl.value,
-      details:     this.detailsForm.value,
-    };
-
-    this.http.post<Payment>('/api/payments', body).subscribe({
+    this.http.get<{ bookingCode: string }>('/api/bookings/generate-code').pipe(
+      switchMap(({ bookingCode }) => {
+        const headers = new HttpHeaders({ 'X-Idempotency-Key': bookingCode });
+        const body = {
+          flightId:    flight.id,
+          seatNumber:  seat.seatNumber,
+          totalAmount: flight.price.amount + 62,
+          currency:    flight.price.currency || 'GBP',
+          passenger: {
+            firstName: draft.firstName,
+            lastName:  draft.lastName,
+            email:     draft.email,
+            phone:     draft.mobile,
+          },
+        };
+        return this.http.post<Booking>('/api/bookings', body, { headers });
+      }),
+      switchMap(booking => {
+        this.flow.setBooking(booking);
+        const payBody = {
+          bookingCode: booking.bookingCode,
+          method:      'CREDIT_CARD',
+          details: {
+            cardNumber:  v.cardNumber,
+            expiryMonth: em,
+            expiryYear:  ey,
+            cvc:         v.cvc,
+          },
+        };
+        return this.http.post<Payment>('/api/payments', payBody);
+      }),
+    ).subscribe({
       next: payment => {
         this.flow.setPayment(payment);
-        this.router.navigate(['/payment/receipt']);
+        this.router.navigate(['/booking/confirmation']);
       },
-      error: (err: HttpErrorResponse) => {
-        if (err.status === 402) {
-          this.error.set('Payment declined — please try another method.');
-        } else if (err.status === 404) {
-          this.error.set('No pending booking found.');
-        } else if (err.status === 409) {
-          this.router.navigate(['/payment/receipt']);
-        } else {
-          this.error.set('Payment failed. Please try again.');
-        }
+      error: () => {
+        this.error.set('Payment failed. Please check your details and try again.');
         this.submitting.set(false);
       },
     });
   }
+
+  submitAltMethod(): void {
+    const flight = this.flow.flight();
+    const seat   = this.flow.seat();
+    const draft  = this.flow.passengerDraft();
+    if (!flight || !seat || !draft) { this.router.navigate(['/booking/seats']); return; }
+
+    this.submitting.set(true);
+    this.http.get<{ bookingCode: string }>('/api/bookings/generate-code').pipe(
+      switchMap(({ bookingCode }) => {
+        const headers = new HttpHeaders({ 'X-Idempotency-Key': bookingCode });
+        const body = {
+          flightId:    flight.id,
+          seatNumber:  seat.seatNumber,
+          totalAmount: flight.price.amount + 62,
+          currency:    flight.price.currency || 'GBP',
+          passenger: { firstName: draft.firstName, lastName: draft.lastName, email: draft.email, phone: draft.mobile },
+        };
+        return this.http.post<Booking>('/api/bookings', body, { headers });
+      }),
+    ).subscribe({
+      next: booking => { this.flow.setBooking(booking); this.router.navigate(['/booking/confirmation']); },
+      error: () => { this.error.set('Something went wrong. Please try again.'); this.submitting.set(false); },
+    });
+  }
+
+  protected readonly seatLabel = (() => this.flow.seat()?.seatNumber ?? '—');
+  protected readonly seatPrice = (() => {
+    const s = this.flow.seat();
+    if (!s) return '£0';
+    return s.class === 'extra' ? '£18' : '£8';
+  });
+  protected readonly total = (() => {
+    const s = this.flow.seat();
+    const seatCost = s ? (s.class === 'extra' ? 18 : 8) : 0;
+    return `£${(this.flow.flight()?.price.amount ?? 389) + 62 + seatCost}`;
+  });
 }

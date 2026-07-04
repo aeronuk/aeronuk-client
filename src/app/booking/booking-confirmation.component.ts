@@ -1,21 +1,29 @@
-// src/app/booking/booking-confirmation.component.ts
-import { Component, OnInit } from '@angular/core';
-import { inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { CurrencyPipe } from '@angular/common';
 import { BookingFlowService } from '../shared/services/booking-flow.service';
 
 @Component({
   selector: 'app-booking-confirmation',
   standalone: true,
-  imports: [CurrencyPipe, RouterLink],
+  imports: [RouterLink],
   templateUrl: './booking-confirmation.component.html',
 })
-export class BookingConfirmationComponent implements OnInit {
+export class BookingConfirmationComponent {
+  protected flow   = inject(BookingFlowService);
   private router = inject(Router);
-  flow = inject(BookingFlowService);
 
-  ngOnInit(): void {
-    if (!this.flow.booking()) this.router.navigate(['/booking']);
+  bookNew(): void {
+    this.flow.reset();
+    this.router.navigate(['/flights']);
+  }
+
+  formatDate(iso: string): string {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  formatTime(iso: string): string {
+    if (!iso) return '';
+    return new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
   }
 }

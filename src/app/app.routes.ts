@@ -6,6 +6,10 @@ export const routes: Routes = [
     loadChildren: () => import('./flights/flights.routes').then(m => m.FLIGHTS_ROUTES),
   },
   {
+    path: 'destinations',
+    loadChildren: () => import('./flights/all-destinations.routes').then(m => m.ALL_DESTINATIONS_ROUTES),
+  },
+  {
     path: 'booking',
     loadChildren: () => import('./booking/booking.routes').then(m => m.BOOKING_ROUTES),
   },

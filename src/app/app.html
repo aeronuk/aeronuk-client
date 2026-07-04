@@ -1,13 +1,20 @@
 <!-- Header -->
-<header class="sticky top-0 z-50 border-b border-[#E4E9F2] bg-white/90 backdrop-blur-md">
-  <div class="mx-auto flex h-16 max-w-[1180px] items-center justify-between px-6">
-    <a routerLink="/flights" class="flex items-center gap-2">
-      <img src="assets/logo.svg" class="h-[38px] w-[38px]" alt="AeroNUK logo">
-      <span class="text-[15px] font-bold tracking-[-0.01em] text-[#0B1E3D]">Aero<span class="text-[#2180E0]">NUK</span></span>
+<header style="position:sticky; top:0; z-index:50; background:rgba(255,255,255,0.85); backdrop-filter:saturate(1.4) blur(12px); border-bottom:1px solid #E4E9F2;">
+  <div style="max-width:1180px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; gap:32px;">
+    <a routerLink="/flights" style="display:flex; align-items:center; gap:11px; text-decoration:none; color:inherit;">
+      <svg viewBox="0 0 680 680" width="38" height="38" style="display:block;" aria-hidden="true">
+        <circle cx="340" cy="340" r="320" fill="#0B1E3D"/>
+        <circle cx="340" cy="340" r="304" fill="none" stroke="#1A3561" stroke-width="2"/>
+        <path d="M 340 150 L 480 520 L 434 520 L 340 270 L 246 520 L 200 520 Z" fill="#FFFFFF"/>
+        <path d="M 268 430 L 412 430 L 400 398 L 280 398 Z" fill="#0B1E3D"/>
+        <path d="M 412 468 L 560 388 Q 604 368 616 366 Q 632 362 628 374 Q 624 384 606 394 L 484 462 Z" fill="#3B9EFF"/>
+        <path d="M 268 468 L 120 388 Q 76 368 64 366 Q 48 362 52 374 Q 56 384 74 394 L 196 462 Z" fill="#3B9EFF"/>
+      </svg>
+      <span style="font-size:20px; font-weight:800; letter-spacing:-0.02em; color:#0B1E3D;">Aero<span style="color:#2180E0;">NUK</span></span>
     </a>
-    <nav class="flex items-center gap-6">
-      <a routerLink="/flights" routerLinkActive="text-[#0B1E3D] font-semibold" class="text-[14px] text-[#5C6B84] transition-colors hover:text-[#0B1E3D]">Book</a>
-      <a routerLink="/my-trips" routerLinkActive="text-[#0B1E3D] font-semibold" class="text-[14px] text-[#5C6B84] transition-colors hover:text-[#0B1E3D]">My trips</a>
+    <nav style="display:flex; gap:6px; margin-left:8px;">
+      <a routerLink="/flights" routerLinkActive="active-nav" [routerLinkActiveOptions]="{exact:true}" style="text-decoration:none; color:#0B1E3D; font-weight:600; font-size:15px; padding:8px 14px; border-radius:9px; transition:background 0.15s ease;">Book</a>
+      <a routerLink="/my-trips" routerLinkActive="active-nav" style="text-decoration:none; color:#5C6B84; font-weight:500; font-size:15px; padding:8px 14px; border-radius:9px; transition:background 0.15s ease;">My trips</a>
     </nav>
   </div>
 </header>
@@ -20,16 +27,14 @@
   <router-outlet />
 </main>
 
-<footer class="mt-16 border-t border-[#E4E9F2] bg-white py-6">
-  <div class="mx-auto flex max-w-[1180px] items-center justify-between px-6">
-    <div class="flex items-center gap-2">
-      <img src="assets/logo.svg" class="h-[32px] w-[32px]" alt="AeroNUK">
-      <span class="text-[13px] text-[#8A99B3]">Fictional airline · demo booking experience</span>
-    </div>
-    <div class="flex gap-5">
-      <a href="#" class="text-[13px] text-[#8A99B3] hover:text-[#0B1E3D]">Privacy</a>
-      <a href="#" class="text-[13px] text-[#8A99B3] hover:text-[#0B1E3D]">Fare rules</a>
-      <a href="#" class="text-[13px] text-[#8A99B3] hover:text-[#0B1E3D]">Contact</a>
+<footer style="border-top:1px solid #E4E9F2; background:#fff;">
+  <div style="max-width:1180px; margin:0 auto; padding:26px 24px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+    <span style="font-size:15px; font-weight:800; letter-spacing:-0.02em;">Aero<span style="color:#2180E0;">NUK</span></span>
+    <span style="color:#8A99B3; font-size:13px;">Fictional airline · demo booking experience</span>
+    <div style="margin-left:auto; display:flex; gap:20px;">
+      <a href="#" style="color:#8A99B3; font-size:13px; text-decoration:none;">Privacy</a>
+      <a href="#" style="color:#8A99B3; font-size:13px; text-decoration:none;">Fare rules</a>
+      <a href="#" style="color:#8A99B3; font-size:13px; text-decoration:none;">Contact</a>
     </div>
   </div>
 </footer>

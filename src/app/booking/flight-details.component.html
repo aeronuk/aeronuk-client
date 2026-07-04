@@ -1,0 +1,89 @@
+<div style="max-width:1180px; margin:0 auto; padding:26px 24px 72px;">
+  <a routerLink="/flights/results" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none; display:inline-block; margin-bottom:16px;">← Back to results</a>
+
+  <div style="display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:start;">
+    <div style="display:flex; flex-direction:column; gap:20px;">
+
+      <!-- Itinerary card -->
+      <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:26px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:22px;">
+          <div style="font-size:19px; font-weight:800;">Outbound · Mon 14 Jul</div>
+          <div style="font-size:13px; font-weight:600; color:#5C6B84; background:#EEF2F8; padding:5px 12px; border-radius:999px;">Direct</div>
+        </div>
+        <div style="display:flex; gap:18px;">
+          <div style="display:flex; flex-direction:column; align-items:center; padding-top:5px;">
+            <div style="width:12px; height:12px; border-radius:50%; border:2px solid #2180E0;"></div>
+            <div style="width:2px; flex:1; background:#D5DEEA; min-height:70px;"></div>
+            <div style="width:12px; height:12px; border-radius:50%; background:#2180E0;"></div>
+          </div>
+          <div style="flex:1;">
+            @if (flow.flight()) {
+              <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <div><span style="font-size:22px; font-weight:800;">{{ formatTime(flow.flight()!.departureTime) }}</span> <span style="color:#5C6B84; font-weight:600;">London Heathrow (LHR)</span></div>
+                <div style="color:#8A99B3; font-size:14px;">Terminal 5</div>
+              </div>
+              <div style="color:#8A99B3; font-size:13px; margin:14px 0 18px; display:flex; align-items:center; gap:8px;">
+                <span style="color:#2180E0;">✈</span> AeroNUK {{ flow.flight()!.flightNumber }} · Boeing 787-9 · Economy
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <div><span style="font-size:22px; font-weight:800;">{{ formatTime(flow.flight()!.arrivalTime) }}</span> <span style="color:#5C6B84; font-weight:600;">New York (JFK)</span></div>
+                <div style="color:#8A99B3; font-size:14px;">Terminal 7</div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Fare selection -->
+      <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:26px;">
+        <div style="font-size:19px; font-weight:800; margin-bottom:6px;">Choose your fare</div>
+        <p style="margin:0 0 20px; color:#8A99B3; font-size:14px;">All fares include taxes and one personal item.</p>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px;">
+          @for (fare of fareDefs; track fare.name) {
+            <div
+              style="position:relative; border-radius:14px; padding:22px 18px 18px; transition:border 0.15s ease, background 0.15s ease;"
+              [style.border]="selectedFare() === fare.name ? '2px solid #2180E0' : '1.5px solid #E4E9F2'"
+              [style.background]="selectedFare() === fare.name ? '#F5FAFF' : '#fff'"
+            >
+              @if (fare.tag) {
+                <span style="position:absolute; top:-11px; left:16px; background:#F2A03D; color:#3B2500; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px;">{{ fare.tag }}</span>
+              }
+              <div style="font-size:15px; font-weight:700; color:#5C6B84;">{{ fare.name }}</div>
+              <div style="font-size:28px; font-weight:800; letter-spacing:-0.02em; margin:6px 0 14px;">{{ fare.price }}</div>
+              <div style="display:flex; flex-direction:column; gap:9px; margin-bottom:18px;">
+                @for (feat of fare.features; track feat) {
+                  <div style="display:flex; gap:8px; font-size:13px; color:#3A4A66;"><span style="color:#1F9D6B;">✓</span> {{ feat }}</div>
+                }
+              </div>
+              <button
+                (click)="selectFare(fare.name)"
+                style="width:100%; border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:14px; padding:11px; border-radius:10px; transition:filter 0.15s ease, transform 0.15s ease;"
+                [style.background]="selectedFare() === fare.name ? '#2180E0' : '#EEF2F8'"
+                [style.color]="selectedFare() === fare.name ? '#fff' : '#0B1E3D'"
+              >{{ selectedFare() === fare.name ? 'Selected' : 'Select' }}</button>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Trip summary sidebar -->
+    <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; position:sticky; top:88px;">
+      <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Trip summary</div>
+      <div style="display:flex; align-items:center; gap:10px; padding-bottom:16px; border-bottom:1px solid #EEF2F8;">
+        <div style="font-size:15px; font-weight:700;">LHR</div>
+        <span style="color:#2180E0;">→</span>
+        <div style="font-size:15px; font-weight:700;">JFK</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:11px; padding:16px 0; border-bottom:1px solid #EEF2F8; font-size:14px;">
+        <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Fare (1 adult)</span><span style="font-weight:600;">{{ selectedFarePrice() }}</span></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Taxes & fees</span><span style="font-weight:600;">£62</span></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:baseline; padding-top:16px;">
+        <span style="font-weight:700;">Total</span>
+        <span style="font-size:26px; font-weight:800; letter-spacing:-0.02em;">£451</span>
+      </div>
+      <button (click)="continue()" class="btn-primary" style="width:100%; border:none; cursor:pointer; margin-top:18px; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:15px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);">Continue →</button>
+    </div>
+  </div>
+</div>

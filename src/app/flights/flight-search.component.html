@@ -1,102 +1,143 @@
 <!-- Hero -->
-<section class="relative h-72 overflow-hidden" style="background: linear-gradient(160deg, #0B1E3D 0%, #12305C 55%, #1A3F73 100%);">
-  <div class="absolute -right-24 -top-24 h-96 w-96 rounded-full opacity-20" style="background: radial-gradient(circle, #2180E0 0%, transparent 70%)"></div>
-  <div class="relative mx-auto flex h-full max-w-[1180px] flex-col justify-center px-6">
-    <p class="mb-2 text-[13px] font-semibold uppercase tracking-[0.12em] text-[#3B9EFF]">One way</p>
-    <h1 class="text-[52px] font-extrabold leading-[1.04] tracking-[-0.03em] text-white">Where to<br>today?</h1>
+<section style="position:relative; background:linear-gradient(165deg,#0B1E3D 0%,#12305C 60%,#1A3F73 100%); overflow:hidden;">
+  <div style="position:absolute; inset:0; background-image:radial-gradient(circle at 82% 18%, rgba(59,158,255,0.28), transparent 42%); pointer-events:none;"></div>
+  <div style="position:absolute; right:-40px; top:24px; opacity:0.10; pointer-events:none;">
+    <svg viewBox="0 0 680 680" width="420" height="420" aria-hidden="true">
+      <path d="M 340 150 L 480 520 L 434 520 L 340 270 L 246 520 L 200 520 Z" fill="#FFFFFF"/>
+      <path d="M 412 468 L 560 388 Q 604 368 616 366 Q 632 362 628 374 Q 624 384 606 394 L 484 462 Z" fill="#3B9EFF"/>
+      <path d="M 268 468 L 120 388 Q 76 368 64 366 Q 48 362 52 374 Q 56 384 74 394 L 196 462 Z" fill="#3B9EFF"/>
+    </svg>
+  </div>
+  <div style="max-width:1180px; margin:0 auto; padding:64px 24px 120px; position:relative;">
+    <p style="margin:0 0 14px; color:#9FC6F5; font-weight:600; font-size:15px; letter-spacing:0.14em; text-transform:uppercase;">Fly better with AeroNUK</p>
+    <h1 style="margin:0; font-size:52px; line-height:1.04; font-weight:800; letter-spacing:-0.03em; color:#fff; white-space:nowrap;">Where would you like to go today?</h1>
+    <p style="margin:18px 0 0; color:#B8C7DE; font-size:18px; line-height:1.5; white-space:nowrap;">Search hundreds of routes, compare fares and book in seconds — no hidden fees, ever.</p>
   </div>
 </section>
 
 <!-- Search Card -->
-<div class="mx-auto -mt-[72px] max-w-[1180px] px-6 pb-12">
-  <div class="rounded-[22px] bg-white p-[26px]" style="box-shadow: 0 1px 2px rgba(11,30,61,.05), 0 24px 60px rgba(11,30,61,.16);">
-    <form [formGroup]="form" (ngSubmit)="search()">
-      <div class="grid grid-cols-3 gap-4">
+<div style="max-width:1180px; margin:-72px auto 0; padding:0 24px; position:relative; z-index:10;">
+  <div style="background:#fff; border-radius:22px; box-shadow:0 1px 2px rgba(11,30,61,0.05), 0 24px 60px rgba(11,30,61,0.16); padding:26px;">
 
-        <!-- From -->
-        <div>
-          <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A99B3]">From</label>
-          <div class="rounded-[12px] border border-[#E4E9F2] px-[14px] py-[11px]">
-            <select formControlName="origin" class="w-full bg-transparent text-[17px] font-bold text-[#0B1E3D] outline-none">
-              <option value="">Select origin</option>
-              @for (code of airportCodes; track code) {
-                <option [value]="code">{{ code }}</option>
-              }
-            </select>
-            <span class="mt-0.5 block text-[13px] text-[#8A99B3]">Airport code</span>
-          </div>
+    <div style="display:flex; gap:8px; margin-bottom:22px;">
+      <button type="button" style="border:none; cursor:default; background:#0B1E3D; color:#fff; font-family:inherit; font-weight:600; font-size:14px; padding:9px 18px; border-radius:999px;">One way</button>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1.4fr 1.4fr 1fr; gap:12px; align-items:end;">
+
+      <!-- From -->
+      <div style="position:relative;">
+        <label style="display:block; font-size:12px; font-weight:600; color:#8A99B3; margin-bottom:7px; text-transform:uppercase; letter-spacing:0.06em;">From</label>
+        <div style="position:relative; border:1px solid #E4E9F2; border-radius:12px; padding:11px 14px; background:#fff; min-height:64px;">
+          @if (originAirport()) {
+            <div style="font-size:17px; font-weight:700; pointer-events:none;">{{ originAirport()!.city }}</div>
+            <div style="font-size:13px; color:#8A99B3; pointer-events:none;">{{ originAirport()!.code }} · {{ originAirport()!.airport }}</div>
+          } @else {
+            <div style="font-size:15px; font-weight:600; color:#B3261E; pointer-events:none;">Select an origin</div>
+          }
+          <select
+            [value]="originCode()"
+            (change)="originCode.set($any($event.target).value)"
+            style="position:absolute; inset:0; opacity:0; width:100%; cursor:pointer;"
+            aria-label="Origin airport"
+          >
+            <option value="">Select origin</option>
+            @for (a of airports; track a.code) {
+              <option [value]="a.code">{{ a.city }} ({{ a.code }})</option>
+            }
+          </select>
         </div>
-
-        <!-- To -->
-        <div>
-          <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A99B3]">To</label>
-          <div class="rounded-[12px] border border-[#E4E9F2] px-[14px] py-[11px]">
-            <select formControlName="destination" class="w-full bg-transparent text-[17px] font-bold text-[#0B1E3D] outline-none">
-              <option value="">Select destination</option>
-              @for (code of airportCodes; track code) {
-                <option [value]="code">{{ code }}</option>
-              }
-            </select>
-            <span class="mt-0.5 block text-[13px] text-[#8A99B3]">Airport code</span>
-          </div>
-        </div>
-
-        <!-- Depart -->
-        <div>
-          <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A99B3]">Depart</label>
-          <div class="rounded-[12px] border border-[#E4E9F2] px-[14px] py-[11px]">
-            <input type="date" formControlName="date" class="w-full bg-transparent text-[17px] font-bold text-[#0B1E3D] outline-none" />
-            <span class="mt-0.5 block text-[13px] text-[#8A99B3]">Pick a date</span>
-          </div>
-        </div>
-
-      </div>
-
-      @if (error()) {
-        <p class="mt-3 text-[14px] text-red-600">{{ error() }}</p>
-      }
-
-      <div class="mt-5 flex justify-end">
+        <!-- Swap button -->
         <button
-          type="submit"
-          [disabled]="form.invalid || loading()"
-          class="rounded-[12px] px-10 py-[15px] text-[16px] font-bold text-white transition-opacity disabled:opacity-60"
-          style="background: linear-gradient(150deg, #2180E0 0%, #3B9EFF 100%); box-shadow: 0 8px 20px rgba(33,128,224,.32);"
+          type="button"
+          (click)="swap()"
+          style="position:absolute; right:-18px; bottom:14px; z-index:5; width:36px; height:36px; border-radius:50%; border:1px solid #E4E9F2; background:#fff; box-shadow:0 4px 10px rgba(11,30,61,0.10); cursor:pointer; color:#2180E0; font-size:16px; display:flex; align-items:center; justify-content:center; transition:border-color 0.15s ease, background 0.15s ease;"
+          aria-label="Swap airports"
         >
-          @if (loading()) { Searching… } @else { Search flights → }
+          <span [style.display]="'inline-block'" [style.transition]="'transform 0.35s ease'" [style.transform]="'rotate(' + swapRotation() + 'deg)'">⇄</span>
         </button>
       </div>
-    </form>
+
+      <!-- To -->
+      <div>
+        <label style="display:block; font-size:12px; font-weight:600; color:#8A99B3; margin-bottom:7px; text-transform:uppercase; letter-spacing:0.06em;">To</label>
+        <div style="position:relative; border:1px solid #E4E9F2; border-radius:12px; padding:11px 14px; background:#fff; min-height:64px;">
+          @if (destinationAirport()) {
+            <div style="font-size:17px; font-weight:700; pointer-events:none;">{{ destinationAirport()!.city }}</div>
+            <div style="font-size:13px; color:#8A99B3; pointer-events:none;">{{ destinationAirport()!.code }} · {{ destinationAirport()!.airport }}</div>
+          } @else {
+            <div style="font-size:15px; font-weight:600; color:#B3261E; pointer-events:none;">Select a destination</div>
+          }
+          <select
+            [value]="destinationCode()"
+            (change)="destinationCode.set($any($event.target).value)"
+            style="position:absolute; inset:0; opacity:0; width:100%; cursor:pointer;"
+            aria-label="Destination airport"
+          >
+            <option value="">Select destination</option>
+            @for (a of airports; track a.code) {
+              <option [value]="a.code">{{ a.city }} ({{ a.code }})</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Depart -->
+      <div>
+        <label style="display:block; font-size:12px; font-weight:600; color:#8A99B3; margin-bottom:7px; text-transform:uppercase; letter-spacing:0.06em;">Depart</label>
+        <div style="border:1px solid #E4E9F2; border-radius:12px; padding:11px 14px; background:#fff; min-height:64px;">
+          <input
+            type="date"
+            [value]="date()"
+            (change)="date.set($any($event.target).value)"
+            style="display:block; width:100%; border:none; background:transparent; font-family:inherit; font-size:17px; font-weight:700; color:#0B1E3D; outline:none; padding:0;"
+            aria-label="Departure date"
+          />
+          <div style="font-size:13px; color:#8A99B3; margin-top:2px;">Pick a date</div>
+        </div>
+      </div>
+
+    </div>
+
+    @if (searchError()) {
+      <div style="margin-top:16px; background:#FCEBEA; color:#B3261E; font-size:13px; font-weight:600; padding:11px 14px; border-radius:10px;">{{ searchError() }}</div>
+    }
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; flex-wrap:wrap; gap:12px;">
+      <div style="display:flex; gap:16px;">
+        <a href="#" (click)="$event.preventDefault(); previewNoResults()" style="color:#8A99B3; text-decoration:underline; font-size:13px;">Preview: no flights found</a>
+        <a href="#" (click)="$event.preventDefault(); previewError()" style="color:#8A99B3; text-decoration:underline; font-size:13px;">Preview: search error</a>
+      </div>
+      <button
+        type="button"
+        (click)="search()"
+        class="btn-primary"
+        style="border:none; cursor:pointer; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:15px 40px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.32); display:flex; align-items:center; gap:9px;"
+      >Search flights →</button>
+    </div>
   </div>
 
-  <!-- Results -->
-  @if (results().length > 0) {
-    <div class="mt-10">
-      <h2 class="mb-4 text-[26px] font-extrabold tracking-[-0.02em] text-[#0B1E3D]">
-        {{ results().length }} direct flight{{ results().length === 1 ? '' : 's' }} found
-      </h2>
-      <app-flight-results [results]="results()" />
+  <!-- Popular Destinations -->
+  <section style="margin:56px 0 0; padding-bottom:72px;">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:22px;">
+      <h2 style="margin:0; font-size:26px; font-weight:800; letter-spacing:-0.02em;">Popular right now</h2>
+      <a routerLink="/destinations" style="color:#2180E0; font-weight:600; font-size:15px; text-decoration:none;">View all destinations →</a>
     </div>
-  }
-
-  <!-- Popular destinations (pre-search) -->
-  @if (results().length === 0) {
-    <div class="mt-10">
-      <h2 class="mb-5 text-[26px] font-extrabold tracking-[-0.02em] text-[#0B1E3D]">Popular right now</h2>
-      <div class="grid grid-cols-4 gap-[18px]">
-        @for (dest of popularDestinations; track dest.code) {
-          <div class="overflow-hidden rounded-[16px] bg-white" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
-            <div class="flex h-[150px] items-end p-3" style="background: repeating-linear-gradient(135deg, #DCE5F1 0 12px, #E7EEF7 12px 24px);">
-              <span class="font-mono text-[11px] text-[#8A99B3]">{{ dest.imageLabel }}</span>
-            </div>
-            <div class="p-4">
-              <p class="text-[15px] font-bold text-[#0B1E3D]">{{ dest.city }}</p>
-              <p class="text-[13px] text-[#8A99B3]">{{ dest.code }}</p>
-              <p class="mt-1 text-[13px] font-semibold text-[#2180E0]">Return from £{{ dest.price }}</p>
-            </div>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:18px;">
+      @for (dest of popularDestinations; track dest.code) {
+        <div (click)="selectDestination(dest)" style="background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.07); cursor:pointer;">
+          <div style="height:150px; background-image:repeating-linear-gradient(135deg,#DCE5F1 0 12px,#E7EEF7 12px 24px); display:flex; align-items:flex-end; padding:12px;">
+            <span style="background:rgba(11,30,61,0.72); color:#fff; font-size:11px; font-family:ui-monospace,monospace; padding:4px 8px; border-radius:6px;">{{ dest.imageLabel }}</span>
           </div>
-        }
-      </div>
+          <div style="padding:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="font-size:18px; font-weight:700;">{{ dest.city }}</div>
+              <div style="font-size:12px; font-weight:600; color:#8A99B3; font-family:ui-monospace,monospace;">{{ dest.code }}</div>
+            </div>
+            <div style="margin-top:8px; color:#5C6B84; font-size:14px;">Return from <span style="color:#0B1E3D; font-weight:700;">{{ dest.price }}</span></div>
+          </div>
+        </div>
+      }
     </div>
-  }
+  </section>
 </div>

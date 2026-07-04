@@ -1,91 +1,97 @@
-<div class="mx-auto max-w-[1180px] px-6 py-8">
-  <div class="grid grid-cols-[1fr_360px] gap-6 items-start">
+<div style="max-width:1180px; margin:0 auto; padding:26px 24px 72px;">
+  <a routerLink="/booking" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none; display:inline-block; margin-bottom:16px;">← Back to flight</a>
 
-    <!-- Main: passenger form -->
-    <div class="rounded-[16px] bg-white p-6" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
-      <h2 class="mb-6 text-[20px] font-extrabold text-[#0B1E3D]">Passenger details</h2>
+  <div style="display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:start;">
 
-      <!-- Passenger badge -->
-      <div class="mb-6 flex items-center gap-3">
-        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-[#2180E0] text-[13px] font-bold text-white">1</div>
-        <span class="text-[14px] font-semibold text-[#5C6B84]">Lead passenger</span>
+    <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:28px;">
+      <div style="font-size:20px; font-weight:800; margin-bottom:4px;">Passenger details</div>
+      <p style="margin:0 0 24px; color:#8A99B3; font-size:14px;">Enter names exactly as they appear on your passport. All fields are required.</p>
+
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; padding:12px 16px; background:#F4F6FB; border-radius:12px;">
+        <div style="width:30px; height:30px; border-radius:50%; background:#2180E0; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0;">1</div>
+        <div style="font-weight:700; font-size:15px;">Adult 1</div>
+        <div style="margin-left:auto; font-size:13px; color:#8A99B3;">Lead passenger</div>
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-5">
-        <div class="grid grid-cols-2 gap-4">
+      @if (submitted() && form.invalid) {
+        <div style="background:#FCEBEA; color:#B3261E; font-size:13px; font-weight:600; padding:11px 14px; border-radius:10px; margin-bottom:16px;">Please fill in all required passenger and contact fields before continuing.</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div style="display:grid; grid-template-columns:120px 1fr 1fr; gap:14px; margin-bottom:16px;">
           <div>
-            <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">First name</label>
-            <input type="text" formControlName="firstName" placeholder="John"
-              class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Title *</label>
+            <select formControlName="title" class="field-input field-select" [class.error]="hasError('title')">
+              <option value="">Select</option>
+              <option value="Mr">Mr</option>
+              <option value="Mrs">Mrs</option>
+              <option value="Ms">Ms</option>
+              <option value="Mx">Mx</option>
+            </select>
           </div>
           <div>
-            <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Last name</label>
-            <input type="text" formControlName="lastName" placeholder="Doe"
-              class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">First &amp; middle names *</label>
+            <input type="text" formControlName="firstName" class="field-input" [class.error]="hasError('firstName')" placeholder="Jordan">
+          </div>
+          <div>
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Last name *</label>
+            <input type="text" formControlName="lastName" class="field-input" [class.error]="hasError('lastName')" placeholder="Doe">
           </div>
         </div>
 
-        <div class="border-t border-[#E4E9F2] pt-5">
-          <p class="mb-4 text-[13px] font-bold uppercase tracking-[0.06em] text-[#8A99B3]">Contact information</p>
-          <div class="space-y-4">
-            <div>
-              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Email</label>
-              <input type="email" formControlName="email" placeholder="john@example.com"
-                class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
-              @if (form.controls.email.invalid && form.controls.email.touched) {
-                <p class="mt-1.5 text-[12px] text-red-600">Please enter a valid email address.</p>
-              }
-            </div>
-            <div>
-              <label class="mb-1.5 block text-[13px] font-semibold text-[#5C6B84]">Mobile <span class="font-normal text-[#B4BECE]">(optional)</span></label>
-              <input type="tel" formControlName="phone" placeholder="+44 7700 000000"
-                class="w-full rounded-[11px] border border-[#E4E9F2] px-[14px] py-[13px] text-[14px] text-[#0B1E3D] outline-none transition focus:border-[#2180E0] focus:ring-2 focus:ring-[#2180E0]/20" />
-            </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
+          <div>
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Date of birth *</label>
+            <input type="date" formControlName="dob" class="field-input" [class.error]="hasError('dob')">
+          </div>
+          <div>
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Nationality *</label>
+            <select formControlName="nationality" class="field-input field-select" [class.error]="hasError('nationality')">
+              <option value="">Select</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="United States">United States</option>
+              <option value="Ireland">Ireland</option>
+              <option value="Canada">Canada</option>
+              <option value="Australia">Australia</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
         </div>
 
-        @if (error()) {
-          <div class="rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-700">{{ error() }}</div>
-        }
+        <div style="height:1px; background:#EEF2F8; margin:24px 0;"></div>
+        <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Contact details</div>
 
-        <button
-          type="submit"
-          [disabled]="form.invalid || submitting()"
-          class="w-full rounded-[12px] py-[15px] text-[16px] font-bold text-white transition-opacity disabled:opacity-60"
-          style="background: linear-gradient(150deg, #2180E0 0%, #3B9EFF 100%); box-shadow: 0 8px 20px rgba(33,128,224,.32);"
-        >
-          @if (submitting()) { Creating booking… } @else { Continue to seats → }
-        </button>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <div>
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Email address *</label>
+            <input type="email" formControlName="email" class="field-input" [class.error]="hasError('email')" placeholder="you@email.com">
+          </div>
+          <div>
+            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Mobile number *</label>
+            <input type="tel" formControlName="mobile" class="field-input" [class.error]="hasError('mobile')" placeholder="+44 7700 900000">
+          </div>
+        </div>
       </form>
     </div>
 
-    <!-- Trip summary sidebar -->
-    <div class="sticky top-[88px] rounded-[16px] bg-white p-6" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
-      <p class="mb-4 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A99B3]">Trip summary</p>
-
-      @if (flow.flight(); as flight) {
-        <div class="flex items-center gap-2 rounded-[10px] bg-[#EAF3FD] px-3 py-2 text-[14px] font-bold text-[#0B1E3D]">
-          {{ flight.origin }} → {{ flight.destination }}
-        </div>
-        <p class="mt-3 text-[13px] text-[#5C6B84]">{{ flight.flightNumber }}</p>
-
-        <div class="mt-5 space-y-2 border-t border-[#E4E9F2] pt-4">
-          <div class="flex justify-between text-[14px]">
-            <span class="text-[#5C6B84]">Fare (1 adult)</span>
-            <span class="font-semibold text-[#0B1E3D]">{{ flight.price.amount | currency:flight.price.currency:'symbol':'1.0-0' }}</span>
-          </div>
-          <div class="flex justify-between text-[14px]">
-            <span class="text-[#5C6B84]">Taxes &amp; fees</span>
-            <span class="font-semibold text-[#0B1E3D]">Included</span>
-          </div>
-        </div>
-
-        <div class="mt-4 flex justify-between border-t border-[#E4E9F2] pt-4">
-          <span class="text-[15px] font-bold text-[#0B1E3D]">Total</span>
-          <span class="text-[22px] font-extrabold tracking-[-0.02em] text-[#0B1E3D]">{{ flight.price.amount | currency:flight.price.currency:'symbol':'1.0-0' }}</span>
-        </div>
-      }
+    <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; position:sticky; top:88px;">
+      <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Trip summary</div>
+      <div style="display:flex; align-items:center; gap:10px; padding-bottom:16px; border-bottom:1px solid #EEF2F8;">
+        @if (flow.flight()) {
+          <div style="font-size:15px; font-weight:700;">{{ flow.flight()!.origin }}</div>
+          <span style="color:#2180E0;">→</span>
+          <div style="font-size:15px; font-weight:700;">{{ flow.flight()!.destination }}</div>
+        }
+      </div>
+      <div style="display:flex; flex-direction:column; gap:11px; padding:16px 0; border-bottom:1px solid #EEF2F8; font-size:14px;">
+        <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Fare (1 adult)</span><span style="font-weight:600;">£389</span></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Taxes &amp; fees</span><span style="font-weight:600;">£62</span></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:baseline; padding-top:16px;">
+        <span style="font-weight:700;">Total</span>
+        <span style="font-size:26px; font-weight:800; letter-spacing:-0.02em;">£451</span>
+      </div>
+      <button (click)="submit()" class="btn-primary" style="width:100%; border:none; cursor:pointer; margin-top:18px; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:15px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);">Continue to seats →</button>
     </div>
-
   </div>
 </div>

@@ -1,74 +1,84 @@
 @if (state.foundBooking(); as booking) {
-  <div class="mx-auto max-w-[1180px] px-6 py-12">
-    <div class="mx-auto max-w-[640px]">
+  <div style="max-width:1180px; margin:0 auto; padding:32px 24px 80px;">
+    <a routerLink="/my-trips" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none; display:inline-block; margin-bottom:24px;">← Find another booking</a>
 
-      <!-- Back link -->
-      <a routerLink="/my-trips" class="mb-6 inline-flex items-center gap-1.5 text-[14px] text-[#5C6B84] hover:text-[#0B1E3D]">
-        ← Back to search
-      </a>
+    <div style="max-width:640px; margin:0 auto;">
 
-      <h1 class="mb-6 text-[28px] font-extrabold tracking-[-0.02em] text-[#0B1E3D]">Booking found</h1>
+      <!-- Status badge -->
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+        <div
+          style="display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:700; padding:6px 14px; border-radius:20px;"
+          [style.background]="booking.status === 'CONFIRMED' ? '#DDF0E8' : '#FFF3CD'"
+          [style.color]="booking.status === 'CONFIRMED' ? '#1F9D6B' : '#856404'"
+        >
+          <span style="width:7px; height:7px; border-radius:50%; background:currentColor; display:inline-block;"></span>
+          {{ booking.status === 'CONFIRMED' ? 'Confirmed' : booking.status }}
+        </div>
+        <span style="font-size:14px; color:#8A99B3;">Booking ref: <strong style="color:#0B1E3D;">{{ booking.bookingCode }}</strong></span>
+      </div>
 
-      <!-- Booking card -->
-      <div class="rounded-[16px] bg-white" style="box-shadow: 0 1px 2px rgba(11,30,61,.04), 0 12px 28px rgba(11,30,61,.06);">
-        <!-- Header -->
-        <div class="border-b border-[#E4E9F2] px-6 py-5">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <img src="assets/logo.svg" class="h-[34px] w-[34px]" alt="AeroNUK">
-              <div>
-                <p class="text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A99B3]">Booking reference</p>
-                <p class="font-mono text-[20px] font-bold tracking-widest text-[#2180E0]">{{ booking.bookingCode }}</p>
-              </div>
+      <!-- Itinerary card -->
+      <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; margin-bottom:16px;">
+        <div style="font-size:15px; font-weight:800; margin-bottom:18px;">Flight details</div>
+
+        <div style="display:flex; align-items:center; gap:0; margin-bottom:20px;">
+          <div style="flex:1;">
+            <div style="font-size:30px; font-weight:800; letter-spacing:-0.02em;">{{ booking.flightId.slice(0,3) }}</div>
+            <div style="font-size:12px; color:#8A99B3; margin-top:2px;">Departure</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:4px; padding:0 16px;">
+            <div style="height:1px; width:80px; background:#E4E9F2; position:relative;">
+              <span style="position:absolute; top:-9px; left:50%; transform:translateX(-50%); font-size:14px; color:#2180E0;">✈</span>
             </div>
-            <span
-              class="rounded-full px-3 py-1 text-[12px] font-bold uppercase tracking-[0.06em]"
-              [style.background]="booking.status === 'CONFIRMED' ? '#DDF0E8' : '#FEE2E2'"
-              [style.color]="booking.status === 'CONFIRMED' ? '#1F9D6B' : '#DC2626'"
-            >{{ booking.status }}</span>
+            <div style="font-size:11px; color:#8A99B3;">Direct</div>
+          </div>
+          <div style="flex:1; text-align:right;">
+            <div style="font-size:30px; font-weight:800; letter-spacing:-0.02em;">{{ booking.flightId.slice(-3) }}</div>
+            <div style="font-size:12px; color:#8A99B3; margin-top:2px;">Arrival</div>
           </div>
         </div>
 
-        <!-- Details -->
-        <div class="space-y-4 px-6 py-5">
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#8A99B3]">Passenger</p>
-              <p class="mt-0.5 text-[15px] font-semibold text-[#0B1E3D]">{{ booking.passenger.firstName }} {{ booking.passenger.lastName }}</p>
-            </div>
-            <div>
-              <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#8A99B3]">Seat</p>
-              <p class="mt-0.5 text-[15px] font-semibold text-[#0B1E3D]">{{ booking.seatNumber }}</p>
-            </div>
-            <div>
-              <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#8A99B3]">Email</p>
-              <p class="mt-0.5 text-[14px] text-[#5C6B84]">{{ booking.passenger.email }}</p>
-            </div>
-            <div>
-              <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#8A99B3]">Total paid</p>
-              <p class="mt-0.5 text-[15px] font-semibold text-[#0B1E3D]">{{ booking.totalAmount | currency:booking.currency }}</p>
-            </div>
-            <div>
-              <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#8A99B3]">Booked on</p>
-              <p class="mt-0.5 text-[14px] text-[#5C6B84]">{{ booking.createdAt | date:'d MMM y, h:mm a' }}</p>
-            </div>
-          </div>
-        </div>
+        <div style="height:1px; background:#EEF2F8; margin-bottom:16px;"></div>
 
-        <!-- Footer actions -->
-        <div class="rounded-b-[16px] border-t border-[#E4E9F2] bg-[#F4F6FB] px-6 py-4">
-          <div class="flex gap-3">
-            <button type="button" disabled class="rounded-[10px] border border-[#E4E9F2] bg-white px-5 py-2.5 text-[14px] font-semibold text-[#8A99B3] opacity-60 cursor-not-allowed">
-              Cancel booking
-            </button>
-            <button type="button" disabled class="rounded-[10px] border border-[#E4E9F2] bg-white px-5 py-2.5 text-[14px] font-semibold text-[#8A99B3] opacity-60 cursor-not-allowed">
-              Change booking
-            </button>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; font-size:13px;">
+          <div>
+            <div style="color:#8A99B3; margin-bottom:3px;">Passenger</div>
+            <div style="font-weight:700; color:#0B1E3D;">{{ booking.passenger.firstName }} {{ booking.passenger.lastName }}</div>
           </div>
-          <p class="mt-2 text-[12px] text-[#B4BECE]">Manage booking features coming soon.</p>
+          <div>
+            <div style="color:#8A99B3; margin-bottom:3px;">Seat</div>
+            <div style="font-weight:700; color:#0B1E3D;">{{ booking.seatNumber }}</div>
+          </div>
+          <div>
+            <div style="color:#8A99B3; margin-bottom:3px;">Status</div>
+            <div style="font-weight:700; color:#0B1E3D;">{{ booking.status }}</div>
+          </div>
         </div>
       </div>
 
+      <!-- Price card -->
+      <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; margin-bottom:24px;">
+        <div style="font-size:15px; font-weight:800; margin-bottom:16px;">Payment summary</div>
+        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+          <span style="color:#5C6B84; font-size:14px;">Total paid</span>
+          <span style="font-size:26px; font-weight:800; letter-spacing:-0.02em;">{{ booking.currency }} {{ booking.totalAmount }}</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <button class="btn-primary" style="border:none; cursor:pointer; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:15px; padding:13px 28px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);">
+          &#8681; Download ticket
+        </button>
+        <a routerLink="/flights" class="btn-outline" style="text-decoration:none; border:1.5px solid #E4E9F2; cursor:pointer; background:#fff; color:#0B1E3D; font-family:inherit; font-weight:600; font-size:15px; padding:13px 28px; border-radius:12px; display:inline-block;">
+          Book another flight
+        </a>
+      </div>
     </div>
+  </div>
+} @else {
+  <div style="max-width:520px; margin:80px auto; text-align:center; padding:0 24px;">
+    <p style="color:#8A99B3; margin-bottom:16px;">No booking loaded.</p>
+    <a routerLink="/my-trips" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none;">← Find your booking</a>
   </div>
 }

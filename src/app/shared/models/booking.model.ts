@@ -1,3 +1,13 @@
+export interface PassengerDraft {
+  title: string;
+  firstName: string;
+  lastName: string;
+  dob: string;
+  nationality: string;
+  email: string;
+  mobile: string;
+}
+
 export interface Passenger {
   firstName: string;
   lastName: string;
