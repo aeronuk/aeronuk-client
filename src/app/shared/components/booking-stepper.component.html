@@ -3,6 +3,9 @@
     @for (step of steps(); track step.label; let last = $last; let i = $index) {
       <div
         (click)="navigate(step)"
+        (keydown.enter)="navigate(step)"
+        role="button"
+        [attr.tabindex]="step.done ? 0 : -1"
         style="display:flex; align-items:center; gap:10px; transition:opacity 0.15s ease;"
         [style.cursor]="step.done ? 'pointer' : 'default'"
       >

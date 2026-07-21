@@ -20,8 +20,8 @@
       <form [formGroup]="form" (ngSubmit)="submit()">
         <div style="display:grid; grid-template-columns:120px 1fr 1fr; gap:14px; margin-bottom:16px;">
           <div>
-            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Title *</label>
-            <select formControlName="title" class="field-input field-select" [class.error]="hasError('title')">
+            <label for="passenger-title" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Title *</label>
+            <select id="passenger-title" formControlName="title" class="field-input field-select" [class.error]="hasError('title')">
               <option value="">Select</option>
               <option value="Mr">Mr</option>
               <option value="Mrs">Mrs</option>
@@ -30,23 +30,23 @@
             </select>
           </div>
           <div>
-            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">First &amp; middle names *</label>
-            <input type="text" formControlName="firstName" class="field-input" [class.error]="hasError('firstName')" placeholder="Jordan">
+            <label for="passenger-firstName" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">First &amp; middle names *</label>
+            <input id="passenger-firstName" type="text" formControlName="firstName" class="field-input" [class.error]="hasError('firstName')" placeholder="Jordan">
           </div>
           <div>
-            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Last name *</label>
-            <input type="text" formControlName="lastName" class="field-input" [class.error]="hasError('lastName')" placeholder="Doe">
+            <label for="passenger-lastName" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Last name *</label>
+            <input id="passenger-lastName" type="text" formControlName="lastName" class="field-input" [class.error]="hasError('lastName')" placeholder="Doe">
           </div>
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
           <div>
-            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Date of birth *</label>
-            <input type="date" formControlName="dob" class="field-input" [class.error]="hasError('dob')">
+            <label for="passenger-dob" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Date of birth *</label>
+            <input id="passenger-dob" type="date" formControlName="dob" class="field-input" [class.error]="hasError('dob')">
           </div>
           <div>
-            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Nationality *</label>
-            <select formControlName="nationality" class="field-input field-select" [class.error]="hasError('nationality')">
+            <label for="passenger-nationality" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Nationality *</label>
+            <select id="passenger-nationality" formControlName="nationality" class="field-input field-select" [class.error]="hasError('nationality')">
               <option value="">Select</option>
               <option value="United Kingdom">United Kingdom</option>
               <option value="United States">United States</option>
@@ -63,12 +63,12 @@
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
           <div>
-            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Email address *</label>
-            <input type="email" formControlName="email" class="field-input" [class.error]="hasError('email')" placeholder="you@email.com">
+            <label for="passenger-email" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Email address *</label>
+            <input id="passenger-email" type="email" formControlName="email" class="field-input" [class.error]="hasError('email')" placeholder="you@email.com">
           </div>
           <div>
-            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Mobile number *</label>
-            <input type="tel" formControlName="mobile" class="field-input" [class.error]="hasError('mobile')" placeholder="+44 7700 900000">
+            <label for="passenger-mobile" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Mobile number *</label>
+            <input id="passenger-mobile" type="tel" formControlName="mobile" class="field-input" [class.error]="hasError('mobile')" placeholder="+44 7700 900000">
           </div>
         </div>
       </form>

@@ -1,8 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, provideRouter, Router, RouterStateSnapshot } from '@angular/router';
 import { bookingGuard } from './booking.guard';
 import { BookingFlowService } from '../services/booking-flow.service';
 import { Flight } from '../models/flight.model';
+
+const dummyRoute = {} as ActivatedRouteSnapshot;
+const dummyState = {} as RouterStateSnapshot;
 
 const flight: Flight = {
   id: 'f1', flightNumber: 'AX001', origin: 'JFK', destination: 'LAX',
@@ -23,14 +26,14 @@ describe('bookingGuard', () => {
   it('returns true when flight is selected', () => {
     flow.selectFlight(flight);
     const result = TestBed.runInInjectionContext(
-      () => bookingGuard({} as any, {} as any),
+      () => bookingGuard(dummyRoute, dummyState),
     );
     expect(result).toBeTrue();
   });
 
   it('redirects to /flights when no flight is selected', () => {
     const result = TestBed.runInInjectionContext(
-      () => bookingGuard({} as any, {} as any),
+      () => bookingGuard(dummyRoute, dummyState),
     );
     expect(result).toEqual(router.createUrlTree(['/flights']));
   });

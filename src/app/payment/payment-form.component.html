@@ -15,6 +15,9 @@
         @for (m of [['card','Card'],['paypal','PayPal'],['applepay','Apple Pay']]; track m[0]) {
           <div
             (click)="selectMethod($any(m[0]))"
+            (keydown.enter)="selectMethod($any(m[0]))"
+            role="button"
+            tabindex="0"
             style="flex:1; border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:10px; cursor:pointer; font-weight:600; font-size:15px; transition:border 0.15s ease, background 0.15s ease;"
             [style.border]="method() === m[0] ? '2px solid #2180E0' : '1.5px solid #E4E9F2'"
             [style.background]="method() === m[0] ? '#EAF3FD' : '#fff'"
@@ -32,21 +35,21 @@
       @if (method() === 'card') {
         <form [formGroup]="cardForm">
           <div style="margin-bottom:16px;">
-            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Cardholder name *</label>
-            <input type="text" formControlName="cardName" class="field-input" [class.error]="hasError('cardName')" placeholder="Jordan Doe">
+            <label for="card-name" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Cardholder name *</label>
+            <input id="card-name" type="text" formControlName="cardName" class="field-input" [class.error]="hasError('cardName')" placeholder="Jordan Doe">
           </div>
           <div style="margin-bottom:16px;">
-            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Card number *</label>
-            <input type="text" inputmode="numeric" maxlength="19" formControlName="cardNumber" class="field-input" [class.error]="hasError('cardNumber')" placeholder="1234 5678 9012 3456">
+            <label for="card-number" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Card number *</label>
+            <input id="card-number" type="text" inputmode="numeric" maxlength="19" formControlName="cardNumber" class="field-input" [class.error]="hasError('cardNumber')" placeholder="1234 5678 9012 3456">
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px;">
             <div>
-              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Expiry date *</label>
-              <input type="text" inputmode="numeric" maxlength="5" formControlName="expiry" class="field-input" [class.error]="hasError('expiry')" placeholder="MM / YY">
+              <label for="card-expiry" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Expiry date *</label>
+              <input id="card-expiry" type="text" inputmode="numeric" maxlength="5" formControlName="expiry" class="field-input" [class.error]="hasError('expiry')" placeholder="MM / YY">
             </div>
             <div>
-              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Security code *</label>
-              <input type="text" inputmode="numeric" maxlength="4" formControlName="cvc" class="field-input" [class.error]="hasError('cvc')" placeholder="CVC">
+              <label for="card-cvc" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Security code *</label>
+              <input id="card-cvc" type="text" inputmode="numeric" maxlength="4" formControlName="cvc" class="field-input" [class.error]="hasError('cvc')" placeholder="CVC">
             </div>
           </div>
 
@@ -60,17 +63,17 @@
           }
 
           <div style="margin-bottom:14px;">
-            <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Address line *</label>
-            <input type="text" formControlName="address" class="field-input" [class.error]="hasError('address')" placeholder="221B Baker Street">
+            <label for="card-address" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Address line *</label>
+            <input id="card-address" type="text" formControlName="address" class="field-input" [class.error]="hasError('address')" placeholder="221B Baker Street">
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
             <div>
-              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">City *</label>
-              <input type="text" formControlName="city" class="field-input" [class.error]="hasError('city')" placeholder="London">
+              <label for="card-city" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">City *</label>
+              <input id="card-city" type="text" formControlName="city" class="field-input" [class.error]="hasError('city')" placeholder="London">
             </div>
             <div>
-              <label style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Postcode *</label>
-              <input type="text" formControlName="postcode" class="field-input" [class.error]="hasError('postcode')" placeholder="NW1 6XE">
+              <label for="card-postcode" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Postcode *</label>
+              <input id="card-postcode" type="text" formControlName="postcode" class="field-input" [class.error]="hasError('postcode')" placeholder="NW1 6XE">
             </div>
           </div>
         </form>
