@@ -4,7 +4,13 @@
   <p style="margin:0 0 28px; color:#5C6B84; font-size:16px;">Flying from London (LHR). Prices shown are return fares.</p>
   <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:18px;">
     @for (dest of allDestinations; track dest.code) {
-      <div (click)="select(dest)" style="background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.07); cursor:pointer;">
+      <div
+        (click)="select(dest)"
+        (keydown.enter)="select(dest)"
+        role="button"
+        tabindex="0"
+        style="background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.07); cursor:pointer;"
+      >
         <div style="height:150px; background-image:repeating-linear-gradient(135deg,#DCE5F1 0 12px,#E7EEF7 12px 24px); display:flex; align-items:flex-end; padding:12px;">
           <span style="background:rgba(11,30,61,0.72); color:#fff; font-size:11px; font-family:ui-monospace,monospace; padding:4px 8px; border-radius:6px;">{{ dest.imageLabel }}</span>
         </div>

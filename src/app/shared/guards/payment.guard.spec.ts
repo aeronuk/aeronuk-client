@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, provideRouter, Router, RouterStateSnapshot } from '@angular/router';
 import { paymentGuard } from './payment.guard';
 import { BookingFlowService } from '../services/booking-flow.service';
 import { Flight, Seat } from '../models/flight.model';
@@ -10,6 +10,8 @@ const flight: Flight = {
   price: { amount: 299.99, currency: 'USD' },
 };
 const seat: Seat = { id: 's1', seatNumber: '12A', class: 'ECONOMY', available: true };
+const dummyRoute = {} as ActivatedRouteSnapshot;
+const dummyState = {} as RouterStateSnapshot;
 
 describe('paymentGuard', () => {
   let flow: BookingFlowService;
@@ -25,14 +27,14 @@ describe('paymentGuard', () => {
     flow.selectFlight(flight);
     flow.selectSeat(seat);
     const result = TestBed.runInInjectionContext(
-      () => paymentGuard({} as any, {} as any),
+      () => paymentGuard(dummyRoute, dummyState),
     );
     expect(result).toBeTrue();
   });
 
   it('redirects to /booking/seats when no seat is selected', () => {
     const result = TestBed.runInInjectionContext(
-      () => paymentGuard({} as any, {} as any),
+      () => paymentGuard(dummyRoute, dummyState),
     );
     expect(result).toEqual(router.createUrlTree(['/booking/seats']));
   });
