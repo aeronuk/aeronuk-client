@@ -15,4 +15,19 @@ test.describe('flight search smoke test', () => {
     await expect(page.getByLabel('Origin airport')).toBeVisible();
     await expect(page.getByRole('button', { name: /search flights/i })).toBeVisible();
   });
+
+  test('clicking anywhere in the Depart box focuses the date input, including over the hint text', async ({ page }) => {
+    await page.goto('/flights');
+
+    const dateInput = page.getByLabel('Departure date');
+    const box = await dateInput.locator('xpath=..').boundingBox();
+    if (!box) throw new Error('Depart field box not found');
+
+    // Click near the bottom-left of the box, where the "Pick a date" hint
+    // text and the box's own padding live -- previously dead space that
+    // didn't respond to clicks.
+    await page.mouse.click(box.x + 10, box.y + box.height - 8);
+
+    await expect(dateInput).toBeFocused();
+  });
 });
