@@ -1,75 +1,84 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { FlightSearchComponent } from './flight-search.component';
-import { BookingFlowService } from '../shared/services/booking-flow.service';
+import { SearchStateService } from '../shared/services/search-state.service';
 
 describe('FlightSearchComponent', () => {
   let fixture: ComponentFixture<FlightSearchComponent>;
   let component: FlightSearchComponent;
-  let httpMock: HttpTestingController;
+  let router: Router;
+  let searchState: SearchStateService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [FlightSearchComponent],
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        provideRouter([]),
-        BookingFlowService,
-      ],
+      providers: [provideRouter([])],
     }).compileComponents();
 
-    fixture   = TestBed.createComponent(FlightSearchComponent);
-    component = fixture.componentInstance;
-    httpMock  = TestBed.inject(HttpTestingController);
+    fixture     = TestBed.createComponent(FlightSearchComponent);
+    component   = fixture.componentInstance;
+    router      = TestBed.inject(Router);
+    searchState = TestBed.inject(SearchStateService);
     fixture.detectChanges();
   });
 
-  afterEach(() => httpMock.verify());
+  it('shows an error and does not navigate when destination is missing', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    component.destinationCode.set('');
+    component.date.set('2025-07-14');
 
-  it('form is invalid when origin is missing', () => {
-    component.form.patchValue({ origin: '', destination: 'LAX', date: '2024-01-15' });
-    expect(component.form.invalid).toBeTrue();
-  });
-
-  it('form is invalid when destination is missing', () => {
-    component.form.patchValue({ origin: 'JFK', destination: '', date: '2024-01-15' });
-    expect(component.form.invalid).toBeTrue();
-  });
-
-  it('form is invalid when date is missing', () => {
-    component.form.patchValue({ origin: 'JFK', destination: 'LAX', date: '' });
-    expect(component.form.invalid).toBeTrue();
-  });
-
-  it('calls GET /api/flights with correct query params on valid submit', () => {
-    component.form.patchValue({ origin: 'JFK', destination: 'LAX', date: '2024-01-15' });
     component.search();
 
-    const req = httpMock.expectOne(
-      r => r.url === '/api/flights' &&
-           r.params.get('origin') === 'JFK' &&
-           r.params.get('destination') === 'LAX' &&
-           r.params.get('date') === '2024-01-15',
-    );
-    expect(req.request.method).toBe('GET');
-    req.flush([]);
+    expect(component.searchError()).toContain('destination');
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 
-  it('populates results signal on successful response', () => {
-    const mockFlight = {
-      id: 'f1', flightNumber: 'AX001', origin: 'JFK', destination: 'LAX',
-      departureTime: '2024-01-15T10:00:00Z', arrivalTime: '2024-01-15T13:00:00Z',
-      price: { amount: 299.99, currency: 'USD' },
-    };
-    component.form.patchValue({ origin: 'JFK', destination: 'LAX', date: '2024-01-15' });
+  it('shows an error and does not navigate when date is missing', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    component.destinationCode.set('JFK');
+    component.date.set('');
+
     component.search();
 
-    const req = httpMock.expectOne(r => r.url === '/api/flights');
-    req.flush([mockFlight]);
+    expect(component.searchError()).toContain('departure date');
+    expect(navigateSpy).not.toHaveBeenCalled();
+  });
 
-    expect(component.results()).toEqual([mockFlight]);
+  it('swap() exchanges origin and destination and bumps the rotation signal', () => {
+    component.originCode.set('LHR');
+    component.destinationCode.set('JFK');
+
+    component.swap();
+
+    expect(component.originCode()).toBe('JFK');
+    expect(component.destinationCode()).toBe('LHR');
+    expect(component.swapRotation()).toBe(180);
+  });
+
+  it('on valid submit stores the search and navigates to /flights/results', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    component.originCode.set('LHR');
+    component.destinationCode.set('JFK');
+    component.date.set('2025-07-14');
+
+    component.search();
+
+    expect(component.searchError()).toBe('');
+    expect(searchState.origin()).toBe('LHR');
+    expect(searchState.destination()).toBe('JFK');
+    expect(searchState.date()).toBe('2025-07-14');
+    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results']);
+  });
+
+  it('selectDestination() stores the destination and navigates to /flights/results', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+
+    component.selectDestination({
+      city: 'Barcelona', code: 'BCN', airport: 'El Prat', price: '£78', imageLabel: 'city / beach photo',
+    });
+
+    expect(searchState.destination()).toBe('BCN');
+    expect(searchState.destinationCity()).toBe('Barcelona');
+    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results']);
   });
 });
