@@ -121,25 +121,6 @@ export class FlightSearchComponent {
     this.router.navigate(['/flights/results']);
   }
 
-  previewNoResults(): void {
-    this.prepareAndNavigate('no-results');
-  }
-
-  previewError(): void {
-    this.prepareAndNavigate('error');
-  }
-
-  private prepareAndNavigate(preview: string): void {
-    const orig = this.airports.find(a => a.code === (this.originCode() || 'LHR'))!;
-    const dest = this.airports.find(a => a.code === (this.destinationCode() || 'JFK')) ?? { code: 'JFK', city: 'New York', airport: 'John F. Kennedy' };
-    this.searchState.setSearch(
-      orig.code, orig.city, orig.airport,
-      dest.code, dest.city, dest.airport,
-      this.date() || '2025-07-14',
-    );
-    this.router.navigate(['/flights/results'], { queryParams: { preview } });
-  }
-
   selectDestination(dest: Destination): void {
     const orig = this.airports.find(a => a.code === (this.originCode() || 'LHR'))!;
     this.searchState.setSearch(
