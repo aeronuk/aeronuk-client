@@ -37,18 +37,30 @@ npx ng build          # production build → dist/aeronuk-client
 npx ng test           # Karma unit tests (not yet written)
 ```
 
-### Dev server while working on an issue
+### Dev server while working on an issue (preferred)
 
-Whenever implementing an issue, start exactly one dev server in the
-background early on and leave it running for the rest of the session, so
-the user can manually test each change live without asking for a rebuild:
+`http://localhost:4200` is normally owned by the `aeronuk-client` Docker
+container, part of the multi-service stack (booking, payment, notification,
+nginx gateway, rabbitmq, mysql/postgres, etc.) defined in the sibling
+`aeronuk-ops` repo — see "Testing against the built Docker container"
+below for how that's managed. For day-to-day frontend work, don't rebuild
+that container on every change; use a live-reloading `ng serve` instead and
+stop only the `aeronuk-client` container to free the port:
 
 ```bash
+docker stop aeronuk-client   # frees port 4200; leaves the rest of the
+                              # aeronuk-ops stack (backends, gateway, dbs) up
 npx ng serve --watch --port 4200
 ```
 
 - `ng serve` watches and live-reloads by default; `--watch` is passed
   explicitly here for clarity.
+- `angular.json`'s `serve` target already sets `"proxyConfig":
+  "proxy.conf.json"`, which forwards `/api/*` to
+  `http://localhost:80` — the `aeronuk-ops` nginx gateway. As long as the
+  rest of the `aeronuk-ops` stack is running, real API calls work exactly
+  as they do through the Docker container, just with instant HMR instead
+  of a rebuild.
 - Before starting it, check for and kill any dev server already running
   (yours from an earlier turn, or a stray one) — only one should be up at
   a time, on port 4200.
@@ -56,7 +68,36 @@ npx ng serve --watch --port 4200
   existing one, and don't run one-off `ng build` + static-serve combos for
   this purpose — `ng serve --watch` already covers it.
 - Leave the server running when you hand off (e.g. after opening a PR);
-  only kill it if the user asks you to.
+  only kill it if the user asks you to. When you do stop it (or the
+  session ends), restart the `aeronuk-client` container
+  (`docker start aeronuk-client`, from `aeronuk-ops`) so the user's normal
+  `localhost:4200` goes back to serving the container rather than sitting
+  on a dead port.
+
+### Testing against the built Docker container
+
+Sometimes you need the actual production-built container rather than a
+live dev server — e.g. confirming a fix survives the real build/nginx
+image before merging its PR. `aeronuk-ops/docker-compose.yml` pulls this
+repo's own `docker-compose.yml` in via `include:`, and both declare
+`container_name: aeronuk-client` under the shared `aeronuk-network`.
+
+Because of that, **always rebuild/restart it from `aeronuk-ops`, never from
+this repo directly** — running `docker compose up` from here spins up a
+second, differently-named compose project and collides with the container
+name already owned by the `aeronuk-ops` one.
+
+```bash
+cd ../aeronuk-ops
+docker compose build aeronuk-client
+docker compose up -d aeronuk-client
+```
+
+The image's build context is this repo's working directory (`build: .` in
+its `docker-compose.yml`, resolved relative to that file), so this bakes in
+whatever is currently on disk here — including an uncommitted or
+not-yet-merged branch — which is exactly what you want when the user asks
+to manually test a fix before merging its PR.
 
 ## Design system tokens (src/styles.css `@theme`)
 
