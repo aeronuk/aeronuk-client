@@ -264,4 +264,24 @@ describe('FlightSearchComponent', () => {
       expect(hit?.id).withContext(label).toBe('depart-date');
     }
   });
+
+  it('opens the native date picker on click, not just focuses the input', () => {
+    // Chrome only opens the calendar dropdown for clicks on the date
+    // input's own value/icon sub-widget -- not for clicks anywhere within
+    // its (stretched) box -- so being able to click-target #depart-date
+    // (previous test) isn't enough on its own to guarantee the picker
+    // actually opens. showPicker() is called explicitly from the click
+    // handler to make that happen regardless of where in the box the click
+    // lands; this asserts that call happens rather than relying on the
+    // native popup itself, which isn't observable through the DOM.
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('#depart-date');
+    if (typeof input.showPicker !== 'function') {
+      pending('showPicker() is not supported in this browser');
+    }
+    const showPickerSpy = spyOn(input, 'showPicker');
+
+    input.click();
+
+    expect(showPickerSpy).toHaveBeenCalled();
+  });
 });

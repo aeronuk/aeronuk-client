@@ -67,6 +67,28 @@ export class FlightSearchComponent {
     this.swapRotation.update(r => r + 180);
   }
 
+  /**
+   * Chrome only opens the native date picker dropdown when a click lands on
+   * the input's own calendar-icon/value sub-widget, not just anywhere within
+   * its (now full-height) box -- so stretching `.search-date-input` to cover
+   * `.search-field-box` alone leaves clicks over the old hint-text/padding
+   * area focusing the input without opening the picker. Explicitly opening
+   * it on any click keeps that promise regardless of where in the box the
+   * click lands.
+   */
+  openDatePicker(event: MouseEvent): void {
+    const input = event.currentTarget as HTMLInputElement & { showPicker?: () => void };
+    if (typeof input.showPicker === 'function') {
+      try {
+        input.showPicker();
+      } catch {
+        // showPicker() throws if not called from a user gesture or if the
+        // browser doesn't support it for this input type -- clicking still
+        // focuses the input either way, so there's nothing else to do here.
+      }
+    }
+  }
+
   search(): void {
     const missing: string[] = [];
     if (!this.originCode()) missing.push('origin');
