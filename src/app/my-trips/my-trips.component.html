@@ -1,23 +1,22 @@
-<div style="max-width:1180px; margin:0 auto; padding:48px 24px 80px;">
-  <div style="max-width:520px; margin:0 auto;">
-    <h1 style="font-size:32px; font-weight:800; letter-spacing:-0.02em; margin:0 0 8px; color:#0B1E3D;">Find your booking</h1>
-    <p style="margin:0 0 32px; font-size:15px; color:#5C6B84;">Enter your booking reference and last name to retrieve your trip.</p>
+<div class="page">
+  <div class="content">
+    <h1 class="title">Find your booking</h1>
+    <p class="subtitle">Enter your booking reference and last name to retrieve your trip.</p>
 
-    <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:28px;">
+    <div class="card card-pad-28">
       <form [formGroup]="form" (ngSubmit)="find()">
-        <div style="margin-bottom:16px;">
-          <label for="trip-bookingCode" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Booking reference</label>
+        <div class="field-group">
+          <label for="trip-bookingCode" class="field-label">Booking reference</label>
           <input
             id="trip-bookingCode"
             type="text"
             formControlName="bookingCode"
-            class="field-input"
+            class="field-input booking-code-input"
             placeholder="e.g. ANK-A1B2C3"
-            style="text-transform:uppercase;"
           >
         </div>
-        <div style="margin-bottom:24px;">
-          <label for="trip-lastName" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Last name</label>
+        <div class="field-group field-group--wide">
+          <label for="trip-lastName" class="field-label">Last name</label>
           <input
             id="trip-lastName"
             type="text"
@@ -28,7 +27,7 @@
         </div>
 
         @if (error()) {
-          <div style="background:#FCEBEA; color:#B3261E; font-size:13px; font-weight:600; padding:11px 14px; border-radius:10px; margin-bottom:16px;">
+          <div class="error-banner form-error-banner">
             {{ error() }}
           </div>
         }
@@ -36,14 +35,13 @@
         <button
           type="submit"
           [disabled]="searching() || form.invalid"
-          class="btn-primary"
-          style="width:100%; border:none; cursor:pointer; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:15px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);"
-          [style.opacity]="(searching() || form.invalid) ? '0.6' : '1'"
+          class="btn-primary submit-btn"
+          [class.submit-btn--disabled]="searching() || form.invalid"
         >{{ searching() ? 'Searching…' : 'Find my booking' }}</button>
       </form>
     </div>
 
-    <p style="margin:20px 0 0; text-align:center; font-size:13px; color:#8A99B3;">
+    <p class="hint">
       Your booking reference was emailed to you when you completed your booking.
     </p>
   </div>

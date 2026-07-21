@@ -17,6 +17,7 @@ export class MyTripsStateService {
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './my-trips.component.html',
+  styleUrl: './my-trips.component.css',
 })
 export class MyTripsComponent {
   private http = inject(HttpClient);

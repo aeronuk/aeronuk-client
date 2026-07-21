@@ -7,6 +7,7 @@ import { MyTripsStateService } from './my-trips.component';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './my-trips-result.component.html',
+  styleUrl: './my-trips-result.component.css',
 })
 export class MyTripsResultComponent implements OnInit {
   private router = inject(Router);
