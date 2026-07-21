@@ -109,11 +109,12 @@
 
 .search-field-box {
   position: relative;
+  box-sizing: border-box;
   border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 11px 14px;
   background: #fff;
-  min-height: 64px;
+  height: 69px;
 }
 
 .search-field-value-primary {
@@ -187,7 +188,7 @@
 .search-date-hint {
   font-size: 13px;
   color: var(--color-faint);
-  margin-top: 2px;
+  margin-top: 0;
 }
 
 .search-error-banner {
