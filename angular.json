@@ -111,6 +111,9 @@
             ],
             "styles": [
               "src/styles.css"
+            ],
+            "codeCoverageExclude": [
+              "src/app/shared/ui/**"
             ]
           }
         },
