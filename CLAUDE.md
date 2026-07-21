@@ -57,6 +57,37 @@ npx ng serve --watch --port 4200
   this purpose — `ng serve --watch` already covers it.
 - Leave the server running when you hand off (e.g. after opening a PR);
   only kill it if the user asks you to.
+- **Check port 4200 is actually free first.** In this environment it's
+  normally occupied by the `aeronuk-client` Docker container from the
+  `aeronuk-ops` stack (see below) — `ng serve --port 4200` will fail to
+  bind if that container is up. Either stop the container first, or serve
+  on a different port for a source-level live-reload check.
+
+### Testing a change against the local Docker stack
+
+The user's day-to-day `http://localhost:4200` is **not** a live dev
+server — it's the `aeronuk-client` container, part of the multi-service
+stack (booking, payment, notification, nginx, rabbitmq, mysql/postgres,
+etc.) defined in the sibling `aeronuk-ops` repo. `aeronuk-ops/docker-compose.yml`
+pulls this repo's own `docker-compose.yml` in via `include:`, and both
+declare `container_name: aeronuk-client` under the shared `aeronuk-network`.
+
+Because of that, **always rebuild/restart it from `aeronuk-ops`, never from
+this repo directly** — running `docker compose up` from here spins up a
+second, differently-named compose project and collides with the container
+name already owned by the `aeronuk-ops` one.
+
+```bash
+cd ../aeronuk-ops
+docker compose build aeronuk-client
+docker compose up -d aeronuk-client
+```
+
+The image's build context is this repo's working directory (`build: .` in
+its `docker-compose.yml`, resolved relative to that file), so this bakes in
+whatever is currently on disk here — including an uncommitted or
+not-yet-merged branch — which is exactly what you want when the user asks
+to manually test a fix before merging its PR.
 
 ## Design system tokens (src/styles.css `@theme`)
 
