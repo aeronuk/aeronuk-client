@@ -176,10 +176,9 @@
   /* Stretched to cover the whole .search-field-box (inset: 0, same technique
      as .search-select-overlay above) so the picker opens no matter where in
      the box is clicked, not just over the input's own intrinsic content
-     line. Horizontal padding mirrors .search-field-box's own 14px so the
-     value lines up with the box's left/right edges the way it did before;
-     vertical padding is set below to center the value+hint group as a
-     unit. */
+     line. Padding mirrors .search-field-box's own 11px/14px so the visible
+     date text lines up where it did when the input was a normal-flow,
+     content-sized element. */
   position: absolute;
   inset: 0;
   width: 100%;
@@ -190,29 +189,27 @@
   font-weight: 700;
   color: var(--color-navy);
   outline: none;
-  padding: 8px 14px;
+  padding: 11px 14px;
   cursor: pointer;
   /* Chromium renders date/time inputs as an internal (inline-)flex box that
      vertically centers the value by default. Now that the input's own box
-     spans the full field height, that default centering would fight with
-     the fixed 8px offset below (meant to center the value+hint group, not
-     just the value on its own) -- overriding align-items keeps the value
-     pinned exactly at that offset, without touching `display` (doing so
-     shifts the calendar icon's own position within the control). */
+     spans the full field height, that default centering would drop the
+     visible value noticeably below where it sits today, crowding the hint
+     text underneath. Overriding align-items keeps the value pinned to the
+     top, matching its original position, without touching `display` (doing
+     so shifts the calendar icon's own position within the control). */
   align-items: flex-start;
 }
 
 .search-date-hint {
-  /* Positioned with a deliberate gap below .search-date-input's value (14px
-     of Depart-box interior split 8px/value/6px-gap/hint/8px, vs. the value
-     sitting flush above it before) so the value and hint read as a
-     vertically-centered pair within the box rather than pinned to the top.
-     pointer-events: none so clicks land on .search-date-input beneath it
-     instead of being swallowed by this plain, non-interactive text. */
+  /* Positioned to sit at the same spot .search-field-box's padding put it at
+     before (bottom-left of the box), and pointer-events: none so clicks
+     land on .search-date-input beneath it instead of being swallowed by
+     this plain, non-interactive text. */
   position: absolute;
   left: 14px;
   right: 14px;
-  bottom: 8px;
+  bottom: 11px;
   font-size: 13px;
   color: var(--color-faint);
   margin-top: 0;
