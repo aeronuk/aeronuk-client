@@ -189,27 +189,30 @@
   font-weight: 700;
   color: var(--color-navy);
   outline: none;
-  padding: 11px 14px;
+  padding: 6px 14px;
   cursor: pointer;
   /* Chromium renders date/time inputs as an internal (inline-)flex box that
      vertically centers the value by default. Now that the input's own box
      spans the full field height, that default centering would drop the
-     visible value noticeably below where it sits today, crowding the hint
-     text underneath. Overriding align-items keeps the value pinned to the
-     top, matching its original position, without touching `display` (doing
-     so shifts the calendar icon's own position within the control). */
+     visible value away from the 6px-from-the-top position intended here --
+     overriding align-items keeps the value pinned exactly at that offset,
+     without touching `display` (doing so shifts the calendar icon's own
+     position within the control). */
   align-items: flex-start;
 }
 
 .search-date-hint {
-  /* Positioned to sit at the same spot .search-field-box's padding put it at
-     before (bottom-left of the box), and pointer-events: none so clicks
-     land on .search-date-input beneath it instead of being swallowed by
-     this plain, non-interactive text. */
+  /* Positioned relative to .search-date-input's value with a deliberate 6px
+     gap between them (they used to sit flush against each other), rather
+     than independently anchored to the box's bottom -- that keeps the pair
+     moving together as a group near the top of the box instead of the gap
+     changing whenever their offset from the top changes.
+     pointer-events: none so clicks land on .search-date-input beneath it
+     instead of being swallowed by this plain, non-interactive text. */
   position: absolute;
   left: 14px;
   right: 14px;
-  bottom: 11px;
+  top: 37px;
   font-size: 13px;
   color: var(--color-faint);
   margin-top: 0;
