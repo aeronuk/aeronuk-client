@@ -3,6 +3,19 @@ import { Router, provideRouter } from '@angular/router';
 import { FlightSearchComponent } from './flight-search.component';
 import { SearchStateService } from '../shared/services/search-state.service';
 
+/** Formats a Date using its local (not UTC) year/month/day as YYYY-MM-DD. */
+function toLocalDateString(d: Date): string {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+const TODAY = toLocalDateString(new Date());
+const YESTERDAY = toLocalDateString(new Date(Date.now() - 24 * 60 * 60 * 1000));
+const TOMORROW = toLocalDateString(new Date(Date.now() + 24 * 60 * 60 * 1000));
+const FUTURE_DATE = '2099-12-25';
+
 describe('FlightSearchComponent', () => {
   let fixture: ComponentFixture<FlightSearchComponent>;
   let component: FlightSearchComponent;
@@ -75,14 +88,52 @@ describe('FlightSearchComponent', () => {
     const navigateSpy = spyOn(router, 'navigate');
     component.originCode.set('LHR');
     component.destinationCode.set('JFK');
-    component.date.set('2025-07-14');
+    component.date.set(FUTURE_DATE);
 
     component.search();
 
     expect(component.searchError()).toBe('');
     expect(searchState.origin()).toBe('LHR');
     expect(searchState.destination()).toBe('JFK');
-    expect(searchState.date()).toBe('2025-07-14');
+    expect(searchState.date()).toBe(FUTURE_DATE);
+    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results']);
+  });
+
+  it('shows an error and does not navigate when the departure date is in the past', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    component.originCode.set('LHR');
+    component.destinationCode.set('JFK');
+    component.date.set(YESTERDAY);
+
+    component.search();
+
+    expect(component.searchError()).toContain('today or later');
+    expect(navigateSpy).not.toHaveBeenCalled();
+  });
+
+  it('accepts today\'s date and navigates to /flights/results', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    component.originCode.set('LHR');
+    component.destinationCode.set('JFK');
+    component.date.set(TODAY);
+
+    component.search();
+
+    expect(component.searchError()).toBe('');
+    expect(searchState.date()).toBe(TODAY);
+    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results']);
+  });
+
+  it('accepts a future date and navigates to /flights/results', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    component.originCode.set('LHR');
+    component.destinationCode.set('JFK');
+    component.date.set(TOMORROW);
+
+    component.search();
+
+    expect(component.searchError()).toBe('');
+    expect(searchState.date()).toBe(TOMORROW);
     expect(navigateSpy).toHaveBeenCalledWith(['/flights/results']);
   });
 
