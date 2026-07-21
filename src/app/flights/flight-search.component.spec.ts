@@ -228,4 +228,60 @@ describe('FlightSearchComponent', () => {
     expect(heights[1]).toBe(heights[0]);
     expect(heights[2]).toBe(heights[0]);
   });
+
+  it('stretches the Depart date input to cover the full field box, not just its own content line', () => {
+    const box: HTMLElement = fixture.nativeElement.querySelector('.search-field-box:has(#depart-date)');
+    const input: HTMLElement = fixture.nativeElement.querySelector('#depart-date');
+
+    const boxRect = box.getBoundingClientRect();
+    const inputRect = input.getBoundingClientRect();
+
+    // The input is absolutely positioned to fill its box (position: absolute;
+    // inset: 0), so its own hit area should span virtually the whole box --
+    // within a couple of pixels for the box's own border -- not shrink down
+    // to the height of just the visible date text (~25px).
+    expect(boxRect.height - inputRect.height).toBeLessThan(4);
+    expect(boxRect.width - inputRect.width).toBeLessThan(4);
+  });
+
+  it('resolves a click anywhere in the Depart box -- including over the hint text and side padding -- to the date input', () => {
+    const box: HTMLElement = fixture.nativeElement.querySelector('.search-field-box:has(#depart-date)');
+    // The Karma browser's viewport is short enough that the search form can
+    // sit below the fold; elementFromPoint only considers the current
+    // viewport, so scroll the box into view before measuring it.
+    box.scrollIntoView();
+    const boxRect = box.getBoundingClientRect();
+
+    const points = {
+      'hint text (bottom-left)': { x: boxRect.left + 10, y: boxRect.bottom - 8 },
+      'top padding': { x: boxRect.left + boxRect.width / 2, y: boxRect.top + 3 },
+      'left padding': { x: boxRect.left + 2, y: boxRect.top + boxRect.height / 2 },
+      'right padding': { x: boxRect.right - 2, y: boxRect.top + boxRect.height / 2 },
+    };
+
+    for (const [label, { x, y }] of Object.entries(points)) {
+      const hit = document.elementFromPoint(x, y);
+      expect(hit?.id).withContext(label).toBe('depart-date');
+    }
+  });
+
+  it('opens the native date picker on click, not just focuses the input', () => {
+    // Chrome only opens the calendar dropdown for clicks on the date
+    // input's own value/icon sub-widget -- not for clicks anywhere within
+    // its (stretched) box -- so being able to click-target #depart-date
+    // (previous test) isn't enough on its own to guarantee the picker
+    // actually opens. showPicker() is called explicitly from the click
+    // handler to make that happen regardless of where in the box the click
+    // lands; this asserts that call happens rather than relying on the
+    // native popup itself, which isn't observable through the DOM.
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('#depart-date');
+    if (typeof input.showPicker !== 'function') {
+      pending('showPicker() is not supported in this browser');
+    }
+    const showPickerSpy = spyOn(input, 'showPicker');
+
+    input.click();
+
+    expect(showPickerSpy).toHaveBeenCalled();
+  });
 });

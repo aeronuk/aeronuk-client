@@ -94,6 +94,7 @@
             [value]="date()"
             [attr.min]="minDate"
             (change)="date.set($any($event.target).value)"
+            (click)="openDatePicker($event)"
             class="search-date-input"
             aria-label="Departure date"
           />
