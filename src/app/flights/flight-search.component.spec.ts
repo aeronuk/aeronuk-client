@@ -152,4 +152,29 @@ describe('FlightSearchComponent', () => {
     expect(searchState.destinationCity()).toBe('Barcelona');
     expect(navigateSpy).toHaveBeenCalledWith(['/flights/results']);
   });
+
+  it('renders the From, To and Depart field boxes at an identical height when empty', () => {
+    const heights = Array.from(
+      fixture.nativeElement.querySelectorAll('.search-field-box') as NodeListOf<HTMLElement>,
+    ).map((box) => box.getBoundingClientRect().height);
+
+    expect(heights.length).toBe(3);
+    expect(heights[1]).toBe(heights[0]);
+    expect(heights[2]).toBe(heights[0]);
+  });
+
+  it('renders the From, To and Depart field boxes at an identical height when filled', () => {
+    component.originCode.set('LHR');
+    component.destinationCode.set('JFK');
+    component.date.set('2025-07-14');
+    fixture.detectChanges();
+
+    const heights = Array.from(
+      fixture.nativeElement.querySelectorAll('.search-field-box') as NodeListOf<HTMLElement>,
+    ).map((box) => box.getBoundingClientRect().height);
+
+    expect(heights.length).toBe(3);
+    expect(heights[1]).toBe(heights[0]);
+    expect(heights[2]).toBe(heights[0]);
+  });
 });
