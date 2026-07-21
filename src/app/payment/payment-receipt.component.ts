@@ -16,6 +16,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
   standalone: true,
   imports: [CurrencyPipe, DatePipe],
   templateUrl: './payment-receipt.component.html',
+  styleUrl: './payment-receipt.component.css',
 })
 export class PaymentReceiptComponent implements OnInit {
   private http       = inject(HttpClient);
