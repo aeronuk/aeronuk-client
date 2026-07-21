@@ -39,6 +39,21 @@ export class FlightResultsComponent implements OnInit {
     if (preview === 'no-results') { this.loading.set(false); this.screen.set('no-results'); return; }
     if (preview === 'error')      { this.loading.set(false); this.screen.set('error');      return; }
 
+    // Search criteria travel through the URL as query params so the results
+    // page can be reloaded, bookmarked, or shared -- when they're present
+    // (e.g. a direct/shared link), they take priority over whatever is
+    // already sitting in SearchStateService; otherwise fall back to the
+    // existing service state (e.g. arriving here via the search form, which
+    // already populated it before navigating).
+    const origin      = this.route.snapshot.queryParamMap.get('origin');
+    const destination = this.route.snapshot.queryParamMap.get('destination');
+    const date        = this.route.snapshot.queryParamMap.get('date');
+    if (origin && destination && date) {
+      this.searchState.origin.set(origin);
+      this.searchState.destination.set(destination);
+      this.searchState.date.set(date);
+    }
+
     const params = new HttpParams()
       .set('origin',      this.searchState.origin())
       .set('destination', this.searchState.destination())
