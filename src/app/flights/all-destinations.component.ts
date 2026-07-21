@@ -15,6 +15,7 @@ interface Destination {
   standalone: true,
   imports: [RouterLink],
   templateUrl: './all-destinations.component.html',
+  styleUrl: './all-destinations.component.css',
 })
 export class AllDestinationsComponent {
   private router = inject(Router);

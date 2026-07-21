@@ -1,84 +1,83 @@
 @if (state.foundBooking(); as booking) {
-  <div style="max-width:1180px; margin:0 auto; padding:32px 24px 80px;">
-    <a routerLink="/my-trips" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none; display:inline-block; margin-bottom:24px;">← Find another booking</a>
+  <div class="page">
+    <a routerLink="/my-trips" class="back-link back-link-wide">← Find another booking</a>
 
-    <div style="max-width:640px; margin:0 auto;">
+    <div class="content">
 
       <!-- Status badge -->
-      <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+      <div class="status-row">
         <div
-          style="display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:700; padding:6px 14px; border-radius:20px;"
-          [style.background]="booking.status === 'CONFIRMED' ? '#DDF0E8' : '#FFF3CD'"
-          [style.color]="booking.status === 'CONFIRMED' ? '#1F9D6B' : '#856404'"
+          class="status-badge"
+          [class.status-badge--confirmed]="booking.status === 'CONFIRMED'"
         >
-          <span style="width:7px; height:7px; border-radius:50%; background:currentColor; display:inline-block;"></span>
+          <span class="status-badge-dot"></span>
           {{ booking.status === 'CONFIRMED' ? 'Confirmed' : booking.status }}
         </div>
-        <span style="font-size:14px; color:#8A99B3;">Booking ref: <strong style="color:#0B1E3D;">{{ booking.bookingCode }}</strong></span>
+        <span class="status-ref">Booking ref: <strong class="status-ref-value">{{ booking.bookingCode }}</strong></span>
       </div>
 
       <!-- Itinerary card -->
-      <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; margin-bottom:16px;">
-        <div style="font-size:15px; font-weight:800; margin-bottom:18px;">Flight details</div>
+      <div class="card detail-card">
+        <div class="detail-card-title">Flight details</div>
 
-        <div style="display:flex; align-items:center; gap:0; margin-bottom:20px;">
-          <div style="flex:1;">
-            <div style="font-size:30px; font-weight:800; letter-spacing:-0.02em;">{{ booking.flightId.slice(0,3) }}</div>
-            <div style="font-size:12px; color:#8A99B3; margin-top:2px;">Departure</div>
+        <div class="route-row">
+          <div class="route-endpoint">
+            <div class="route-code">{{ booking.flightId.slice(0,3) }}</div>
+            <div class="route-code-label">Departure</div>
           </div>
-          <div style="display:flex; flex-direction:column; align-items:center; gap:4px; padding:0 16px;">
-            <div style="height:1px; width:80px; background:#E4E9F2; position:relative;">
-              <span style="position:absolute; top:-9px; left:50%; transform:translateX(-50%); font-size:14px; color:#2180E0;">✈</span>
+          <div class="route-middle">
+            <div class="route-line">
+              <span class="route-plane">✈</span>
             </div>
-            <div style="font-size:11px; color:#8A99B3;">Direct</div>
+            <div class="route-direct">Direct</div>
           </div>
-          <div style="flex:1; text-align:right;">
-            <div style="font-size:30px; font-weight:800; letter-spacing:-0.02em;">{{ booking.flightId.slice(-3) }}</div>
-            <div style="font-size:12px; color:#8A99B3; margin-top:2px;">Arrival</div>
+          <div class="route-endpoint--right">
+            <div class="route-code">{{ booking.flightId.slice(-3) }}</div>
+            <div class="route-code-label">Arrival</div>
           </div>
         </div>
 
-        <div style="height:1px; background:#EEF2F8; margin-bottom:16px;"></div>
+        <div class="detail-divider"></div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; font-size:13px;">
+        <div class="detail-grid">
           <div>
-            <div style="color:#8A99B3; margin-bottom:3px;">Passenger</div>
-            <div style="font-weight:700; color:#0B1E3D;">{{ booking.passenger.firstName }} {{ booking.passenger.lastName }}</div>
+            <div class="detail-grid-label">Passenger</div>
+            <div class="detail-grid-value">{{ booking.passenger.firstName }} {{ booking.passenger.lastName }}</div>
           </div>
           <div>
-            <div style="color:#8A99B3; margin-bottom:3px;">Seat</div>
-            <div style="font-weight:700; color:#0B1E3D;">{{ booking.seatNumber }}</div>
+            <div class="detail-grid-label">Seat</div>
+            <div class="detail-grid-value">{{ booking.seatNumber }}</div>
           </div>
           <div>
-            <div style="color:#8A99B3; margin-bottom:3px;">Status</div>
-            <div style="font-weight:700; color:#0B1E3D;">{{ booking.status }}</div>
+            <div class="detail-grid-label">Status</div>
+            <div class="detail-grid-value">{{ booking.status }}</div>
           </div>
         </div>
       </div>
 
       <!-- Price card -->
-      <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; margin-bottom:24px;">
-        <div style="font-size:15px; font-weight:800; margin-bottom:16px;">Payment summary</div>
-        <div style="display:flex; justify-content:space-between; align-items:baseline;">
-          <span style="color:#5C6B84; font-size:14px;">Total paid</span>
-          <span style="font-size:26px; font-weight:800; letter-spacing:-0.02em;">{{ booking.currency }} {{ booking.totalAmount }}</span>
+      <div class="card price-card">
+        <div class="price-card-title">Payment summary</div>
+        <div class="price-row">
+          <span class="price-row-label">Total paid</span>
+          <span class="price-row-value">{{ booking.currency }} {{ booking.totalAmount }}</span>
         </div>
       </div>
 
       <!-- Actions -->
-      <div style="display:flex; gap:12px; flex-wrap:wrap;">
-        <button class="btn-primary" style="border:none; cursor:pointer; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:15px; padding:13px 28px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);">
+      <div class="actions">
+        <button class="btn-primary download-btn">
           &#8681; Download ticket
         </button>
-        <a routerLink="/flights" class="btn-outline" style="text-decoration:none; border:1.5px solid #E4E9F2; cursor:pointer; background:#fff; color:#0B1E3D; font-family:inherit; font-weight:600; font-size:15px; padding:13px 28px; border-radius:12px; display:inline-block;">
+        <a routerLink="/flights" class="btn-outline book-another-btn">
           Book another flight
         </a>
       </div>
     </div>
   </div>
 } @else {
-  <div style="max-width:520px; margin:80px auto; text-align:center; padding:0 24px;">
-    <p style="color:#8A99B3; margin-bottom:16px;">No booking loaded.</p>
-    <a routerLink="/my-trips" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none;">← Find your booking</a>
+  <div class="empty-state">
+    <p class="empty-state-description">No booking loaded.</p>
+    <a routerLink="/my-trips" class="back-link back-link-flush">← Find your booking</a>
   </div>
 }

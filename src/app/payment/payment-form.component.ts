@@ -14,6 +14,7 @@ type Method = 'card' | 'paypal' | 'applepay';
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './payment-form.component.html',
+  styleUrl: './payment-form.component.css',
 })
 export class PaymentFormComponent {
   private http   = inject(HttpClient);

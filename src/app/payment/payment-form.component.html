@@ -1,30 +1,28 @@
-<div style="max-width:1180px; margin:0 auto; padding:26px 24px 72px;">
-  <a routerLink="/booking/seats" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none; display:inline-block; margin-bottom:16px;">← Back to seats</a>
+<div class="page-container">
+  <a routerLink="/booking/seats" class="back-link">← Back to seats</a>
 
-  <div style="display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:start;">
+  <div class="layout">
 
     <!-- Payment form card -->
-    <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:28px;">
-      <div style="font-size:20px; font-weight:800; margin-bottom:4px;">Payment</div>
-      <p style="margin:0 0 24px; color:#8A99B3; font-size:14px; display:flex; align-items:center; gap:7px;">
-        <span style="color:#1F9D6B;">&#128274;</span> Your payment is encrypted and secure.
+    <div class="card form-card">
+      <div class="form-title">Payment</div>
+      <p class="form-subtitle">
+        <span class="form-subtitle-lock">&#128274;</span> Your payment is encrypted and secure.
       </p>
 
       <!-- Method selector -->
-      <div style="display:flex; gap:10px; margin-bottom:24px;">
+      <div class="method-selector">
         @for (m of [['card','Card'],['paypal','PayPal'],['applepay','Apple Pay']]; track m[0]) {
           <div
             (click)="selectMethod($any(m[0]))"
             (keydown.enter)="selectMethod($any(m[0]))"
             role="button"
             tabindex="0"
-            style="flex:1; border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:10px; cursor:pointer; font-weight:600; font-size:15px; transition:border 0.15s ease, background 0.15s ease;"
-            [style.border]="method() === m[0] ? '2px solid #2180E0' : '1.5px solid #E4E9F2'"
-            [style.background]="method() === m[0] ? '#EAF3FD' : '#fff'"
-            [style.color]="method() === m[0] ? '#2180E0' : '#5C6B84'"
+            class="method-option"
+            [class.method-option--selected]="method() === m[0]"
           >
-            <span style="width:14px; height:14px; border-radius:50%; border:2px solid currentColor; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              @if (method() === m[0]) { <span style="width:6px; height:6px; border-radius:50%; background:#2180E0; display:block;"></span> }
+            <span class="method-option-radio">
+              @if (method() === m[0]) { <span class="method-option-radio-dot"></span> }
             </span>
             {{ m[1] }}
           </div>
@@ -34,45 +32,45 @@
       <!-- Card form -->
       @if (method() === 'card') {
         <form [formGroup]="cardForm">
-          <div style="margin-bottom:16px;">
-            <label for="card-name" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Cardholder name *</label>
+          <div class="field-group">
+            <label for="card-name" class="field-label">Cardholder name *</label>
             <input id="card-name" type="text" formControlName="cardName" class="field-input" [class.error]="hasError('cardName')" placeholder="Jordan Doe">
           </div>
-          <div style="margin-bottom:16px;">
-            <label for="card-number" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Card number *</label>
+          <div class="field-group">
+            <label for="card-number" class="field-label">Card number *</label>
             <input id="card-number" type="text" inputmode="numeric" maxlength="19" formControlName="cardNumber" class="field-input" [class.error]="hasError('cardNumber')" placeholder="1234 5678 9012 3456">
           </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px;">
+          <div class="field-row-2 field-row-2--mb-24">
             <div>
-              <label for="card-expiry" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Expiry date *</label>
+              <label for="card-expiry" class="field-label">Expiry date *</label>
               <input id="card-expiry" type="text" inputmode="numeric" maxlength="5" formControlName="expiry" class="field-input" [class.error]="hasError('expiry')" placeholder="MM / YY">
             </div>
             <div>
-              <label for="card-cvc" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Security code *</label>
+              <label for="card-cvc" class="field-label">Security code *</label>
               <input id="card-cvc" type="text" inputmode="numeric" maxlength="4" formControlName="cvc" class="field-input" [class.error]="hasError('cvc')" placeholder="CVC">
             </div>
           </div>
 
-          <div style="height:1px; background:#EEF2F8; margin-bottom:24px;"></div>
-          <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Billing address</div>
+          <div class="field-divider"></div>
+          <div class="section-title">Billing address</div>
 
           @if (submitted() && cardForm.invalid) {
-            <div style="background:#FCEBEA; color:#B3261E; font-size:13px; font-weight:600; padding:11px 14px; border-radius:10px; margin-bottom:16px;">
+            <div class="error-banner form-error-banner">
               Please fill in all required payment and billing fields before paying.
             </div>
           }
 
-          <div style="margin-bottom:14px;">
-            <label for="card-address" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Address line *</label>
+          <div class="address-field-group">
+            <label for="card-address" class="field-label">Address line *</label>
             <input id="card-address" type="text" formControlName="address" class="field-input" [class.error]="hasError('address')" placeholder="221B Baker Street">
           </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <div class="field-row-2">
             <div>
-              <label for="card-city" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">City *</label>
+              <label for="card-city" class="field-label">City *</label>
               <input id="card-city" type="text" formControlName="city" class="field-input" [class.error]="hasError('city')" placeholder="London">
             </div>
             <div>
-              <label for="card-postcode" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Postcode *</label>
+              <label for="card-postcode" class="field-label">Postcode *</label>
               <input id="card-postcode" type="text" formControlName="postcode" class="field-input" [class.error]="hasError('postcode')" placeholder="NW1 6XE">
             </div>
           </div>
@@ -81,73 +79,72 @@
 
       <!-- PayPal panel -->
       @if (method() === 'paypal') {
-        <div style="border:1px solid #E4E9F2; border-radius:14px; padding:32px 24px; text-align:center;">
-          <div style="font-size:24px; font-weight:800; letter-spacing:-0.01em; margin-bottom:10px;">
-            <span style="color:#003087;">Pay</span><span style="color:#0070BA;">Pal</span>
+        <div class="alt-panel">
+          <div class="paypal-logo">
+            <span class="paypal-logo-dark">Pay</span><span class="paypal-logo-light">Pal</span>
           </div>
-          <p style="margin:0 0 24px; color:#5C6B84; font-size:14px; max-width:340px; margin-left:auto; margin-right:auto;">
+          <p class="alt-panel-description">
             You'll be redirected to PayPal to log in and confirm this payment securely.
           </p>
           <button
             (click)="submitAltMethod()"
             [disabled]="submitting()"
-            style="border:none; cursor:pointer; background:#FFC439; color:#003087; font-family:inherit; font-weight:800; font-size:15px; padding:13px 32px; border-radius:24px; transition:filter 0.15s ease;"
-            [style.opacity]="submitting() ? '0.6' : '1'"
+            class="paypal-btn"
+            [class.alt-btn--submitting]="submitting()"
           >{{ submitting() ? 'Processing…' : 'Continue with PayPal' }}</button>
         </div>
       }
 
       <!-- Apple Pay panel -->
       @if (method() === 'applepay') {
-        <div style="border:1px solid #E4E9F2; border-radius:14px; padding:32px 24px; text-align:center;">
-          <p style="margin:0 0 24px; color:#5C6B84; font-size:14px; max-width:340px; margin-left:auto; margin-right:auto;">
+        <div class="alt-panel">
+          <p class="alt-panel-description">
             Confirm this payment with Face ID or Touch ID using the card on file in your Apple Wallet.
           </p>
           <button
             (click)="submitAltMethod()"
             [disabled]="submitting()"
-            style="border:none; cursor:pointer; background:#000; color:#fff; font-family:inherit; font-weight:600; font-size:16px; padding:13px 32px; border-radius:10px; display:inline-flex; align-items:center; gap:7px; transition:filter 0.15s ease;"
-            [style.opacity]="submitting() ? '0.6' : '1'"
+            class="applepay-btn"
+            [class.alt-btn--submitting]="submitting()"
           >{{ submitting() ? 'Processing…' : 'Pay with Apple Pay' }}</button>
         </div>
       }
 
       @if (error()) {
-        <div style="margin-top:16px; background:#FCEBEA; color:#B3261E; font-size:13px; font-weight:600; padding:11px 14px; border-radius:10px;">{{ error() }}</div>
+        <div class="error-banner form-error-banner-loose">{{ error() }}</div>
       }
     </div>
 
     <!-- Order summary sidebar -->
-    <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; position:sticky; top:88px;">
-      <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Order summary</div>
-      <div style="display:flex; align-items:center; gap:8px; padding-bottom:14px; border-bottom:1px solid #EEF2F8;">
-        <span style="font-size:14px; font-weight:700;">{{ flow.flight()?.origin ?? 'LHR' }}</span>
-        <span style="color:#2180E0;">→</span>
-        <span style="font-size:14px; font-weight:700;">{{ flow.flight()?.destination ?? 'JFK' }}</span>
+    <div class="card card-sidebar">
+      <div class="section-title">Order summary</div>
+      <div class="summary-route">
+        <span class="summary-route-code">{{ flow.flight()?.origin ?? 'LHR' }}</span>
+        <span class="summary-route-arrow">→</span>
+        <span class="summary-route-code">{{ flow.flight()?.destination ?? 'JFK' }}</span>
       </div>
-      <div style="display:flex; flex-direction:column; gap:11px; padding:14px 0; border-bottom:1px solid #EEF2F8; font-size:14px;">
-        <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Fare (1 adult)</span><span style="font-weight:600;">£389</span></div>
-        <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Seat {{ seatLabel() }}</span><span style="font-weight:600;">{{ seatPrice() }}</span></div>
-        <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Taxes &amp; fees</span><span style="font-weight:600;">£62</span></div>
+      <div class="summary-lines">
+        <div class="summary-line"><span class="summary-line-label">Fare (1 adult)</span><span class="summary-line-value">£389</span></div>
+        <div class="summary-line"><span class="summary-line-label">Seat {{ seatLabel() }}</span><span class="summary-line-value">{{ seatPrice() }}</span></div>
+        <div class="summary-line"><span class="summary-line-label">Taxes &amp; fees</span><span class="summary-line-value">£62</span></div>
       </div>
-      <div style="display:flex; justify-content:space-between; align-items:baseline; padding-top:16px; margin-bottom:18px;">
-        <span style="font-weight:700;">Total</span>
-        <span style="font-size:28px; font-weight:800; letter-spacing:-0.02em;">{{ total() }}</span>
+      <div class="summary-total">
+        <span class="summary-total-label">Total</span>
+        <span class="summary-total-value">{{ total() }}</span>
       </div>
 
       @if (method() === 'card') {
         <button
           (click)="submitCard()"
           [disabled]="submitting()"
-          class="btn-primary"
-          style="width:100%; border:none; cursor:pointer; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:16px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);"
-          [style.opacity]="submitting() ? '0.6' : '1'"
+          class="btn-primary pay-btn"
+          [class.pay-btn--submitting]="submitting()"
         >{{ submitting() ? 'Processing…' : 'Pay ' + total() }}</button>
       }
       @if (method() !== 'card') {
-        <p style="text-align:center; font-size:13px; color:#5C6B84;">Complete your payment in the panel on the left.</p>
+        <p class="pay-hint">Complete your payment in the panel on the left.</p>
       }
-      <p style="margin:12px 0 0; text-align:center; font-size:12px; color:#8A99B3;">By paying you agree to our fare rules &amp; terms.</p>
+      <p class="terms-note">By paying you agree to our fare rules &amp; terms.</p>
     </div>
   </div>
 </div>

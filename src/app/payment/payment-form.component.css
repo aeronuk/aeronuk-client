@@ -1,0 +1,277 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+.form-card {
+  padding: 28px;
+}
+
+.form-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.form-subtitle {
+  margin: 0 0 24px;
+  color: var(--color-faint);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.form-subtitle-lock {
+  color: var(--color-success);
+}
+
+.method-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.method-option {
+  flex: 1;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: border 0.15s ease, background 0.15s ease;
+  border: 1.5px solid var(--color-border);
+  background: #fff;
+  color: var(--color-muted);
+}
+
+.method-option--selected {
+  border: 2px solid var(--color-blue);
+  background: var(--color-blue-tint);
+  color: var(--color-blue);
+}
+
+.method-option-radio {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.method-option-radio-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-blue);
+  display: block;
+}
+
+.field-group {
+  margin-bottom: 16px;
+}
+
+.field-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.field-row-2--mb-24 {
+  margin-bottom: 24px;
+}
+
+.field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-muted);
+  margin-bottom: 7px;
+}
+
+.field-divider {
+  height: 1px;
+  background: #EEF2F8;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.form-error-banner {
+  margin-bottom: 16px;
+}
+
+.address-field-group {
+  margin-bottom: 14px;
+}
+
+.alt-panel {
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.paypal-logo {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+
+.paypal-logo-dark {
+  color: #003087;
+}
+
+.paypal-logo-light {
+  color: #0070BA;
+}
+
+.alt-panel-description {
+  margin: 0 0 24px;
+  color: var(--color-muted);
+  font-size: 14px;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.paypal-btn {
+  border: none;
+  cursor: pointer;
+  background: #FFC439;
+  color: #003087;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 13px 32px;
+  border-radius: 24px;
+  transition: filter 0.15s ease;
+  opacity: 1;
+}
+
+.applepay-btn {
+  border: none;
+  cursor: pointer;
+  background: #000;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 13px 32px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: filter 0.15s ease;
+  opacity: 1;
+}
+
+.alt-btn--submitting {
+  opacity: 0.6;
+}
+
+.form-error-banner-loose {
+  margin-top: 16px;
+}
+
+.summary-route {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #EEF2F8;
+}
+
+.summary-route-code {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.summary-route-arrow {
+  color: var(--color-blue);
+}
+
+.summary-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 14px 0;
+  border-bottom: 1px solid #EEF2F8;
+  font-size: 14px;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+}
+
+.summary-line-label {
+  color: var(--color-muted);
+}
+
+.summary-line-value {
+  font-weight: 600;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 16px;
+  margin-bottom: 18px;
+}
+
+.summary-total-label {
+  font-weight: 700;
+}
+
+.summary-total-value {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.pay-btn {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(150deg, #2180E0, #3B9EFF);
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(33, 128, 224, 0.28);
+  opacity: 1;
+}
+
+.pay-btn--submitting {
+  opacity: 0.6;
+}
+
+.pay-hint {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.terms-note {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--color-faint);
+}

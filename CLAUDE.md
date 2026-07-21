@@ -16,8 +16,14 @@ The last commit (`ae9fb9f`) applied the full design handoff redesign.
 ## Stack
 
 - Angular 21, standalone components throughout (no NgModules)
-- Tailwind CSS v4 with `@theme` tokens in `src/styles.css`; complex
-  one-off values use inline `style=""` attributes
+- Tailwind CSS v4 with `@theme` tokens in `src/styles.css`; every component
+  has a colocated `styleUrl` stylesheet for its own one-off values, and
+  styling patterns that repeat across components live as shared classes in
+  `src/styles.css` instead of being duplicated per component. Static
+  `style=""` attributes are not used; a dynamic `[style.x]` binding is only
+  acceptable for values that are genuinely continuous (e.g. an
+  animation's rotation angle) rather than a small discrete set of states,
+  which should be `[class.x]` bindings backed by real CSS instead
 - Hanken Grotesk from Google Fonts (loaded in `index.html`)
 - Signal-based state (no NgRx, no BehaviorSubject)
 - `toSignal()` for converting RxJS observables to signals
@@ -49,11 +55,20 @@ npx ng test           # Karma unit tests (not yet written)
 ## Global utility CSS classes (src/styles.css)
 
 ```
-.btn-primary   hover: translateY(-2px), brightness(0.88) saturate(1.25), blue glow shadow
-.btn-navy      hover: background #16305c, translateY(-1px)
-.btn-outline   hover: background #F4F6FB, translateY(-1px)
-.field-input   width:100%, border-radius:11px, focus ring blue, .error variant red
-.field-select  appearance:none (overlaid native select trick)
+.btn-primary     hover: translateY(-2px), brightness(0.88) saturate(1.25), blue glow shadow
+.btn-navy        hover: background #16305c, translateY(-1px)
+.btn-outline     hover: background #F4F6FB, translateY(-1px)
+.field-input     width:100%, border-radius:11px, focus ring blue, .error variant red
+.field-select    appearance:none (overlaid native select trick)
+.error-text      error-colored text
+.error-banner    error bg + text, padding, rounded — inline form/page error messages
+.page-container  1180px content column, 26/24/72 padding — shared top-level screen wrapper
+.back-link       "← Back to X" link style used across the booking flow screens
+.card            white bg, 18px radius, standard elevated box-shadow
+.card-pad-28     .card + 28px padding (form cards)
+.card-sidebar    .card + 24px padding, sticky at top:88px (trip/order summary sidebars)
+.destination-card-*  destination card grid/image/body classes shared between the
+                      "Popular right now" and "All destinations" screens
 ```
 
 ## Routing structure

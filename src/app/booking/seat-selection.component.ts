@@ -22,6 +22,7 @@ interface SeatRow {
   standalone: true,
   imports: [RouterLink],
   templateUrl: './seat-selection.component.html',
+  styleUrl: './seat-selection.component.css',
 })
 export class SeatSelectionComponent {
   protected flow   = inject(BookingFlowService);
@@ -52,11 +53,11 @@ export class SeatSelectionComponent {
     return rows;
   });
 
-  getSeatStyle(seat: SeatCell): string {
-    if (seat.selected) return 'width:30px;height:30px;border-radius:7px;background:#2180E0;border:1.5px solid #2180E0;color:#fff;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:filter 0.15s ease;';
-    if (seat.occupied) return 'width:30px;height:30px;border-radius:7px;background:#E4E9F2;border:1.5px solid #E4E9F2;color:#B4BECE;font-family:inherit;font-size:11px;font-weight:700;cursor:not-allowed;display:flex;align-items:center;justify-content:center;padding:0;';
-    if (seat.extra)    return 'width:30px;height:30px;border-radius:7px;background:#DDF0E8;border:1.5px solid #9FD8BF;color:#1F9D6B;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:filter 0.15s ease;';
-    return 'width:30px;height:30px;border-radius:7px;background:#EAF3FD;border:1.5px solid #BBD8F5;color:#2180E0;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:filter 0.15s ease;';
+  getSeatClass(seat: SeatCell): string {
+    if (seat.selected) return 'seat-btn seat-btn--selected';
+    if (seat.occupied) return 'seat-btn seat-btn--occupied';
+    if (seat.extra)    return 'seat-btn seat-btn--extra';
+    return 'seat-btn seat-btn--standard';
   }
 
   selectSeat(seat: SeatCell): void {

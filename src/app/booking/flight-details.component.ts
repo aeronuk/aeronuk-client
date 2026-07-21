@@ -14,6 +14,7 @@ interface FareDef {
   standalone: true,
   imports: [RouterLink],
   templateUrl: './flight-details.component.html',
+  styleUrl: './flight-details.component.css',
 })
 export class FlightDetailsComponent {
   protected flow   = inject(BookingFlowService);

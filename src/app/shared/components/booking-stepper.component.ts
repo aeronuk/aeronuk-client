@@ -15,6 +15,7 @@ interface Step {
   standalone: true,
   imports: [],
   templateUrl: './booking-stepper.component.html',
+  styleUrl: './booking-stepper.component.css',
 })
 export class BookingStepperComponent {
   private router = inject(Router);

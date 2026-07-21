@@ -8,6 +8,7 @@ import { BookingFlowService } from '../shared/services/booking-flow.service';
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './passenger-form.component.html',
+  styleUrl: './passenger-form.component.css',
 })
 export class PassengerFormComponent {
   protected flow   = inject(BookingFlowService);

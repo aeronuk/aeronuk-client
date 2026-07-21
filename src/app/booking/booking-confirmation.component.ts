@@ -7,6 +7,7 @@ import { BookingFlowService } from '../shared/services/booking-flow.service';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './booking-confirmation.component.html',
+  styleUrl: './booking-confirmation.component.css',
 })
 export class BookingConfirmationComponent {
   protected flow   = inject(BookingFlowService);

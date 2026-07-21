@@ -9,6 +9,7 @@ import { BookingStepperComponent } from './shared/components/booking-stepper.com
   standalone: true,
   imports: [RouterLink, RouterLinkActive, RouterOutlet, BookingStepperComponent],
   templateUrl: './app.html',
+  styleUrl: './app.css',
 })
 export class App {
   private router = inject(Router);

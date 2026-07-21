@@ -1,26 +1,26 @@
-<div style="background:#fff; border-bottom:1px solid #E4E9F2;">
-  <div style="max-width:1180px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+<div class="stepper-bar">
+  <div class="stepper-bar-inner">
     @for (step of steps(); track step.label; let last = $last; let i = $index) {
       <div
         (click)="navigate(step)"
         (keydown.enter)="navigate(step)"
         role="button"
         [attr.tabindex]="step.done ? 0 : -1"
-        style="display:flex; align-items:center; gap:10px; transition:opacity 0.15s ease;"
-        [style.cursor]="step.done ? 'pointer' : 'default'"
+        class="stepper-step"
+        [class.stepper-step--clickable]="step.done"
       >
         <div
-          style="width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0; transition:background 0.15s ease;"
-          [style.background]="step.done ? '#1F9D6B' : step.active ? '#2180E0' : '#EEF2F8'"
-          [style.color]="(step.done || step.active) ? '#fff' : '#8A99B3'"
+          class="stepper-dot"
+          [class.stepper-dot--done]="step.done"
+          [class.stepper-dot--active]="!step.done && step.active"
         >{{ step.done ? '✓' : (i + 1) }}</div>
         <span
-          style="font-size:14px;"
-          [style.font-weight]="(step.active || step.done) ? '700' : '500'"
-          [style.color]="step.active ? '#0B1E3D' : step.done ? '#1F9D6B' : '#8A99B3'"
+          class="stepper-label"
+          [class.stepper-label--done]="step.done"
+          [class.stepper-label--active]="!step.done && step.active"
         >{{ step.label }}</span>
         @if (!last) {
-          <div style="width:34px; height:2px; background:#E4E9F2; border-radius:2px;"></div>
+          <div class="stepper-connector"></div>
         }
       </div>
     }

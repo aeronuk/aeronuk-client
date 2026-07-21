@@ -1,75 +1,75 @@
 @if (flow.booking(); as booking) {
-  <div style="max-width:680px; margin:0 auto; padding:48px 24px 80px; text-align:center;">
+  <div class="page">
 
     <!-- Success badge -->
-    <div style="width:80px; height:80px; border-radius:50%; background:#DDF0E8; border:4px solid #1F9D6B; display:flex; align-items:center; justify-content:center; margin:0 auto 24px;">
+    <div class="success-badge">
       <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M7 18l7 7 15-15" stroke="#1F9D6B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
 
-    <div style="font-size:28px; font-weight:800; letter-spacing:-0.02em; margin-bottom:8px;">Booking confirmed!</div>
-    <p style="margin:0 0 8px; color:#5C6B84; font-size:16px;">Your booking reference is</p>
-    <div style="display:inline-block; background:#F4F6FB; border-radius:12px; padding:10px 24px; font-size:24px; font-weight:800; letter-spacing:0.12em; color:#0B1E3D; margin-bottom:28px;">{{ booking.bookingCode }}</div>
-    <p style="margin:0 0 32px; color:#8A99B3; font-size:14px;">A confirmation email has been sent to <strong style="color:#0B1E3D;">{{ flow.passengerDraft()?.email }}</strong></p>
+    <div class="headline">Booking confirmed!</div>
+    <p class="subheadline">Your booking reference is</p>
+    <div class="booking-code">{{ booking.bookingCode }}</div>
+    <p class="email-note">A confirmation email has been sent to <strong class="email-note-value">{{ flow.passengerDraft()?.email }}</strong></p>
 
     <!-- Flight recap card -->
-    <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; text-align:left; margin-bottom:24px;">
-      <div style="font-size:15px; font-weight:800; margin-bottom:18px; color:#0B1E3D;">Flight details</div>
+    <div class="card recap-card">
+      <div class="recap-title">Flight details</div>
 
-      <div style="display:flex; align-items:center; gap:0; margin-bottom:20px;">
-        <div style="flex:1;">
-          <div style="font-size:26px; font-weight:800; letter-spacing:-0.02em;">{{ flow.flight()?.origin ?? booking.flightId }}</div>
+      <div class="recap-route">
+        <div class="recap-route-endpoint">
+          <div class="recap-route-code">{{ flow.flight()?.origin ?? booking.flightId }}</div>
           @if (flow.flight()?.departureTime) {
-            <div style="font-size:13px; color:#5C6B84; margin-top:2px;">{{ formatTime(flow.flight()!.departureTime) }}</div>
+            <div class="recap-route-time">{{ formatTime(flow.flight()!.departureTime) }}</div>
           }
         </div>
-        <div style="display:flex; flex-direction:column; align-items:center; gap:4px; padding:0 16px;">
-          <div style="height:1px; width:64px; background:#E4E9F2; position:relative;">
-            <span style="position:absolute; top:-9px; left:50%; transform:translateX(-50%); font-size:13px; color:#2180E0;">✈</span>
+        <div class="recap-route-middle">
+          <div class="recap-route-line">
+            <span class="recap-route-plane">✈</span>
           </div>
-          <div style="font-size:11px; color:#8A99B3;">Direct</div>
+          <div class="recap-route-direct">Direct</div>
         </div>
-        <div style="flex:1; text-align:right;">
-          <div style="font-size:26px; font-weight:800; letter-spacing:-0.02em;">{{ flow.flight()?.destination ?? '' }}</div>
+        <div class="recap-route-endpoint--right">
+          <div class="recap-route-code">{{ flow.flight()?.destination ?? '' }}</div>
           @if (flow.flight()?.arrivalTime) {
-            <div style="font-size:13px; color:#5C6B84; margin-top:2px;">{{ formatTime(flow.flight()!.arrivalTime) }}</div>
+            <div class="recap-route-time">{{ formatTime(flow.flight()!.arrivalTime) }}</div>
           }
         </div>
       </div>
 
-      <div style="height:1px; background:#EEF2F8; margin-bottom:16px;"></div>
+      <div class="recap-divider"></div>
 
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; font-size:13px;">
+      <div class="recap-grid">
         <div>
-          <div style="color:#8A99B3; margin-bottom:3px;">Passenger</div>
-          <div style="font-weight:700; color:#0B1E3D;">{{ flow.passengerDraft()?.firstName }} {{ flow.passengerDraft()?.lastName }}</div>
+          <div class="recap-grid-label">Passenger</div>
+          <div class="recap-grid-value">{{ flow.passengerDraft()?.firstName }} {{ flow.passengerDraft()?.lastName }}</div>
         </div>
         <div>
-          <div style="color:#8A99B3; margin-bottom:3px;">Seat</div>
-          <div style="font-weight:700; color:#0B1E3D;">{{ booking.seatNumber }}</div>
+          <div class="recap-grid-label">Seat</div>
+          <div class="recap-grid-value">{{ booking.seatNumber }}</div>
         </div>
         <div>
-          <div style="color:#8A99B3; margin-bottom:3px;">Total paid</div>
-          <div style="font-weight:700; color:#0B1E3D;">£{{ booking.totalAmount }}</div>
+          <div class="recap-grid-label">Total paid</div>
+          <div class="recap-grid-value">£{{ booking.totalAmount }}</div>
         </div>
       </div>
     </div>
 
     <!-- Actions -->
-    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-      <button class="btn-primary" style="border:none; cursor:pointer; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:15px; padding:13px 28px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);">
+    <div class="actions">
+      <button class="btn-primary download-btn">
         &#8681; Download ticket
       </button>
-      <button (click)="bookNew()" class="btn-outline" style="border:1.5px solid #E4E9F2; cursor:pointer; background:#fff; color:#0B1E3D; font-family:inherit; font-weight:600; font-size:15px; padding:13px 28px; border-radius:12px;">
+      <button (click)="bookNew()" class="btn-outline book-another-btn">
         Book another flight
       </button>
     </div>
   </div>
 } @else {
-  <div style="max-width:520px; margin:80px auto; text-align:center; padding:0 24px;">
-    <div style="font-size:18px; font-weight:700; color:#0B1E3D; margin-bottom:12px;">No booking found</div>
-    <p style="color:#8A99B3; margin-bottom:24px;">It looks like your booking details are no longer available.</p>
-    <a routerLink="/flights" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none;">← Search for flights</a>
+  <div class="empty-state">
+    <div class="empty-state-title">No booking found</div>
+    <p class="empty-state-description">It looks like your booking details are no longer available.</p>
+    <a routerLink="/flights" class="empty-state-link">← Search for flights</a>
   </div>
 }
