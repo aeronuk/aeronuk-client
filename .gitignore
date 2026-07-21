@@ -46,3 +46,9 @@ Thumbs.db
 .env
 .superpowers/
 .worktrees/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
