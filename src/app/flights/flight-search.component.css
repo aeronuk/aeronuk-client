@@ -225,22 +225,11 @@
 
 .search-actions-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-top: 20px;
   flex-wrap: wrap;
   gap: 12px;
-}
-
-.search-preview-links {
-  display: flex;
-  gap: 16px;
-}
-
-.search-preview-link {
-  color: var(--color-faint);
-  text-decoration: underline;
-  font-size: 13px;
 }
 
 .search-submit-btn {

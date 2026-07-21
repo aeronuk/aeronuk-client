@@ -109,10 +109,6 @@
     }
 
     <div class="search-actions-row">
-      <div class="search-preview-links">
-        <a href="#" (click)="$event.preventDefault(); previewNoResults()" class="search-preview-link">Preview: no flights found</a>
-        <a href="#" (click)="$event.preventDefault(); previewError()" class="search-preview-link">Preview: search error</a>
-      </div>
       <button
         type="button"
         (click)="search()"
