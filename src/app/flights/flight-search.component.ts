@@ -51,6 +51,9 @@ export class FlightSearchComponent {
   swapRotation    = signal(0);
   attemptedSearch = signal(false);
 
+  /** Today's date in the browser's local timezone, formatted as YYYY-MM-DD. */
+  protected readonly minDate = this.toLocalDateString(new Date());
+
   protected readonly originAirport = computed(() =>
     this.airports.find(a => a.code === this.originCode()) ?? null);
 
@@ -75,6 +78,12 @@ export class FlightSearchComponent {
         ? missing[0]
         : missing.slice(0, -1).join(', ') + ' and ' + missing[missing.length - 1];
       this.searchError.set(`Please add the missing ${missing.length === 1 ? 'field' : 'fields'} before searching: ${list}.`);
+      this.attemptedSearch.set(true);
+      return;
+    }
+
+    if (this.date() < this.minDate) {
+      this.searchError.set('Please choose a departure date of today or later.');
       this.attemptedSearch.set(true);
       return;
     }
@@ -117,5 +126,13 @@ export class FlightSearchComponent {
       this.date() || '2025-07-14',
     );
     this.router.navigate(['/flights/results']);
+  }
+
+  /** Formats a Date using its local (not UTC) year/month/day as YYYY-MM-DD. */
+  private toLocalDateString(d: Date): string {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }

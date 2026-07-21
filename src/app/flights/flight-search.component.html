@@ -92,6 +92,7 @@
             id="depart-date"
             type="date"
             [value]="date()"
+            [attr.min]="minDate"
             (change)="date.set($any($event.target).value)"
             class="search-date-input"
             aria-label="Departure date"
