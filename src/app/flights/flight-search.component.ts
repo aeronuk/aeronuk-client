@@ -44,7 +44,7 @@ export class FlightSearchComponent {
     { city: 'Tokyo',     code: 'HND', airport: 'Haneda',           price: '£520', imageLabel: 'street photo' },
   ];
 
-  originCode      = signal('LHR');
+  originCode      = signal('');
   destinationCode = signal('');
   date            = signal('');
   searchError     = signal('');

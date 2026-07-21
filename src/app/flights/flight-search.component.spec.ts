@@ -22,6 +22,22 @@ describe('FlightSearchComponent', () => {
     fixture.detectChanges();
   });
 
+  it('starts with an empty origin field by default', () => {
+    expect(component.originCode()).toBe('');
+  });
+
+  it('shows an error and does not navigate when origin is missing', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    component.originCode.set('');
+    component.destinationCode.set('JFK');
+    component.date.set('2025-07-14');
+
+    component.search();
+
+    expect(component.searchError()).toContain('origin');
+    expect(navigateSpy).not.toHaveBeenCalled();
+  });
+
   it('shows an error and does not navigate when destination is missing', () => {
     const navigateSpy = spyOn(router, 'navigate');
     component.destinationCode.set('');
@@ -100,6 +116,27 @@ describe('FlightSearchComponent', () => {
     fixture.detectChanges();
 
     const placeholder: HTMLElement = fixture.nativeElement.querySelector('#destination-select')
+      .previousElementSibling;
+    expect(placeholder.classList).toContain('error-text');
+  });
+
+  it('does not render error-text on the origin placeholder before a search is attempted', () => {
+    fixture.detectChanges();
+
+    const placeholder: HTMLElement = fixture.nativeElement.querySelector('#origin-select')
+      .previousElementSibling;
+    expect(placeholder.classList).not.toContain('error-text');
+  });
+
+  it('renders error-text on the origin placeholder after a failed search attempt', () => {
+    component.originCode.set('');
+    component.destinationCode.set('JFK');
+    component.date.set('2025-07-14');
+
+    component.search();
+    fixture.detectChanges();
+
+    const placeholder: HTMLElement = fixture.nativeElement.querySelector('#origin-select')
       .previousElementSibling;
     expect(placeholder.classList).toContain('error-text');
   });
