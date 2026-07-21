@@ -37,6 +37,27 @@ npx ng build          # production build → dist/aeronuk-client
 npx ng test           # Karma unit tests (not yet written)
 ```
 
+### Dev server while working on an issue
+
+Whenever implementing an issue, start exactly one dev server in the
+background early on and leave it running for the rest of the session, so
+the user can manually test each change live without asking for a rebuild:
+
+```bash
+npx ng serve --watch --port 4200
+```
+
+- `ng serve` watches and live-reloads by default; `--watch` is passed
+  explicitly here for clarity.
+- Before starting it, check for and kill any dev server already running
+  (yours from an earlier turn, or a stray one) — only one should be up at
+  a time, on port 4200.
+- Don't start a second server on another port instead of reusing the
+  existing one, and don't run one-off `ng build` + static-serve combos for
+  this purpose — `ng serve --watch` already covers it.
+- Leave the server running when you hand off (e.g. after opening a PR);
+  only kill it if the user asks you to.
+
 ## Design system tokens (src/styles.css `@theme`)
 
 | Token | Value | Use |
