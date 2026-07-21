@@ -112,23 +112,29 @@ export class FlightSearchComponent {
 
     const orig = this.airports.find(a => a.code === this.originCode())!;
     const dest = this.airports.find(a => a.code === this.destinationCode())!;
+    const date = this.date();
     this.searchState.setSearch(
       orig.code, orig.city, orig.airport,
       dest.code, dest.city, dest.airport,
-      this.date(),
+      date,
     );
     this.searchError.set('');
-    this.router.navigate(['/flights/results']);
+    this.router.navigate(['/flights/results'], {
+      queryParams: { origin: orig.code, destination: dest.code, date },
+    });
   }
 
   selectDestination(dest: Destination): void {
     const orig = this.airports.find(a => a.code === (this.originCode() || 'LHR'))!;
+    const date = this.date() || '2025-07-14';
     this.searchState.setSearch(
       orig.code, orig.city, orig.airport,
       dest.code, dest.city, dest.airport,
-      this.date() || '2025-07-14',
+      date,
     );
-    this.router.navigate(['/flights/results']);
+    this.router.navigate(['/flights/results'], {
+      queryParams: { origin: orig.code, destination: dest.code, date },
+    });
   }
 
   /** Formats a Date using its local (not UTC) year/month/day as YYYY-MM-DD. */
