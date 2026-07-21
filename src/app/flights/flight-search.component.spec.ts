@@ -96,7 +96,9 @@ describe('FlightSearchComponent', () => {
     expect(searchState.origin()).toBe('LHR');
     expect(searchState.destination()).toBe('JFK');
     expect(searchState.date()).toBe(FUTURE_DATE);
-    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results']);
+    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results'], {
+      queryParams: { origin: 'LHR', destination: 'JFK', date: FUTURE_DATE },
+    });
   });
 
   it('shows an error and does not navigate when the departure date is in the past', () => {
@@ -121,7 +123,9 @@ describe('FlightSearchComponent', () => {
 
     expect(component.searchError()).toBe('');
     expect(searchState.date()).toBe(TODAY);
-    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results']);
+    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results'], {
+      queryParams: { origin: 'LHR', destination: 'JFK', date: TODAY },
+    });
   });
 
   it('accepts a future date and navigates to /flights/results', () => {
@@ -134,7 +138,9 @@ describe('FlightSearchComponent', () => {
 
     expect(component.searchError()).toBe('');
     expect(searchState.date()).toBe(TOMORROW);
-    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results']);
+    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results'], {
+      queryParams: { origin: 'LHR', destination: 'JFK', date: TOMORROW },
+    });
   });
 
   it('does not flag attemptedSearch before any search has been submitted', () => {
@@ -201,7 +207,23 @@ describe('FlightSearchComponent', () => {
 
     expect(searchState.destination()).toBe('BCN');
     expect(searchState.destinationCity()).toBe('Barcelona');
-    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results']);
+    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results'], {
+      queryParams: { origin: 'LHR', destination: 'BCN', date: '2025-07-14' },
+    });
+  });
+
+  it('selectDestination() carries the chosen origin and departure date through as query params when set', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    component.originCode.set('JFK');
+    component.date.set('2025-08-01');
+
+    component.selectDestination({
+      city: 'Barcelona', code: 'BCN', airport: 'El Prat', price: '£78', imageLabel: 'city / beach photo',
+    });
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/flights/results'], {
+      queryParams: { origin: 'JFK', destination: 'BCN', date: '2025-08-01' },
+    });
   });
 
   it('renders the From, To and Depart field boxes at an identical height when empty', () => {

@@ -42,6 +42,8 @@ export class AllDestinationsComponent {
       dest.code, dest.city, dest.airport,
       '',
     );
-    this.router.navigate(['/flights/results']);
+    this.router.navigate(['/flights/results'], {
+      queryParams: { origin: 'LHR', destination: dest.code, date: '' },
+    });
   }
 }
