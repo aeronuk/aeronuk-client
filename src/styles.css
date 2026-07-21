@@ -95,6 +95,42 @@
   border-radius: 10px;
 }
 
+/* Page content wrapper — shared by every top-level screen that uses the
+   1180px content column with 26/24/72 padding. */
+.page-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 26px 24px 72px;
+}
+
+/* "← Back to X" link — shared across the multi-step booking flow screens. */
+.back-link {
+  color: var(--color-blue);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+/* Elevated white card — the base look shared by nearly every card/panel
+   across the booking flow (form cards, sidebars, status panels, filters). */
+.card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(11, 30, 61, 0.04), 0 12px 28px rgba(11, 30, 61, 0.06);
+}
+.card-pad-28 {
+  padding: 28px;
+}
+/* Sticky trip-summary/order-summary sidebar, identical across the
+   flight details, passenger, seat selection and payment screens. */
+.card-sidebar {
+  padding: 24px;
+  position: sticky;
+  top: 88px;
+}
+
 /* Destination card grid — shared between the "Popular right now" section
    on the flight search screen and the full "All destinations" screen. */
 .destination-grid {

@@ -4,15 +4,6 @@
   padding: 40px 24px 80px;
 }
 
-.back-link {
-  color: var(--color-blue);
-  font-weight: 600;
-  font-size: 14px;
-  text-decoration: none;
-  display: inline-block;
-  margin-bottom: 16px;
-}
-
 .page-title {
   margin: 0 0 8px;
   font-size: 32px;

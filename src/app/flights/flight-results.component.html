@@ -1,4 +1,4 @@
-<div class="page">
+<div class="page-container">
 
   @if (loading()) {
     <div class="loading-state">Searching flights…</div>
@@ -16,7 +16,7 @@
       <p class="results-summary">Economy · <span class="results-summary-count">{{ flights().length }} direct flight{{ flights().length === 1 ? '' : 's' }} found</span></p>
 
       <div class="results-layout">
-        <aside class="filters-panel">
+        <aside class="card filters-panel">
           <div class="filters-title">Filters</div>
           <div class="filter-group">
             <div class="filter-group-label">Price range</div>
@@ -75,7 +75,7 @@
 
     @if (screen() === 'no-results') {
       <p class="status-summary">Economy</p>
-      <div class="status-panel">
+      <div class="card status-panel">
         <div class="status-icon">✈</div>
         <h2 class="status-title">No flights found</h2>
         <p class="status-description">We couldn't find any flights for this route. Try a different date or airport.</p>
@@ -85,7 +85,7 @@
 
     @if (screen() === 'error') {
       <p class="status-summary">Economy</p>
-      <div class="status-panel">
+      <div class="card status-panel">
         <div class="status-icon status-icon--error">!</div>
         <h2 class="status-title">Something went wrong</h2>
         <p class="status-description">We're having trouble searching flights right now. Please try again in a moment.</p>

@@ -1,0 +1,279 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+.main-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-pad-26 {
+  padding: 26px;
+}
+
+.itinerary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.itinerary-date {
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.itinerary-direct-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-muted);
+  background: #EEF2F8;
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+
+.itinerary-body {
+  display: flex;
+  gap: 18px;
+}
+
+.itinerary-timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 5px;
+}
+
+.itinerary-timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--color-blue);
+}
+
+.itinerary-timeline-line {
+  width: 2px;
+  flex: 1;
+  background: #D5DEEA;
+  min-height: 70px;
+}
+
+.itinerary-timeline-dot--filled {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-blue);
+}
+
+.itinerary-legs {
+  flex: 1;
+}
+
+.itinerary-leg {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.itinerary-leg-time {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.itinerary-leg-place {
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.itinerary-leg-terminal {
+  color: var(--color-faint);
+  font-size: 14px;
+}
+
+.itinerary-flight-meta {
+  color: var(--color-faint);
+  font-size: 13px;
+  margin: 14px 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.itinerary-flight-meta-icon {
+  color: var(--color-blue);
+}
+
+.fare-section-title {
+  font-size: 19px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.fare-section-subtitle {
+  margin: 0 0 20px;
+  color: var(--color-faint);
+  font-size: 14px;
+}
+
+.fare-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.fare-card {
+  position: relative;
+  border-radius: 14px;
+  padding: 22px 18px 18px;
+  transition: border 0.15s ease, background 0.15s ease;
+  border: 1.5px solid var(--color-border);
+  background: #fff;
+}
+
+.fare-card--selected {
+  border: 2px solid var(--color-blue);
+  background: #F5FAFF;
+}
+
+.fare-card-tag {
+  position: absolute;
+  top: -11px;
+  left: 16px;
+  background: var(--color-warm);
+  color: #3B2500;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.fare-card-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.fare-card-price {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 6px 0 14px;
+}
+
+.fare-card-features {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 18px;
+}
+
+.fare-card-feature {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  color: #3A4A66;
+}
+
+.fare-card-feature-check {
+  color: var(--color-success);
+}
+
+.fare-card-select-btn {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 11px;
+  border-radius: 10px;
+  transition: filter 0.15s ease, transform 0.15s ease;
+  background: #EEF2F8;
+  color: var(--color-navy);
+}
+
+.fare-card-select-btn--selected {
+  background: var(--color-blue);
+  color: #fff;
+}
+
+.summary-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.summary-route {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #EEF2F8;
+}
+
+.summary-route-code {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.summary-route-arrow {
+  color: var(--color-blue);
+}
+
+.summary-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 16px 0;
+  border-bottom: 1px solid #EEF2F8;
+  font-size: 14px;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+}
+
+.summary-line-label {
+  color: var(--color-muted);
+}
+
+.summary-line-value {
+  font-weight: 600;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 16px;
+}
+
+.summary-total-label {
+  font-weight: 700;
+}
+
+.summary-total-value {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.summary-continue-btn {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  margin-top: 18px;
+  background: linear-gradient(150deg, #2180E0, #3B9EFF);
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(33, 128, 224, 0.28);
+}

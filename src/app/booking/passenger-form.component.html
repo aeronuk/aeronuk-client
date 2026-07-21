@@ -1,26 +1,26 @@
-<div style="max-width:1180px; margin:0 auto; padding:26px 24px 72px;">
-  <a routerLink="/booking" style="color:#2180E0; font-weight:600; font-size:14px; text-decoration:none; display:inline-block; margin-bottom:16px;">← Back to flight</a>
+<div class="page-container">
+  <a routerLink="/booking" class="back-link">← Back to flight</a>
 
-  <div style="display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:start;">
+  <div class="layout">
 
-    <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:28px;">
-      <div style="font-size:20px; font-weight:800; margin-bottom:4px;">Passenger details</div>
-      <p style="margin:0 0 24px; color:#8A99B3; font-size:14px;">Enter names exactly as they appear on your passport. All fields are required.</p>
+    <div class="card form-card">
+      <div class="form-title">Passenger details</div>
+      <p class="form-subtitle">Enter names exactly as they appear on your passport. All fields are required.</p>
 
-      <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; padding:12px 16px; background:#F4F6FB; border-radius:12px;">
-        <div style="width:30px; height:30px; border-radius:50%; background:#2180E0; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0;">1</div>
-        <div style="font-weight:700; font-size:15px;">Adult 1</div>
-        <div style="margin-left:auto; font-size:13px; color:#8A99B3;">Lead passenger</div>
+      <div class="passenger-chip">
+        <div class="passenger-chip-avatar">1</div>
+        <div class="passenger-chip-name">Adult 1</div>
+        <div class="passenger-chip-role">Lead passenger</div>
       </div>
 
       @if (submitted() && form.invalid) {
-        <div style="background:#FCEBEA; color:#B3261E; font-size:13px; font-weight:600; padding:11px 14px; border-radius:10px; margin-bottom:16px;">Please fill in all required passenger and contact fields before continuing.</div>
+        <div class="error-banner form-error-banner">Please fill in all required passenger and contact fields before continuing.</div>
       }
 
       <form [formGroup]="form" (ngSubmit)="submit()">
-        <div style="display:grid; grid-template-columns:120px 1fr 1fr; gap:14px; margin-bottom:16px;">
+        <div class="field-row-3">
           <div>
-            <label for="passenger-title" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Title *</label>
+            <label for="passenger-title" class="field-label">Title *</label>
             <select id="passenger-title" formControlName="title" class="field-input field-select" [class.error]="hasError('title')">
               <option value="">Select</option>
               <option value="Mr">Mr</option>
@@ -30,22 +30,22 @@
             </select>
           </div>
           <div>
-            <label for="passenger-firstName" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">First &amp; middle names *</label>
+            <label for="passenger-firstName" class="field-label">First &amp; middle names *</label>
             <input id="passenger-firstName" type="text" formControlName="firstName" class="field-input" [class.error]="hasError('firstName')" placeholder="Jordan">
           </div>
           <div>
-            <label for="passenger-lastName" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Last name *</label>
+            <label for="passenger-lastName" class="field-label">Last name *</label>
             <input id="passenger-lastName" type="text" formControlName="lastName" class="field-input" [class.error]="hasError('lastName')" placeholder="Doe">
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
+        <div class="field-row-2">
           <div>
-            <label for="passenger-dob" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Date of birth *</label>
+            <label for="passenger-dob" class="field-label">Date of birth *</label>
             <input id="passenger-dob" type="date" formControlName="dob" class="field-input" [class.error]="hasError('dob')">
           </div>
           <div>
-            <label for="passenger-nationality" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Nationality *</label>
+            <label for="passenger-nationality" class="field-label">Nationality *</label>
             <select id="passenger-nationality" formControlName="nationality" class="field-input field-select" [class.error]="hasError('nationality')">
               <option value="">Select</option>
               <option value="United Kingdom">United Kingdom</option>
@@ -58,40 +58,40 @@
           </div>
         </div>
 
-        <div style="height:1px; background:#EEF2F8; margin:24px 0;"></div>
-        <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Contact details</div>
+        <div class="field-divider"></div>
+        <div class="section-title">Contact details</div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div class="field-row-2">
           <div>
-            <label for="passenger-email" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Email address *</label>
+            <label for="passenger-email" class="field-label">Email address *</label>
             <input id="passenger-email" type="email" formControlName="email" class="field-input" [class.error]="hasError('email')" placeholder="you@email.com">
           </div>
           <div>
-            <label for="passenger-mobile" style="display:block; font-size:13px; font-weight:600; color:#5C6B84; margin-bottom:7px;">Mobile number *</label>
+            <label for="passenger-mobile" class="field-label">Mobile number *</label>
             <input id="passenger-mobile" type="tel" formControlName="mobile" class="field-input" [class.error]="hasError('mobile')" placeholder="+44 7700 900000">
           </div>
         </div>
       </form>
     </div>
 
-    <div style="background:#fff; border-radius:18px; box-shadow:0 1px 2px rgba(11,30,61,0.04), 0 12px 28px rgba(11,30,61,0.06); padding:24px; position:sticky; top:88px;">
-      <div style="font-size:16px; font-weight:800; margin-bottom:16px;">Trip summary</div>
-      <div style="display:flex; align-items:center; gap:10px; padding-bottom:16px; border-bottom:1px solid #EEF2F8;">
+    <div class="card card-sidebar">
+      <div class="section-title">Trip summary</div>
+      <div class="summary-route">
         @if (flow.flight()) {
-          <div style="font-size:15px; font-weight:700;">{{ flow.flight()!.origin }}</div>
-          <span style="color:#2180E0;">→</span>
-          <div style="font-size:15px; font-weight:700;">{{ flow.flight()!.destination }}</div>
+          <div class="summary-route-code">{{ flow.flight()!.origin }}</div>
+          <span class="summary-route-arrow">→</span>
+          <div class="summary-route-code">{{ flow.flight()!.destination }}</div>
         }
       </div>
-      <div style="display:flex; flex-direction:column; gap:11px; padding:16px 0; border-bottom:1px solid #EEF2F8; font-size:14px;">
-        <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Fare (1 adult)</span><span style="font-weight:600;">£389</span></div>
-        <div style="display:flex; justify-content:space-between;"><span style="color:#5C6B84;">Taxes &amp; fees</span><span style="font-weight:600;">£62</span></div>
+      <div class="summary-lines">
+        <div class="summary-line"><span class="summary-line-label">Fare (1 adult)</span><span class="summary-line-value">£389</span></div>
+        <div class="summary-line"><span class="summary-line-label">Taxes &amp; fees</span><span class="summary-line-value">£62</span></div>
       </div>
-      <div style="display:flex; justify-content:space-between; align-items:baseline; padding-top:16px;">
-        <span style="font-weight:700;">Total</span>
-        <span style="font-size:26px; font-weight:800; letter-spacing:-0.02em;">£451</span>
+      <div class="summary-total">
+        <span class="summary-total-label">Total</span>
+        <span class="summary-total-value">£451</span>
       </div>
-      <button (click)="submit()" class="btn-primary" style="width:100%; border:none; cursor:pointer; margin-top:18px; background:linear-gradient(150deg,#2180E0,#3B9EFF); color:#fff; font-family:inherit; font-weight:700; font-size:16px; padding:15px; border-radius:12px; box-shadow:0 8px 20px rgba(33,128,224,0.28);">Continue to seats →</button>
+      <button (click)="submit()" class="btn-primary summary-continue-btn">Continue to seats →</button>
     </div>
   </div>
 </div>
