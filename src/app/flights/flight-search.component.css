@@ -166,11 +166,6 @@
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-.swap-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.4;
-}
-
 .swap-icon {
   display: inline-block;
   transition: transform 0.35s ease;

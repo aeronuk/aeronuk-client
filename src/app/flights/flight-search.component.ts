@@ -58,8 +58,6 @@ export class FlightSearchComponent {
     this.airports.find(a => a.code === this.destinationCode()) ?? null);
 
   swap(): void {
-    if (!this.originCode() || !this.destinationCode()) return;
-
     const tmp = this.originCode();
     this.originCode.set(this.destinationCode());
     this.destinationCode.set(tmp);
