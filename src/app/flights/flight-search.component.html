@@ -33,7 +33,7 @@
             <div class="search-field-value-primary">{{ originAirport()!.city }}</div>
             <div class="search-field-value-secondary">{{ originAirport()!.code }} · {{ originAirport()!.airport }}</div>
           } @else {
-            <div class="search-field-placeholder error-text">Select an origin</div>
+            <div class="search-field-placeholder" [class.error-text]="attemptedSearch()" [class.search-field-placeholder-muted]="!attemptedSearch()">Select an origin</div>
           }
           <select
             id="origin-select"
@@ -67,7 +67,7 @@
             <div class="search-field-value-primary">{{ destinationAirport()!.city }}</div>
             <div class="search-field-value-secondary">{{ destinationAirport()!.code }} · {{ destinationAirport()!.airport }}</div>
           } @else {
-            <div class="search-field-placeholder error-text">Select a destination</div>
+            <div class="search-field-placeholder" [class.error-text]="attemptedSearch()" [class.search-field-placeholder-muted]="!attemptedSearch()">Select a destination</div>
           }
           <select
             id="destination-select"

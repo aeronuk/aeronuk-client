@@ -70,6 +70,40 @@ describe('FlightSearchComponent', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['/flights/results']);
   });
 
+  it('does not flag attemptedSearch before any search has been submitted', () => {
+    expect(component.attemptedSearch()).toBe(false);
+  });
+
+  it('sets attemptedSearch to true once a search is submitted with a missing field', () => {
+    component.destinationCode.set('');
+    component.date.set('2025-07-14');
+
+    component.search();
+
+    expect(component.attemptedSearch()).toBe(true);
+  });
+
+  it('does not render error-text on the destination placeholder before a search is attempted', () => {
+    component.destinationCode.set('');
+    fixture.detectChanges();
+
+    const placeholder: HTMLElement = fixture.nativeElement.querySelector('#destination-select')
+      .previousElementSibling;
+    expect(placeholder.classList).not.toContain('error-text');
+  });
+
+  it('renders error-text on the destination placeholder after a failed search attempt', () => {
+    component.destinationCode.set('');
+    component.date.set('2025-07-14');
+
+    component.search();
+    fixture.detectChanges();
+
+    const placeholder: HTMLElement = fixture.nativeElement.querySelector('#destination-select')
+      .previousElementSibling;
+    expect(placeholder.classList).toContain('error-text');
+  });
+
   it('selectDestination() stores the destination and navigates to /flights/results', () => {
     const navigateSpy = spyOn(router, 'navigate');
 
