@@ -10,6 +10,7 @@ import { Flight } from '../shared/models/flight.model';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './flight-results.component.html',
+  styleUrl: './flight-results.component.css',
 })
 export class FlightResultsComponent implements OnInit {
   private http    = inject(HttpClient);
@@ -72,10 +73,10 @@ export class FlightResultsComponent implements OnInit {
     return '';
   }
 
-  getTagStyle(tag: string): string {
-    if (tag === 'Cheapest') return 'display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:#DDF0E8;color:#1F9D6B;';
-    if (tag === 'Fastest')  return 'display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:#FCE9CF;color:#B5711A;';
-    return 'display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:#EAF3FD;color:#2180E0;';
+  getTagClass(tag: string): string {
+    if (tag === 'Cheapest') return 'flight-tag flight-tag--cheapest';
+    if (tag === 'Fastest')  return 'flight-tag flight-tag--fastest';
+    return 'flight-tag flight-tag--best';
   }
 
   formatTime(iso: string): string {

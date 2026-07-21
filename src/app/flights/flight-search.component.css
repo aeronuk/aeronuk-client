@@ -1,0 +1,254 @@
+.hero {
+  position: relative;
+  background: linear-gradient(165deg, #0B1E3D 0%, #12305C 60%, #1A3F73 100%);
+  overflow: hidden;
+}
+
+.hero-radial-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 82% 18%, rgba(59, 158, 255, 0.28), transparent 42%);
+  pointer-events: none;
+}
+
+.hero-plane-decoration {
+  position: absolute;
+  right: -40px;
+  top: 24px;
+  opacity: 0.10;
+  pointer-events: none;
+}
+
+.hero-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 64px 24px 120px;
+  position: relative;
+}
+
+.hero-eyebrow {
+  margin: 0 0 14px;
+  color: #9FC6F5;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  margin: 0;
+  font-size: 52px;
+  line-height: 1.04;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.hero-subtitle {
+  margin: 18px 0 0;
+  color: #B8C7DE;
+  font-size: 18px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.search-card-wrap {
+  max-width: 1180px;
+  margin: -72px auto 0;
+  padding: 0 24px;
+  position: relative;
+  z-index: 10;
+}
+
+.search-card {
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 1px 2px rgba(11, 30, 61, 0.05), 0 24px 60px rgba(11, 30, 61, 0.16);
+  padding: 26px;
+}
+
+.trip-type-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.trip-type-btn {
+  border: none;
+  cursor: default;
+  background: var(--color-navy);
+  color: #fff;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 9px 18px;
+  border-radius: 999px;
+}
+
+.search-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1.4fr 1fr;
+  gap: 12px;
+  align-items: end;
+}
+
+.search-field {
+  position: relative;
+}
+
+.search-field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-faint);
+  margin-bottom: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.search-field-box {
+  position: relative;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 11px 14px;
+  background: #fff;
+  min-height: 64px;
+}
+
+.search-field-value-primary {
+  font-size: 17px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.search-field-value-secondary {
+  font-size: 13px;
+  color: var(--color-faint);
+  pointer-events: none;
+}
+
+.search-field-placeholder {
+  font-size: 15px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.search-select-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.swap-btn {
+  position: absolute;
+  right: -18px;
+  bottom: 14px;
+  z-index: 5;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(11, 30, 61, 0.10);
+  cursor: pointer;
+  color: var(--color-blue);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.swap-icon {
+  display: inline-block;
+  transition: transform 0.35s ease;
+}
+
+.search-date-input {
+  display: block;
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-navy);
+  outline: none;
+  padding: 0;
+}
+
+.search-date-hint {
+  font-size: 13px;
+  color: var(--color-faint);
+  margin-top: 2px;
+}
+
+.search-error-banner {
+  margin-top: 16px;
+}
+
+.search-actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.search-preview-links {
+  display: flex;
+  gap: 16px;
+}
+
+.search-preview-link {
+  color: var(--color-faint);
+  text-decoration: underline;
+  font-size: 13px;
+}
+
+.search-submit-btn {
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(150deg, #2180E0, #3B9EFF);
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 15px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(33, 128, 224, 0.32);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.popular-section {
+  margin: 56px 0 0;
+  padding-bottom: 72px;
+}
+
+.popular-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.popular-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.popular-view-all {
+  color: var(--color-blue);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+}
+

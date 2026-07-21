@@ -22,6 +22,7 @@ interface Destination {
   standalone: true,
   imports: [RouterLink, FormsModule],
   templateUrl: './flight-search.component.html',
+  styleUrl: './flight-search.component.css',
 })
 export class FlightSearchComponent {
   private router = inject(Router);
