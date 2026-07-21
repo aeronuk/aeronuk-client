@@ -55,6 +55,28 @@ describe('FlightSearchComponent', () => {
     expect(component.swapRotation()).toBe(180);
   });
 
+  it('swap() does nothing when the destination is empty', () => {
+    component.originCode.set('LHR');
+    component.destinationCode.set('');
+
+    component.swap();
+
+    expect(component.originCode()).toBe('LHR');
+    expect(component.destinationCode()).toBe('');
+    expect(component.swapRotation()).toBe(0);
+  });
+
+  it('swap() does nothing when the origin is empty', () => {
+    component.originCode.set('');
+    component.destinationCode.set('JFK');
+
+    component.swap();
+
+    expect(component.originCode()).toBe('');
+    expect(component.destinationCode()).toBe('JFK');
+    expect(component.swapRotation()).toBe(0);
+  });
+
   it('on valid submit stores the search and navigates to /flights/results', () => {
     const navigateSpy = spyOn(router, 'navigate');
     component.originCode.set('LHR');

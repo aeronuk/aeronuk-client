@@ -52,6 +52,7 @@
         <button
           type="button"
           (click)="swap()"
+          [disabled]="!originCode() || !destinationCode()"
           class="swap-btn"
           aria-label="Swap airports"
         >
