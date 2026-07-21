@@ -134,6 +134,10 @@
   pointer-events: none;
 }
 
+.search-field-placeholder-muted {
+  color: var(--color-faint);
+}
+
 .search-select-overlay {
   position: absolute;
   inset: 0;

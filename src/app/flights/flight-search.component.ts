@@ -49,6 +49,7 @@ export class FlightSearchComponent {
   date            = signal('');
   searchError     = signal('');
   swapRotation    = signal(0);
+  attemptedSearch = signal(false);
 
   protected readonly originAirport = computed(() =>
     this.airports.find(a => a.code === this.originCode()) ?? null);
@@ -74,6 +75,7 @@ export class FlightSearchComponent {
         ? missing[0]
         : missing.slice(0, -1).join(', ') + ' and ' + missing[missing.length - 1];
       this.searchError.set(`Please add the missing ${missing.length === 1 ? 'field' : 'fields'} before searching: ${list}.`);
+      this.attemptedSearch.set(true);
       return;
     }
 
